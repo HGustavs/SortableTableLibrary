@@ -1,28 +1,54 @@
 
-function rendertable()
+var columnfilter=[];
+
+function renderTable(tbl,tableid,filterid,caption)
 {
-		// Global that contains rendered html
+
+		// Global that contains rendered html for column filter div
+		columnfilter = JSON.parse(localStorage.getItem("filtercolnames"));
+
+		if(columnfilter == null) columnfilter=[];
+
+		var filterstr="";
+		for(let colno in tbl.tblhead){
+				var col=tbl.tblhead[colno];
+				filterstr+=renderColumnFilter(col,columnfilter.indexOf(col)>-1);
+		}
+		document.getElementById(filterid).innerHTML=filterstr;
+		
+		// Global that contains rendered html for table
 		
 		var str="";
 		
-		str+= "<caption>Teaching allocation for WEBUG courses in year </caption>";
+		str+= "<caption></caption>";
 		
 		str+= "<thead>";
 			str+= "<tr>";
-			for(let col in tbl.tblhead){
-					str+= "<th><span style='padding:0 10px 0 10px;'>"+tbl.tblhead[col]+"</span></th>";
+			for(let colno in tbl.tblhead){
+					var col=tbl.tblhead[colno];
+					if(columnfilter.indexOf(col)>-1){
+							str+= "<th><span style='padding:0 10px 0 10px;'>"+col+"</span></th>";
+					}
 			}
 			str+= "</tr>";
 		str+= "</thead>";
 		
 		// Render table body
 		str+= "<tbody>";
-			for(let row in tbl.tblbody){
-					str+="<tr>";
-					for(let col in tbl.tblbody[row]){
-							rendercell(tbl.tblbody[row][col],tbl.tblhead[col]);
+			for(let rowno in tbl.tblbody){
+					var row=tbl.tblbody[rowno]
+					if(rowFilter(row)){
+						str+="<tr>";
+						for(let colno in row){
+							col=row[colno];
+							if(columnfilter.indexOf(tbl.tblhead[colno])>-1){
+									str+="<td>";
+									str+=renderCell(col,tbl.tblhead[colno]);
+									str+="</td>";						
+							}
+						}
+						str+="</tr>";
 					}
-					str+="</tr>";
 			}
 		str+= "</tbody>";
 
@@ -38,7 +64,19 @@ function rendertable()
 		str+="</tr>";
 		str+= "</tfoot></table>";
 
-		document.getElementById(tblID).innerHTML=str;
+		document.getElementById(tableid).innerHTML=str;
 
 }
 
+function toggleColumn(col,tbl,tableid,filterid)
+{
+		if(columnfilter.indexOf(col)==-1){
+				columnfilter.push(col);
+		}else{
+				columnfilter.splice(columnfilter.indexOf(col),1);
+		}
+
+		localStorage.setItem("filtercolnames", JSON.stringify(columnfilter));
+
+		renderTable(tbl,tableid,filterid);
+}

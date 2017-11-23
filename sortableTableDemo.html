@@ -1,5 +1,6 @@
 <html>
 <head>
+ 		<script src="sortableTable.js"></script> 
 		<script>
 
 // -------------------------------------------------------------------------------------------------------
@@ -35,24 +36,53 @@ var tabledata={
 //--------------------------------------------------------------------------
 		
 function setup(){
-		rendertable(tabledata,"thetable");
+		renderTable(tabledata,"thetable","columnfilter");
 }
 
 //--------------------------------------------------------------------------
-// rendercell
+// rowFilter
+// ---------------
+//  Callback function that renders the col filter div
+//--------------------------------------------------------------------------
+		
+function renderColumnFilter(col,status){
+		str="";
+		if(status){
+				str="<label>"+col+"</label>:<input type='checkbox' checked onclick='toggleColumn(\""+col+"\",tabledata,\"thetable\",\"columnfilter\")'>";
+		}else{
+				str="<label>"+col+"</label>:<input type='checkbox' onclick='toggleColumn(\""+col+"\",tabledata,\"thetable\",\"columnfilter\")'>";
+		}
+		return str;
+}
+
+
+//--------------------------------------------------------------------------
+// renderCell
 // ---------------
 //  Callback function that renders a specific cell in the table
 //--------------------------------------------------------------------------
 		
-function rendercell(celldata){
+function renderCell(celldata){
 		return celldata;
+}
+
+//--------------------------------------------------------------------------
+// rowFilter
+// ---------------
+//  Callback function that renders a specific cell in the table
+//--------------------------------------------------------------------------
+		
+function rowFilter(row){
+		return true;
 }
 
 		</script>
 </head>
 <body onload="setup();">
- 	<canvas id="myCanvas" width="900" height="900" style="border:1px solid #000000;"></canvas> 
 
+	<!-- Column filter div -->
+	<div id="columnfilter"></div>
+	
 	<!-- Table placeholder -->
 	<table style='border-collapse: collapse;' id='thetable'>
 	</table>
