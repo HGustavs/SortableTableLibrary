@@ -1,0 +1,60 @@
+<html>
+<head>
+		<script>
+
+// -------------------------------------------------------------------------------------------------------
+// -----------------=============######## Sourtable Table Demo Code ########=============-----------------
+// -------------------------------------------------------------------------------------------------------
+//  Copyright a97marbr / HGustavs 
+//
+//        (\ /)
+//        (. .)           
+//       c(")(")                     ∴ 
+//--------------------------------------------------------------------------------------------------------
+
+//------------==========########### GLOBALS ###########==========------------
+
+var tabledata={
+	tblhead:[
+		"Namn","Pnr","Foo","Holk","Trumma"
+	],
+	tblbody:[
+		["g","305","Zoopla","heblo",{xk:100,yk:3000}],
+		["c","307","Golpla","greblo",{xk:200,yk:4}],
+		["b","107","Foopla","treblo",{xk:500,yk:41}]
+	],
+	tblfoot:[]
+}
+
+//------------==========########### FUNCTIONZ ###########==========------------
+
+//--------------------------------------------------------------------------
+// setup
+// ---------------
+//  makes the background for most diagrams (excluding the topology diagram?)
+//--------------------------------------------------------------------------
+		
+function setup(){
+		rendertable(tabledata,"thetable");
+}
+
+//--------------------------------------------------------------------------
+// rendercell
+// ---------------
+//  Callback function that renders a specific cell in the table
+//--------------------------------------------------------------------------
+		
+function rendercell(celldata){
+		return celldata;
+}
+
+		</script>
+</head>
+<body onload="setup();">
+ 	<canvas id="myCanvas" width="900" height="900" style="border:1px solid #000000;"></canvas> 
+
+	<!-- Table placeholder -->
+	<table style='border-collapse: collapse;' id='thetable'>
+	</table>
+
+</body>
