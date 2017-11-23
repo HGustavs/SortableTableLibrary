@@ -41,7 +41,7 @@ var myTable;
 
 function setup(){
 		myTable = new sortableTable(tabledata,"thetable","columnfilter","Booyah!",
-				function(celldata){return renderCell(celldata)},
+				function(celldata, col){return renderCell(celldata,col)},
 				function(col, status){return renderSortOptions(col,status)},
 				function(col, status){return renderColumnFilter(col,status)},
 				function(row){ return rowFilter(row)}
@@ -81,7 +81,7 @@ function renderSortOptions(col,status){
 		str="";
 		
 		if(status==-1){
-				str+="<span onclick='toggleSortStatus(\""+col+"\",1)'>"+col+"</span>";
+				str+="<span onclick='myTable.toggleSortStatus(\""+col+"\",1)'>"+col+"</span>";
 		}else{
 				if(col=="Namn"){
 						if(status){
@@ -89,9 +89,9 @@ function renderSortOptions(col,status){
 						}		
 				}else{
 						if(status){
-								str+="<span onclick='toggleSortStatus(\""+col+"\",0)'>"+col+"&#x25b4;</span>";
+								str+="<span onclick='myTable.toggleSortStatus(\""+col+"\",0)'>"+col+"&#x25b4;</span>";
 						}else{
-								str+="<span onclick='toggleSortStatus(\""+col+"\",1)'>"+col+"&#x25be;</span>";
+								str+="<span onclick='myTable.toggleSortStatus(\""+col+"\",1)'>"+col+"&#x25be;</span>";
 						}
 				}
 		}
@@ -105,7 +105,11 @@ function renderSortOptions(col,status){
 //  Callback function that renders a specific cell in the table
 //--------------------------------------------------------------------------
 		
-function renderCell(celldata){
+function renderCell(celldata,col){
+    if (col=="Trumma"){
+        return celldata.xk;
+    }
+    
 		return celldata;
 }
 
