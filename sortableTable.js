@@ -1,5 +1,5 @@
 
-function sortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter) {
+function sortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,compare) {
 
 		this.columnfilter=[];
 		this.sortcolumn="UNK";
@@ -12,6 +12,7 @@ function sortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		this.renderSortOptions=renderSortOptions;
 		this.renderColumnFilter=renderColumnFilter;
 		this.rowFilter=rowFilter;
+		this.compare=compare;
 								
 		this.renderTable = function ()
 		{
@@ -103,23 +104,9 @@ function sortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		this.toggleSortStatus = function(col,status)
 		{
 				this.sortcolumn=col;
-				this.sortstatus=status;
-								
-				let colno=this.tbl.tblhead.indexOf(col);
+				this.sortstatus=status;		
 				
-				if(status==0){
-					this.tbl.tblbody.sort(function(a,b){												
-							if (a[colno] < b[colno]) return 1;
-							if (a[colno] > b[colno]) return -1;
-							return 0;
-					});					
-				} else {
-					this.tbl.tblbody.sort(function(a,b){												
-							if (a[colno] < b[colno]) return -1;
-					    if (a[colno] > b[colno]) return 1;
-					    return 0;						
-					});					
-				}
+				this.tbl.tblbody.sort(this.compare(this.tbl.tblhead.indexOf(col),this.sortstatus));
 				
 				this.reRender();
 		}

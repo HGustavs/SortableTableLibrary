@@ -20,9 +20,9 @@ var tabledata={
 		"First/Last","Pnr","Foo","Holk","Trumma"
 	],
 	tblbody:[
-		["g","305","Zoopla","heblo",{xk:100,yk:3000}],
-		["c","307","Golpla","greblo",{xk:200,yk:4}],
-		["b","107","Foopla","treblo",{xk:500,yk:41}]
+		["Adam van Dyke","305","Zoopla","heblo",{xk:100,yk:3000}],
+		["Zeus Flabber","307","Golpla","greblo",{xk:200,yk:4}],
+		["Clara Brook","107","Foopla","treblo",{xk:500,yk:41}]
 	],
 	tblfoot:[]
 }
@@ -44,7 +44,8 @@ function setup(){
 				function(celldata, col){return renderCell(celldata,col)},
 				function(col, status){return renderSortOptions(col,status)},
 				function(col, status){return renderColumnFilter(col,status)},
-				function(row){ return rowFilter(row)}
+				function(row){ return rowFilter(row)},
+        function(colno,status){ return compare(colno,status)}
 		);
 		myTable.renderTable();
 		
@@ -86,7 +87,7 @@ function renderSortOptions(col,status){
 				}
 		}else{
 				if(col=="First/Last"){
-						// First up/down vs Last up / down
+						// First up/down vs Last up/down
 						if(status==0||status==1){
 								if(status==0){
 										str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",1)'>First&#x25b4;</span>/";								
@@ -102,8 +103,18 @@ function renderSortOptions(col,status){
 								}else{
 										str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",2)'>Last&#x25be;</span>";								
 								}
-						}		
-				}else{
+						}		            
+				} else if(col=="Trumma"){
+						// Special sort for Trumma (JSON structure)
+            str+="<span>"+col+"</span>";
+            str+="<select onchange='myTable.toggleSortStatus(\""+col+"\",this.value)'>";
+            str+="<option hidden disabled selected value>Select Sort</option>"
+            str+="<option value='0'>x&#x25be;/y</option>";
+            str+="<option value='1'>x&#x25b4;/y</option>";
+            str+="<option value='2'>x/y&#x25be;</option>";
+            str+="<option value='3'>x/y&#x25b4;</option>";
+            str+="</select>";
+				} else{
 						if(status){
 								str+="<span onclick='myTable.toggleSortStatus(\""+col+"\",0)'>"+col+"&#x25b4;</span>";
 						}else{
@@ -138,6 +149,106 @@ function renderCell(celldata,col){
 		
 function rowFilter(row){
 		return true;
+}
+
+//--------------------------------------------------------------------------
+// compare
+// ---------------
+//  Callback function with different compare alternatives for the column sort
+//--------------------------------------------------------------------------
+function compare(colno,status){
+    if (colno==0){
+        // Sort Fname / Lname
+        if(status==0){
+            return function(a,b){
+                if (a[colno].substr(0,a[colno].indexOf(' ')) < b[colno].substr(0,b[colno].indexOf(' '))) return 1;
+                if (a[colno].substr(0,a[colno].indexOf(' ')) > b[colno].substr(0,b[colno].indexOf(' '))) return -1;
+                return 0;
+            }    
+        } else if(status==1){
+            return function(a,b){
+                if (a[colno].substr(0,a[colno].indexOf(' ')) < b[colno].substr(0,b[colno].indexOf(' '))) return -1;
+                if (a[colno].substr(0,a[colno].indexOf(' ')) > b[colno].substr(0,b[colno].indexOf(' '))) return 1;
+                return 0;
+            }    
+        } else if(status==2){
+            return function(a,b){
+                if (a[colno].substr(a[colno].indexOf(' ')+1) < b[colno].substr(b[colno].indexOf(' ')+1)) return 1;
+                if (a[colno].substr(a[colno].indexOf(' ')+1) > b[colno].substr(b[colno].indexOf(' ')+1)) return -1;
+                return 0;
+            }    
+        } else {
+            return function(a,b){
+                if (a[colno].substr(a[colno].indexOf(' ')+1) < b[colno].substr(b[colno].indexOf(' ')+1)) return -1;
+                if (a[colno].substr(a[colno].indexOf(' ')+1) > b[colno].substr(b[colno].indexOf(' ')+1)) return 1;
+                return 0;
+            }    
+        }      
+    } else if (colno==4){
+        // Sort "Trumma"
+        if(status==0){
+            return function(a,b){
+                if (a[colno].xk < b[colno].xk) return 1;
+                if (a[colno].xk > b[colno].xk) return -1;
+                return 0;
+            }    
+        } else if(status==1){
+            return function(a,b){
+                if (a[colno].xk < b[colno].xk) return -1;
+                if (a[colno].xk > b[colno].xk) return 1;
+                return 0;
+            }    
+        } else if(status==2){
+            return function(a,b){
+                if (a[colno].yk < b[colno].yk) return 1;
+                if (a[colno].yk > b[colno].yk) return -1;
+                return 0;
+            }    
+        } else {
+            return function(a,b){
+              if (a[colno].yk < b[colno].yk) return -1;
+              if (a[colno].yk > b[colno].yk) return 1;
+                return 0;
+            }    
+        }              
+    } else {
+        // Sorts as number if numeric and as string otherwise
+        if(status==0){
+            return function (a, b) {
+                function isNumeric(num){
+                    return !isNaN(num)
+                }
+
+                // convert string to numbers if necessary:
+                // http://stackoverflow.com/questions/175739/is-there-a-built-in-way-in-javascript-to-check-if-a-string-is-a-valid-number
+                var left = (isNumeric(a[colno])) ? +a[colno] : a[colno];
+                var right = (isNumeric(b[colno])) ? +b[colno] : b[colno];
+
+                if (left < right)
+                    return -1;
+                if (left > right) 
+                    return 1;
+                return 0;
+            }                    
+        } else {
+          return function (a, b) {
+              function isNumeric(num){
+                  return !isNaN(num)
+              }
+
+              // convert string to numbers if necessary:
+              // http://stackoverflow.com/questions/175739/is-there-a-built-in-way-in-javascript-to-check-if-a-string-is-a-valid-number
+              var left = (isNumeric(a[colno])) ? +a[colno] : a[colno];
+              var right = (isNumeric(b[colno])) ? +b[colno] : b[colno];
+
+              if (left < right)
+                  return 1;
+              if (left > right) 
+                  return -1;
+              return 0;
+          }                             
+        }
+    }
 }
 
 		</script>
