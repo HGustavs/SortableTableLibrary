@@ -46,11 +46,8 @@ function setup(){
 				function(col, status){return renderColumnFilter(col,status)},
 				function(row){ return rowFilter(row)}
 		);
-		console.log(myTable);
-		
 		myTable.renderTable();
 		
-//		myTable.renderTable();
 }
 
 //--------------------------------------------------------------------------
@@ -107,16 +104,17 @@ function renderSortOptions(col,status){
 		
 function renderCell(celldata,col){
     if (col=="Trumma"){
-        return celldata.xk;
-    }
-    
+        return "<div><span>"+celldata.xk+"</span>/<span>"+celldata.yk+"</span></div>";
+    } else if (col=="Pnr"){
+        return "<div style='text-align:right'>"+celldata+"</div>";
+    }    
 		return celldata;
 }
 
 //--------------------------------------------------------------------------
 // rowFilter
 // ---------------
-//  Callback function that renders a specific cell in the table
+//  Callback function that filters rows in the table
 //--------------------------------------------------------------------------
 		
 function rowFilter(row){

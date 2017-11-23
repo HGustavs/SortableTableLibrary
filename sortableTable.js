@@ -43,9 +43,9 @@ function sortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 							var col=this.tbl.tblhead[colno];
 							if(this.columnfilter.indexOf(col)>-1){
 									if(col==this.sortcolumn){
-											str+= "<th><span style='padding:0 10px 0 10px;'>"+this.renderSortOptions(col,this.sortstatus)+"</span></th>";
+											str+= "<th>"+this.renderSortOptions(col,this.sortstatus)+"</th>";
 									}else{
-											str+= "<th><span style='padding:0 10px 0 10px;'>"+this.renderSortOptions(col,-1)+"</span></th>";
+											str+= "<th>"+this.renderSortOptions(col,-1)+"</th>";
 									}
 							}
 					}
@@ -104,12 +104,24 @@ function sortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		{
 				this.sortcolumn=col;
 				this.sortstatus=status;
+								
+				let colno=this.tbl.tblhead.indexOf(col);
+				
+				if(status==0){
+					this.tbl.tblbody.sort(function(a,b){												
+							if (a[colno] < b[colno]) return 1;
+							if (a[colno] > b[colno]) return -1;
+							return 0;
+					});					
+				} else {
+					this.tbl.tblbody.sort(function(a,b){												
+							if (a[colno] < b[colno]) return -1;
+					    if (a[colno] > b[colno]) return 1;
+					    return 0;						
+					});					
+				}
 				
 				this.reRender();
 		}
 		
 }
-
-
-
-
