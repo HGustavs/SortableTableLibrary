@@ -17,7 +17,7 @@
 
 var tabledata={
 	tblhead:[
-		"Namn","Pnr","Foo","Holk","Trumma"
+		"First/Last","Pnr","Foo","Holk","Trumma"
 	],
 	tblbody:[
 		["g","305","Zoopla","heblo",{xk:100,yk:3000}],
@@ -78,11 +78,30 @@ function renderSortOptions(col,status){
 		str="";
 		
 		if(status==-1){
-				str+="<span onclick='myTable.toggleSortStatus(\""+col+"\",1)'>"+col+"</span>";
+				if(col=="First/Last"){
+						str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",1)'>First</span>/";								
+						str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",3)'>Last</span>";								
+				}else{
+						str+="<span onclick='myTable.toggleSortStatus(\""+col+"\",1)'>"+col+"</span>";				
+				}
 		}else{
-				if(col=="Namn"){
-						if(status){
-						}else{
+				if(col=="First/Last"){
+						// First up/down vs Last up / down
+						if(status==0||status==1){
+								if(status==0){
+										str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",1)'>First&#x25b4;</span>/";								
+								}else{
+										str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",0)'>First&#x25be;</span>/";								
+								}
+								str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",2)'>Last</span>";								
+						}
+						else if(status==2||status==3){
+								str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",1)'>First</span>/";								
+								if(status==2){
+										str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",3)'>Last&#x25b4;</span>";								
+								}else{
+										str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",2)'>Last&#x25be;</span>";								
+								}
 						}		
 				}else{
 						if(status){
