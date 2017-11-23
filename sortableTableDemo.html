@@ -27,20 +27,30 @@ var tabledata={
 	tblfoot:[]
 }
 
+var myTable;
+
 //------------==========########### FUNCTIONZ ###########==========------------
 
 //--------------------------------------------------------------------------
 // setup
 // ---------------
-//  makes the background for most diagrams (excluding the topology diagram?)
+//  Creates the table object and assigns all mandatory pararmeters
+//  
+//  tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter
 //--------------------------------------------------------------------------
-		
+
 function setup(){
-		renderTable(tabledata,"thetable","columnfilter");
+		myTable=sortableTable(tabledata,"thetable","columnfilter","Booyah!",
+				function(celldata){renderCell(celldata)},
+				function(col, status){renderSortOptions(col,status)},
+				function(col, status){renderColumnFilter(col,status)},
+				function(row){rowFilter(row)}
+		);
+		myTable.renderTable();
 }
 
 //--------------------------------------------------------------------------
-// rowFilter
+// renderColumnFilter
 // ---------------
 //  Callback function that renders the col filter div
 //--------------------------------------------------------------------------
@@ -55,6 +65,33 @@ function renderColumnFilter(col,status){
 		return str;
 }
 
+//--------------------------------------------------------------------------
+// renderSortOptions
+// ---------------
+//  Callback function that renders the col filter div
+//--------------------------------------------------------------------------
+		
+function renderSortOptions(col,status){
+		str="";
+		
+		if(status==-1){
+				str+="<span onclick='toggleSortStatus(\""+col+"\",1)'>"+col+"</span>";
+		}else{
+				if(col=="Namn"){
+						if(status){
+						}else{
+						}		
+				}else{
+						if(status){
+								str+="<span onclick='toggleSortStatus(\""+col+"\",0)'>"+col+"&#x25b4;</span>";
+						}else{
+								str+="<span onclick='toggleSortStatus(\""+col+"\",1)'>"+col+"&#x25be;</span>";
+						}
+				}
+		}
+
+		return str;
+}
 
 //--------------------------------------------------------------------------
 // renderCell
