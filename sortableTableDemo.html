@@ -81,7 +81,7 @@ function renderSortOptions(col,status){
 		str="";
 		
 		if(status==-1){
-				str+="<span onclick='toggleSortStatus(\""+col+"\",1)'>"+col+"</span>";
+				str+="<span onclick='myTable.toggleSortStatus(\""+col+"\",1)'>"+col+"</span>";
 		}else{
 				if(col=="Namn"){
 						if(status){
@@ -89,9 +89,9 @@ function renderSortOptions(col,status){
 						}		
 				}else{
 						if(status){
-								str+="<span onclick='toggleSortStatus(\""+col+"\",0)'>"+col+"&#x25b4;</span>";
+								str+="<span onclick='myTable.toggleSortStatus(\""+col+"\",0)'>"+col+"&#x25b4;</span>";
 						}else{
-								str+="<span onclick='toggleSortStatus(\""+col+"\",1)'>"+col+"&#x25be;</span>";
+								str+="<span onclick='myTable.toggleSortStatus(\""+col+"\",1)'>"+col+"&#x25be;</span>";
 						}
 				}
 		}
