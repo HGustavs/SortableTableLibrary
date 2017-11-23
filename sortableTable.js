@@ -1,5 +1,5 @@
 
-function sortableTable (tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter) {
+function sortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter) {
 
 		this.columnfilter=[];
 		this.sortcolumn="UNK";
@@ -12,18 +12,14 @@ function sortableTable (tbl,tableid,filterid,caption,renderCell,renderSortOption
 		this.renderSortOptions=renderSortOptions;
 		this.renderColumnFilter=renderColumnFilter;
 		this.rowFilter=rowFilter;
-				
-		alert("Hello!");
-				
-		function renderTable()
+								
+		this.renderTable = function ()
 		{
-				reRender();
+				this.reRender();
 		}
 		
-		function reRender()
+		this.reRender = function ()
 		{
-				alert("Hello!");
-
 				// Global that contains rendered html for column filter div
 				this.columnfilter = JSON.parse(localStorage.getItem(this.tableid+"_filtercolnames"));
 
@@ -91,7 +87,7 @@ function sortableTable (tbl,tableid,filterid,caption,renderCell,renderSortOption
 
 		}
 
-		function toggleColumn(col)
+		this.toggleColumn = function(col)
 		{
 				if(this.columnfilter.indexOf(col)==-1){
 						this.columnfilter.push(col);
@@ -101,17 +97,17 @@ function sortableTable (tbl,tableid,filterid,caption,renderCell,renderSortOption
 
 				localStorage.setItem(this.tableid+"_filtercolnames", JSON.stringify(this.columnfilter));
 
-				reRender();
+				this.reRender();
 		}
 
-		function toggleSortStatus(col,status)
+		this.toggleSortStatus = function(col,status)
 		{
 				this.sortcolumn=col;
 				this.sortstatus=status;
 				
-				reRender();
+				this.reRender();
 		}
-
+		
 }
 
 

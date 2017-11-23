@@ -40,13 +40,17 @@ var myTable;
 //--------------------------------------------------------------------------
 
 function setup(){
-		myTable=sortableTable(tabledata,"thetable","columnfilter","Booyah!",
-				function(celldata){renderCell(celldata)},
-				function(col, status){renderSortOptions(col,status)},
-				function(col, status){renderColumnFilter(col,status)},
-				function(row){rowFilter(row)}
+		myTable = new sortableTable(tabledata,"thetable","columnfilter","Booyah!",
+				function(celldata){return renderCell(celldata)},
+				function(col, status){return renderSortOptions(col,status)},
+				function(col, status){return renderColumnFilter(col,status)},
+				function(row){ return rowFilter(row)}
 		);
+		console.log(myTable);
+		
 		myTable.renderTable();
+		
+//		myTable.renderTable();
 }
 
 //--------------------------------------------------------------------------
@@ -56,12 +60,14 @@ function setup(){
 //--------------------------------------------------------------------------
 		
 function renderColumnFilter(col,status){
+		
 		str="";
 		if(status){
-				str="<label>"+col+"</label>:<input type='checkbox' checked onclick='toggleColumn(\""+col+"\",tabledata,\"thetable\",\"columnfilter\")'>";
+				str="<label>"+col+"</label>:<input type='checkbox' checked onclick='myTable.toggleColumn(\""+col+"\")'>";
 		}else{
-				str="<label>"+col+"</label>:<input type='checkbox' onclick='toggleColumn(\""+col+"\",tabledata,\"thetable\",\"columnfilter\")'>";
+				str="<label>"+col+"</label>:<input type='checkbox' onclick='myTable.toggleColumn(\""+col+"\")'>";
 		}
+
 		return str;
 }
 
