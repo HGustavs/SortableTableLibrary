@@ -1,3 +1,11 @@
+// Keep track of Currently active Table
+var currentTable=NULL;
+
+// Global sorting function global
+function sortableInternalSort(a,b)
+{
+		alert("Compare: "+a+" "+b);
+}
 
 function sortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,compare) {
 
@@ -21,6 +29,9 @@ function sortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		
 		this.reRender = function ()
 		{
+				// Assign currently active table
+				currentTable=this;
+
 				// Global that contains rendered html for column filter div
 				this.columnfilter = JSON.parse(localStorage.getItem(this.tableid+"_filtercolnames"));
 
@@ -90,6 +101,9 @@ function sortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 
 		this.toggleColumn = function(col)
 		{
+				// Assign currently active table
+				currentTable=this;
+
 				if(this.columnfilter.indexOf(col)==-1){
 						this.columnfilter.push(col);
 				}else{
@@ -103,10 +117,14 @@ function sortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 
 		this.toggleSortStatus = function(col,status)
 		{
+				// Assign currently active table
+				currentTable=this;
+				
 				this.sortcolumn=col;
 				this.sortstatus=status;		
 				
-				this.tbl.tblbody.sort(this.compare(this.tbl.tblhead.indexOf(col),this.sortstatus));
+				// Sort the body of the table again
+				this.tbl.tblbody.sort(sortableInternalSort);
 				
 				this.reRender();
 		}
