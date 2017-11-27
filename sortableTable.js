@@ -1,17 +1,26 @@
 // Keep track of Currently active Table
-var currentTable=NULL;
+var currentTable=null;
 
 // Global sorting function global
 function sortableInternalSort(a,b)
 {
-		alert("Compare: "+a+" "+b);
+		let ret=0;		
+		let colno=currentTable.tbl.tblhead.indexOf(currentTable.sortcolumn);
+		if(currentTable.sortstatus%2 == 0){
+				//alert("Compare: "+a+" "+b);			
+				ret=compare(a[colno],b[colno],currentTable.sortcolumn);
+		} else {
+				//alert("Compare: "+b+" "+a);
+				ret=compare(b[colno],a[colno],currentTable.sortcolumn);
+		}		
+		return ret;
 }
 
-function sortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,compare) {
+function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter) {
 
 		this.columnfilter=[];
 		this.sortcolumn="UNK";
-		this.sortstatus=true;
+		this.sortstatus=-1;
 		this.tbl=tbl;
 		this.tableid=tableid;
 		this.filterid=filterid;
@@ -20,7 +29,6 @@ function sortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		this.renderSortOptions=renderSortOptions;
 		this.renderColumnFilter=renderColumnFilter;
 		this.rowFilter=rowFilter;
-		this.compare=compare;
 								
 		this.renderTable = function ()
 		{
@@ -125,15 +133,7 @@ function sortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				
 				// Sort the body of the table again
 				this.tbl.tblbody.sort(sortableInternalSort);
-				
-				this.tbl.tblbody.sort(function(a,b){
-						if(ActiveSortableTable.sortstatus == 0){
-								return ActiveSortableTable.compare(a,b)						
-						} else {
-								return ActiveSortableTable.compare(b,a)
-						}					
-				});
-				
+								
 				this.reRender();
 		}
 		
