@@ -45,12 +45,20 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				// Global that contains rendered html for column filter div
 				this.columnfilter = JSON.parse(localStorage.getItem(this.tableid+"_filtercolnames"));
 
-				if(this.columnfilter == null) this.columnfilter=[];
+				let isFirstVisit=false;
+				if(this.columnfilter == null) {
+						isFirstVisit=true;
+						this.columnfilter=[];
+				} 
 
 				var filterstr="";
 				for(let colno in this.tbl.tblhead){
 						var col=this.tbl.tblhead[colno];
-						filterstr+=this.renderColumnFilter(col,this.columnfilter.indexOf(col)>-1);
+						if(isFirstVisit){
+								this.columnfilter.push(col);
+						} 
+						filterstr+=this.renderColumnFilter(col,this.columnfilter.indexOf(col)>-1);							
+						
 				}
 				document.getElementById(this.filterid).innerHTML=filterstr;
 
