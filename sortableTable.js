@@ -126,6 +126,14 @@ function sortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				// Sort the body of the table again
 				this.tbl.tblbody.sort(sortableInternalSort);
 				
+				this.tbl.tblbody.sort(function(a,b){
+						if(ActiveSortableTable.sortstatus == 0){
+								return ActiveSortableTable.compare(a,b)						
+						} else {
+								return ActiveSortableTable.compare(b,a)
+						}					
+				});
+				
 				this.reRender();
 		}
 		
