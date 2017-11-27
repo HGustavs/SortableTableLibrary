@@ -91,8 +91,9 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 								for(let colno in row){
 									col=row[colno];
 									if(this.columnfilter.indexOf(this.tbl.tblhead[colno])>-1){
-											str+="<td>";
-											str+=this.renderCell(col,this.tbl.tblhead[colno]);
+											let cellid="r"+rowno+"c"+colno;
+											str+="<td id='"+cellid+"'>";
+											str+=this.renderCell(col,this.tbl.tblhead[colno],cellid);
 											str+="</td>";						
 									}
 								}

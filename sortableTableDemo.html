@@ -41,7 +41,7 @@ var myTable;
 
 function setup(){
 		myTable = new SortableTable(tabledata,"thetable","columnfilter","Booyah!",
-				function(celldata, col){return renderCell(celldata,col)},
+				function(celldata,col,cellid){return renderCell(celldata,col,cellid)},
 				function(col, kind){return renderSortOptions(col,kind)},
 				function(col, status){return renderColumnFilter(col,status)},
 				function(row){ return rowFilter(row)}
