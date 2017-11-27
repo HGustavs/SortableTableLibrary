@@ -42,10 +42,9 @@ var myTable;
 function setup(){
 		myTable = new SortableTable(tabledata,"thetable","columnfilter","Booyah!",
 				function(celldata, col){return renderCell(celldata,col)},
-				function(col, status){return renderSortOptions(col,status)},
+				function(col, kind){return renderSortOptions(col,kind)},
 				function(col, status){return renderColumnFilter(col,status)},
-				function(row){ return rowFilter(row)},
-        function(colno,status){ return compare(colno,status)}
+				function(row){ return rowFilter(row)}
 		);
 		myTable.renderTable();
 		
@@ -160,41 +159,41 @@ function rowFilter(row){
 function compare(a,b){
     // Find out which column and part of column are we sorting on from currentTable
     let col=currentTable.sortcolumn;
-    let status=currentTable.sortstatus;
+    let kind=currentTable.sortkind;
     
     if (col == "Trumma"){
-        if(status==0 || status==1){ 
+        if(kind==0 || kind==1){ 
           return a.xk-b.xk; 
-      } else if(status==2 || status==3){ 
+      } else if(kind==2 || kind==3){ 
           return a.yk-b.yk; 
       } 
     } else if (col == "First/Last"){
         // Sort Fname / Lname 
-        if(status==0 || status==1){ 
+        if(kind==0 || kind==1){ 
             let afname=a.substr(0,a.indexOf(' '));
             let bfname=b.substr(0,b.indexOf(' '));
-            if ( afname < bfname ) return 1; 
-            if ( afname > bfname ) return -1; 
+            if ( afname < bfname ) return -1; 
+            if ( afname > bfname ) return 1; 
             return 0; 
-        } else if(status==2 || status==3){ 
+        } else if(kind==2 || kind==3){ 
             let alname=a.substr(a.indexOf(' ')+1);
             let blname=b.substr(b.indexOf(' ')+1);
-            if ( alname < blname ) return 1; 
-            if ( alname > blname ) return -1; 
+            if ( alname < blname ) return -1; 
+            if ( alname > blname ) return 1; 
             return 0; 
         }
     } else if (col == "Foo" || col == "Holk"){
-        if ( a < b ) return 1; 
-        if ( a > b ) return -1; 
+        if ( a < b ) return -1; 
+        if ( a > b ) return 1; 
         return 0; 
     } else {
         // We allways sort none numbers below 
-        let tmp=(status%2==0) ? 1000000 : -1000000;
+        let tmp=(currentTable.ascending) ? -1000000 : 1000000;
         
         let left = (isNaN(a)) ? tmp : +a; 
         let right = (isNaN(b)) ? tmp : +b; 
         
-        return left-right;     
+        return right-left;     
     }
 }
 
