@@ -46,7 +46,8 @@ function setup(){
 				function(col, status){return renderColumnFilter(col,status)},
 				function(row){ return rowFilter(row)},
 				["Pnr","Num","Trumma"],
-				function(col, val){return makeSum(col,val)}
+				["Pnr","Num"],				
+				function(col, val){return makeSum(col,val);}
 		);
 		myTable.renderTable();
 		
@@ -209,7 +210,6 @@ function makeSum(col,value){
 		if(col=="Trumma"){
 				return value.xk;
 		}else{
-				alert(value);
 				if(value=="UNK"){
 						return 0;
 				}else{
