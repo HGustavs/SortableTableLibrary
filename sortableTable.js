@@ -17,7 +17,7 @@ function sortableInternalSort(a,b)
 		return ret;
 }
 
-function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter) {
+function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,sumList,sumFunc) {
 
 		this.columnfilter=[];
 		this.sortcolumn="UNK";
@@ -31,6 +31,9 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		this.renderSortOptions=renderSortOptions;
 		this.renderColumnFilter=renderColumnFilter;
 		this.rowFilter=rowFilter;
+		this.sumList=sumList;
+		this.sumFunc=sumFunc;
+		this.sumContent=[];
 								
 		this.renderTable = function ()
 		{
@@ -90,6 +93,15 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 								str+="<tr>";
 								for(let colno in row){
 									col=row[colno];
+									
+									// This condition is true if column is in summing list
+									if(this.sumList.indexOf(this.tbl.tblhead[colno])>-1){
+											alert("Hello!"+this.tbl.tblhead[colno]);
+									}else{
+											alert(this.sumList.indexOf(this.tbl.tblhead[colno]));
+									}
+									
+									// If we show this column...
 									if(this.columnfilter.indexOf(this.tbl.tblhead[colno])>-1){
 											let cellid="r"+rowno+"c"+colno;
 											str+="<td id='"+cellid+"'>";

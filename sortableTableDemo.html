@@ -24,7 +24,7 @@ var tabledata={
 		["Zeus Flabber","307",11,"Golpla","greblo",{xk:200,yk:4}],
 		["Clara Brook","107",21,"Foopla","treblo",{xk:500,yk:41}]
 	],
-	tblfoot:[]
+	tblfoot:["","Pnr","Num","","","Trumma"]
 }
 
 var myTable;
@@ -44,7 +44,9 @@ function setup(){
 				function(celldata,col,cellid){return renderCell(celldata,col,cellid)},
 				function(col, kind){return renderSortOptions(col,kind)},
 				function(col, status){return renderColumnFilter(col,status)},
-				function(row){ return rowFilter(row)}
+				function(row){ return rowFilter(row)},
+				["Pnr","Num","Trumma"],
+				function(col, val){return makeSum(col,val)}
 		);
 		myTable.renderTable();
 		
