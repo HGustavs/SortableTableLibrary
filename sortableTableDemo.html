@@ -199,6 +199,26 @@ function compare(a,b){
     }
 }
 
+//--------------------------------------------------------------------------
+// makeSum
+// ---------------
+//	makeSum col,value  
+//--------------------------------------------------------------------------
+
+function makeSum(col,value){
+		if(col=="Trumma"){
+				return value.xk;
+		}else{
+				alert(value);
+				if(value=="UNK"){
+						return 0;
+				}else{
+						return parseFloat(value);
+				}
+		}
+		return 0;
+}
+
 		</script>
 </head>
 <body onload="setup();">
