@@ -17,7 +17,7 @@ function sortableInternalSort(a,b)
 		return ret;
 }
 
-function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,sumList,rowsumList,sumFunc) {
+function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,colsumList,rowsumList,sumFunc) {
 
 		this.columnfilter=[];
 		this.sortcolumn="UNK";
@@ -31,8 +31,8 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		this.renderSortOptions=renderSortOptions;
 		this.renderColumnFilter=renderColumnFilter;
 		this.rowFilter=rowFilter;
-		this.sumList=sumList;
-		this.rowsumList=sumList;
+		this.colsumList=colsumList;
+		this.rowsumList=rowsumList;
 		this.sumFunc=sumFunc;
 								
 		this.renderTable = function ()
@@ -85,6 +85,13 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 									}
 							}
 					}
+					if(this.rowsumList.length>0){
+							if(rowsumList[0]==this.sortcolumn){
+									str+= "<th>"+this.renderSortOptions(this.rowsumList[0],this.sortkind)+"</th>";
+							}else{
+									str+= "<th>"+this.renderSortOptions(this.rowsumList[0],-1)+"</th>";
+							}
+					}
 					str+= "</tr>";
 				str+= "</thead>";
 
@@ -105,7 +112,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 									if(this.columnfilter.indexOf(this.tbl.tblhead[colno])>-1){
 											
 											// This condition is true if column is in summing list and in that case perform the sum like a BOSS
-											if(this.sumList.indexOf(this.tbl.tblhead[colno])>-1){
+											if(this.colsumList.indexOf(this.tbl.tblhead[colno])>-1){
 													if(typeof(sumContent[this.tbl.tblhead[colno]]) == "undefined") sumContent[this.tbl.tblhead[colno]]=0;
 													sumContent[this.tbl.tblhead[colno]]+=this.sumFunc(this.tbl.tblhead[colno],col);		
 											}
@@ -136,7 +143,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				str+= "<tr style='font-style:italic;'>";
 				for(let colno in this.tbl.tblfoot){
 						
-						if(this.sumList.indexOf(this.tbl.tblhead[colno])>-1){
+						if(this.colsumList.indexOf(this.tbl.tblhead[colno])>-1){
 								// If writing sum - just write it
 								str+="<td>"+sumContent[this.tbl.tblhead[colno]]+"</td>";						
 						}else{
