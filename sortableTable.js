@@ -17,7 +17,7 @@ function sortableInternalSort(a,b)
 		return ret;
 }
 
-function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,colsumList,rowsumList,sumFunc) {
+function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,colsumList,rowsumList,rowsumHeading,sumFunc) {
 
 		this.columnfilter=[];
 		this.sortcolumn="UNK";
@@ -33,6 +33,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		this.rowFilter=rowFilter;
 		this.colsumList=colsumList;
 		this.rowsumList=rowsumList;
+		this.rowsumHeading=rowsumHeading;
 		this.sumFunc=sumFunc;
 								
 		this.renderTable = function ()
@@ -86,10 +87,10 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 							}
 					}
 					if(this.rowsumList.length>0){
-							if(rowsumList[0]==this.sortcolumn){
-									str+= "<th>"+this.renderSortOptions(this.rowsumList[0],this.sortkind)+"</th>";
+							if(this.rowsumHeading==this.sortcolumn){
+									str+= "<th>"+this.renderSortOptions(this.rowsumHeading,this.sortkind)+"</th>";
 							}else{
-									str+= "<th>"+this.renderSortOptions(this.rowsumList[0],-1)+"</th>";
+									str+= "<th>"+this.renderSortOptions(this.rowsumHeading,-1)+"</th>";
 							}
 					}
 					str+= "</tr>";

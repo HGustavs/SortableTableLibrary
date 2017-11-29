@@ -46,7 +46,8 @@ function setup(){
 				function(col, status){return renderColumnFilter(col,status)},
 				function(row){ return rowFilter(row)},
 				["Pnr","Num","Trumma"],
-				["RowSum","Pnr","Num"],				
+				["Pnr","Num"],				
+        "RowSum",
 				function(col, val){return makeSum(col,val);}
 		);
 		myTable.renderTable();
