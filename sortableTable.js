@@ -143,15 +143,18 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				str+= "<tfoot style='border-top:2px solid #000'>";
 				str+= "<tr style='font-style:italic;'>";
 				for(let colno in this.tbl.tblfoot){
-						
-						if(this.colsumList.indexOf(this.tbl.tblhead[colno])>-1){
-								// If writing sum - just write it
-								str+="<td>"+sumContent[this.tbl.tblhead[colno]]+"</td>";						
-						}else{
-								if (this.tbl.tblfoot[col]!="UNK"){
-										str+="<td>"+this.tbl.tblfoot[colno]+"</td>";
-								} else {
-										str+="<td>&nbsp;</td>";
+						// If we show this column...
+						if(this.columnfilter.indexOf(this.tbl.tblhead[colno])>-1){
+
+								if(this.colsumList.indexOf(this.tbl.tblhead[colno])>-1){
+										// If writing sum - just write it
+										str+="<td>"+sumContent[this.tbl.tblhead[colno]]+"</td>";						
+								}else{
+										if (this.tbl.tblfoot[col]!="UNK"){
+												str+="<td>"+this.tbl.tblfoot[colno]+"</td>";
+										} else {
+												str+="<td>&nbsp;</td>";
+										}
 								}
 						}
 				}
