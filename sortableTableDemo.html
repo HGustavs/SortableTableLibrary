@@ -1,5 +1,6 @@
 <html>
 <head>
+    <meta charset="utf-8">
  		<script src="sortableTable.js"></script> 
 		<script>
 
@@ -20,9 +21,15 @@ var tabledata={
 		"First/Last","Pnr","Num","Foo","Holk","Trumma"
 	],
 	tblbody:[
-		["Adam van Dyke","305","UNK","Zoopla","heblo",{xk:100,yk:3000}],
+		["Adam van Dyke","305","UNK","Zoopla","dreblo",{xk:100,yk:287}],
 		["Zeus Flabber","307",11,"Golpla","greblo",{xk:200,yk:4}],
-		["Clara Brook","107",21,"Foopla","treblo",{xk:500,yk:41}]
+		["Clara Brook","107",21,"Foopla","treblo",{xk:500,yk:41}],
+    ["Liisa af Borg","2","UNK","Zoopla","feblo",{xk:100,yk:3000}],
+		["Mbapé Globber","974","UNK","Golpla","peblo",{xk:200,yk:4}],
+		["Günter Puu","22","UNK","Foopla","ablo",{xk:500,yk:41}],
+    ["Bode van Tiller",350,"UNK","Zoopla","åblo",{xk:100,yk:3000}],
+		["Aretha Goo",317,111,"Golpla","äblo",{xk:200,yk:4}],
+		["Clara Brea",107,121,"Foopla","èblo",{xk:500,yk:41}]
 	],
 	tblfoot:["","Pnr","Num","","","Trumma"]
 }
@@ -48,7 +55,7 @@ function setup(){
 				["Pnr","Num","Trumma"],
 				["Pnr","Num"],				
         "RowSum",
-				function(col, val){return makeSum(col,val);}
+				function(col, val, row){return makeSum(col,val,row);}
 		);
 		myTable.renderTable();
 		
@@ -205,12 +212,15 @@ function compare(a,b){
 // makeSum
 // ---------------
 //	makeSum col,value  
+//  row is optional
 //--------------------------------------------------------------------------
 
-function makeSum(col,value){
+function makeSum(col,value,row){
 		if(col=="Trumma"){
 				return value.xk;
-		}else{
+		} else if(col=="RowSum"){
+				return value.xk;
+		} else{
 				if(value=="UNK"){
 						return 0;
 				}else{
@@ -226,9 +236,8 @@ function makeSum(col,value){
 
 	<!-- Column filter div -->
 	<div id="columnfilter"></div>
-	
-	<!-- Table placeholder -->
-	<table style='border-collapse: collapse;' id='thetable'>
-	</table>
+  
+  <!-- Table placeholder -->
+  <div id="thetable"></div>
 
 </body>

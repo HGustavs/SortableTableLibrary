@@ -1,5 +1,58 @@
-// Keep track of Currently active Table
+// Keep track of Currently active Table and all sortable tables
 var currentTable=null;
+var sortableTables=[];
+
+// Magic heading updated based on scroll position
+window.onscroll = function() {magicHeading()};
+
+// Global function for magic Headings
+function magicHeading(){  
+    for (let i=0;i<sortableTables.length;i++){
+        // Update col widths
+        var tintin=sortableTables[i];
+        var leftMostCol="";        
+        for(let colno in tintin.tbl.tblhead){
+						var col=tintin.tbl.tblhead[colno];
+						if(tintin.columnfilter.indexOf(col)>-1){
+                console.log(col+colno);                
+						}
+				}
+        // Position mh table
+
+        // display
+
+      /*
+        $('#'+currentTable.tblid+'_magic').css("top",(window.pageYOffset+48)+"px");
+        // Display Magic Headings when scrolling
+        if(window.pageYOffset+15>$('#'+currentTable.tblid+'_firstrow').offset().top){
+            $('#'+currentTable.tblid+'_magic').css('display','block');
+        }else{
+            $('#'+currentTable.tblid+'_magic').css('display','none');
+        }
+        $("#upperDecker").css("width",$("#markinglist").outerWidth()+"px");
+        
+        if(window.pageXOffset>$("#subheading").offset().left){
+            $("#sideDecker").css("display","block");
+        }else{
+            $("#sideDecker").css("display","none");      
+        }
+        
+        // Add or Remove the inverse class depending on sorting
+        $(".dugga-result-subheader").each(function(){
+            var elemid=$(this).attr('id');
+            var elemwidth=$(this).width();
+            $("#"+elemid+"magic").css("width",elemwidth+"px");
+            if($(this).hasClass("result-header-inverse")){
+                $("#"+elemid+"magic").addClass("result-header-inverse");
+            } else {
+                $("#"+elemid+"magic").removeClass("result-header-inverse"); 
+            }
+        });
+    */
+        // Position Magic Headings
+        //$("#sideDecker").css("left",(window.pageXOffset)+"px");      
+    }
+}
 
 // Global sorting function global
 function sortableInternalSort(a,b)
@@ -35,7 +88,14 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		this.rowsumList=rowsumList;
 		this.rowsumHeading=rowsumHeading;
 		this.sumFunc=sumFunc;
+    this.tbl.cleanHead=[];
+    
+    for(let i=0;i<this.tbl.tblhead.length;i++){
+        this.tbl.cleanHead.push(this.tbl.tblhead[i].toLowerCase().replace(/[^a-zA-Z0-9]+/g, ""));      
+    }    
 								
+    sortableTables.push(this);
+    
 		this.renderTable = function ()
 		{
 				this.reRender();
@@ -71,29 +131,42 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 
 				// Global that contains rendered html for table
 				var str="";
-
+        var mhstr="";
+        
+        mhstr+="<table style='border-collapse: collapse;background-color:#fed;' id='"+this.tblid+"_magic'>";
+        str+="<table style='border-collapse: collapse;' id='"+this.tblid+"_tbl'>";
 				str+= "<caption>"+this.caption+"</caption>";
 
-				str+= "<thead>";
-					str+= "<tr>";
-					for(let colno in this.tbl.tblhead){
-							var col=this.tbl.tblhead[colno];
-							if(this.columnfilter.indexOf(col)>-1){
-									if(col==this.sortcolumn){
-											str+= "<th>"+this.renderSortOptions(col,this.sortkind)+"</th>";
-									}else{
-											str+= "<th>"+this.renderSortOptions(col,-1)+"</th>";
-									}
-							}
-					}
-					if(this.rowsumList.length>0){
-							if(this.rowsumHeading==this.sortcolumn){
-									str+= "<th>"+this.renderSortOptions(this.rowsumHeading,this.sortkind)+"</th>";
-							}else{
-									str+= "<th>"+this.renderSortOptions(this.rowsumHeading,-1)+"</th>";
-							}
-					}
-					str+= "</tr>";
+        mhstr+= "<thead>";
+        mhstr+= "<tr>";
+        str+= "<thead>";
+				str+= "<tr id='"+currentTable.tblid+"_firstrow'>";
+				for(let colno in this.tbl.tblhead){
+						var col=this.tbl.tblhead[colno];
+						if(this.columnfilter.indexOf(col)>-1){
+								if(col==this.sortcolumn){
+                    mhstr+= "<th>"+this.renderSortOptions(col,this.sortkind)+"</th>";
+										str+= "<th>"+this.renderSortOptions(col,this.sortkind)+"</th>";
+								}else{
+                    mhstr+= "<th>"+this.renderSortOptions(col,-1)+"</th>";
+										str+= "<th>"+this.renderSortOptions(col,-1)+"</th>";
+								}
+						}
+				}
+				if(this.rowsumList.length>0){
+						if(this.rowsumHeading==this.sortcolumn){
+                mhstr+= "<th>"+this.renderSortOptions(this.rowsumHeading,this.sortkind)+"</th>";
+								str+= "<th>"+this.renderSortOptions(this.rowsumHeading,this.sortkind)+"</th>";
+						}else{
+                mhstr+= "<th>"+this.renderSortOptions(this.rowsumHeading,-1)+"</th>";
+                str+= "<th>"+this.renderSortOptions(this.rowsumHeading,-1)+"</th>";
+						}
+				}
+        mhstr+= "</tr>";
+				mhstr+= "</thead>";
+        mhstr+= "</table>";
+        
+        str+= "</tr>";
 				str+= "</thead>";
 
 				// Render table body
@@ -161,6 +234,8 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				str+="</tr>";
 				str+= "</tfoot></table>";
 
+        str+=mhstr;
+
 				document.getElementById(this.tableid).innerHTML=str;
 
 		}
@@ -196,5 +271,6 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 								
 				this.reRender();
 		}
-		
+
 }
+
