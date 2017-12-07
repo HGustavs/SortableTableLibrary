@@ -9,48 +9,39 @@ window.onscroll = function() {magicHeading()};
 function magicHeading(){  
     for (let i=0;i<sortableTables.length;i++){
         // Update col widths
-        var tintin=sortableTables[i];
+        var tintin=sortableTables[i];        
         var leftMostCol="";        
+        
+        document.getElementById(tintin.tableid+"_magic").style.width=document.getElementById(tintin.tableid).clientWidth+"px";
+        
         for(let colno in tintin.tbl.tblhead){
 						var col=tintin.tbl.tblhead[colno];
 						if(tintin.columnfilter.indexOf(col)>-1){
-                console.log(col+colno);                
+                let ccol=col.toLowerCase().replace(/[^a-zA-Z0-9]+/g, "");
+                let w=document.getElementById(ccol).clientWidth;
+                let s=document.getElementById(ccol).getBoundingClientRect();
+                var pl=window.getComputedStyle(document.getElementById(ccol), null).getPropertyValue('padding-left');
+                var pr=window.getComputedStyle(document.getElementById(ccol), null).getPropertyValue('padding-right');
+                pl=parseInt(pl.replace("px",""));
+                pr=parseInt(pr.replace("px",""));
+                var padding=pl+pr;
+                document.getElementById(ccol+"_mh").style.width=(w-padding)+"px";
 						}
 				}
-        // Position mh table
-
-        // display
-
-      /*
-        $('#'+currentTable.tblid+'_magic').css("top",(window.pageYOffset+48)+"px");
-        // Display Magic Headings when scrolling
-        if(window.pageYOffset+15>$('#'+currentTable.tblid+'_firstrow').offset().top){
-            $('#'+currentTable.tblid+'_magic').css('display','block');
-        }else{
-            $('#'+currentTable.tblid+'_magic').css('display','none');
-        }
-        $("#upperDecker").css("width",$("#markinglist").outerWidth()+"px");
         
-        if(window.pageXOffset>$("#subheading").offset().left){
-            $("#sideDecker").css("display","block");
-        }else{
-            $("#sideDecker").css("display","none");      
-        }
-        
-        // Add or Remove the inverse class depending on sorting
-        $(".dugga-result-subheader").each(function(){
-            var elemid=$(this).attr('id');
-            var elemwidth=$(this).width();
-            $("#"+elemid+"magic").css("width",elemwidth+"px");
-            if($(this).hasClass("result-header-inverse")){
-                $("#"+elemid+"magic").addClass("result-header-inverse");
-            } else {
-                $("#"+elemid+"magic").removeClass("result-header-inverse"); 
-            }
-        });
-    */
-        // Position Magic Headings
-        //$("#sideDecker").css("left",(window.pageXOffset)+"px");      
+        // Display magic heading if part of the table has scrolled past the top 
+        // BUT the entire table has not scrolled out of view.
+        var top=document.getElementById(tintin.tableid).getBoundingClientRect().top;
+        var height=document.getElementById(tintin.tableid).getBoundingClientRect().height;
+        if (top < 0 && top+height > 0){
+          // Position mh table
+          document.getElementById(tintin.tableid+"_magic").style.top="0px";
+          // display
+          document.getElementById(tintin.tableid+"_magic").style.display="block";
+        } else {
+          // hide
+          document.getElementById(tintin.tableid+"_magic").style.display="none";          
+        }        
     }
 }
 
@@ -133,8 +124,8 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				var str="";
         var mhstr="";
         
-        mhstr+="<table style='border-collapse: collapse;background-color:#fed;' id='"+this.tblid+"_magic'>";
-        str+="<table style='border-collapse: collapse;' id='"+this.tblid+"_tbl'>";
+        mhstr+="<table style='border-collapse: collapse;background-color:#fed;display:none;position:fixed;' id='"+this.tableid+"_magic'>";
+        str+="<table style='border-collapse: collapse;' id='"+this.tableid+"_tbl'>";
 				str+= "<caption>"+this.caption+"</caption>";
 
         mhstr+= "<thead>";
@@ -143,13 +134,14 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				str+= "<tr id='"+currentTable.tblid+"_firstrow'>";
 				for(let colno in this.tbl.tblhead){
 						var col=this.tbl.tblhead[colno];
+            var cleancol=this.tbl.cleanHead[colno];
 						if(this.columnfilter.indexOf(col)>-1){
 								if(col==this.sortcolumn){
-                    mhstr+= "<th>"+this.renderSortOptions(col,this.sortkind)+"</th>";
-										str+= "<th>"+this.renderSortOptions(col,this.sortkind)+"</th>";
+                    mhstr+= "<th id='"+cleancol+"_mh'>"+this.renderSortOptions(col,this.sortkind)+"</th>";
+										str+= "<th id='"+cleancol+"'>"+this.renderSortOptions(col,this.sortkind)+"</th>";
 								}else{
-                    mhstr+= "<th>"+this.renderSortOptions(col,-1)+"</th>";
-										str+= "<th>"+this.renderSortOptions(col,-1)+"</th>";
+                    mhstr+= "<th id='"+cleancol+"_mh'>"+this.renderSortOptions(col,-1)+"</th>";
+										str+= "<th id='"+cleancol+"'>"+this.renderSortOptions(col,-1)+"</th>";
 								}
 						}
 				}
