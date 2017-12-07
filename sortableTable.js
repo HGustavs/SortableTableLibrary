@@ -12,20 +12,22 @@ function magicHeading(){
         var tintin=sortableTables[i];        
         var leftMostCol="";        
         
-        document.getElementById(tintin.tableid+"_magic").style.width=document.getElementById(tintin.tableid).clientWidth+"px";
+        document.getElementById(tintin.tableid+"_magic").style.width=document.getElementById(tintin.tableid+"_tbl").clientWidth+"px";
         
         for(let colno in tintin.tbl.tblhead){
 						var col=tintin.tbl.tblhead[colno];
 						if(tintin.columnfilter.indexOf(col)>-1){
-                let ccol=col.toLowerCase().replace(/[^a-zA-Z0-9]+/g, "");
-                let w=document.getElementById(ccol).clientWidth;
-                let s=document.getElementById(ccol).getBoundingClientRect();
-                var pl=window.getComputedStyle(document.getElementById(ccol), null).getPropertyValue('padding-left');
-                var pr=window.getComputedStyle(document.getElementById(ccol), null).getPropertyValue('padding-right');
-                pl=parseInt(pl.replace("px",""));
-                pr=parseInt(pr.replace("px",""));
-                var padding=pl+pr;
-                document.getElementById(ccol+"_mh").style.width=(w-padding)+"px";
+              let ccol=col.toLowerCase().replace(/[^a-zA-Z0-9]+/g, "");
+              let mhcol=ccol+"_"+tintin.tableid+"_mh";
+              ccol+="_"+tintin.tableid+"_tbl";
+              let w=document.getElementById(ccol).clientWidth;
+              let s=document.getElementById(ccol).getBoundingClientRect();
+              pl=window.getComputedStyle(document.getElementById(ccol), null).getPropertyValue('padding-left');
+              pr=window.getComputedStyle(document.getElementById(ccol), null).getPropertyValue('padding-right');
+              pl=parseInt(pl.replace("px",""));
+              pr=parseInt(pr.replace("px",""));
+              padding=pl+pr;
+              document.getElementById(mhcol).style.width=(w-padding)+"px";
 						}
 				}
         
@@ -124,7 +126,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				var str="";
         var mhstr="";
         
-        mhstr+="<table style='border-collapse: collapse;background-color:#fed;display:none;position:fixed;' id='"+this.tableid+"_magic'>";
+        mhstr+="<table style='border-collapse: collapse;background-color:#fed;display:none;position:fixed;margin:0;' id='"+this.tableid+"_magic'>";
         str+="<table style='border-collapse: collapse;' id='"+this.tableid+"_tbl'>";
 				str+= "<caption>"+this.caption+"</caption>";
 
@@ -137,11 +139,11 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
             var cleancol=this.tbl.cleanHead[colno];
 						if(this.columnfilter.indexOf(col)>-1){
 								if(col==this.sortcolumn){
-                    mhstr+= "<th id='"+cleancol+"_mh'>"+this.renderSortOptions(col,this.sortkind)+"</th>";
-										str+= "<th id='"+cleancol+"'>"+this.renderSortOptions(col,this.sortkind)+"</th>";
+                    mhstr+= "<th id='"+cleancol+"_"+this.tableid+"_mh'>"+this.renderSortOptions(col,this.sortkind)+"</th>";
+										str+= "<th id='"+cleancol+"_"+this.tableid+"_tbl'>"+this.renderSortOptions(col,this.sortkind)+"</th>";
 								}else{
-                    mhstr+= "<th id='"+cleancol+"_mh'>"+this.renderSortOptions(col,-1)+"</th>";
-										str+= "<th id='"+cleancol+"'>"+this.renderSortOptions(col,-1)+"</th>";
+                    mhstr+= "<th id='"+cleancol+"_"+this.tableid+"_mh'>"+this.renderSortOptions(col,-1)+"</th>";
+										str+= "<th id='"+cleancol+"_"+this.tableid+"_tbl'>"+this.renderSortOptions(col,-1)+"</th>";
 								}
 						}
 				}

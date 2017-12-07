@@ -1,6 +1,11 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <style>
+        th,td {
+            padding:0 5px;
+        }
+    </style>
  		<script src="sortableTable.js"></script> 
 		<script>
 
@@ -244,7 +249,7 @@ function makeSum(col,value,row){
 		</script>
 </head>
 <body onload="setup();">
-
+  <h2>Example Table 1</h2>
 	<!-- Column filter div -->
 	<div id="columnfilter"></div>
   
@@ -264,6 +269,8 @@ function makeSum(col,value,row){
   <br>
   <br>
   <br>
+  <!-- You can have multiple tables on the same page -->
+  <h2>Example Table 2</h2>
   <div id="columnfilter2"></div>
   <div id="thetable2"></div>
   <br>
