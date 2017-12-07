@@ -3,16 +3,17 @@ var currentTable=null;
 var sortableTables=[];
 
 // Magic heading updated based on scroll position
-window.onscroll = function() {magicHeading()};
+//window.onscroll = function() {magicHeading()};
 
 // Global function for magic Headings
+/*
 function magicHeading(){  
     for (let i=0;i<sortableTables.length;i++){
         // Update col widths
         var tintin=sortableTables[i];        
         var leftMostCol="";        
         
-        document.getElementById(tintin.tableid+"_magic").style.width=document.getElementById(tintin.tableid+"_tbl").clientWidth+"px";
+        document.getElementById(tintin.getID()+"_magic").style.width=document.getElementById(tintin.getID()+"_tbl").clientWidth+"px";
         
         for(let colno in tintin.tbl.tblhead){
 						var col=tintin.tbl.tblhead[colno];
@@ -46,6 +47,7 @@ function magicHeading(){
         }        
     }
 }
+*/
 
 // Global sorting function global
 function sortableInternalSort(a,b)
@@ -65,26 +67,26 @@ function sortableInternalSort(a,b)
 
 function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,colsumList,rowsumList,rowsumHeading,sumFunc) {
 
-		this.columnfilter=[];
-		this.sortcolumn="UNK";
-		this.sortkind=-1;
-		this.ascending=false;
-		this.tbl=tbl;
-		this.tableid=tableid;
-		this.filterid=filterid;
-		this.caption=caption;
-		this.renderCell=renderCell;
-		this.renderSortOptions=renderSortOptions;
-		this.renderColumnFilter=renderColumnFilter;
-		this.rowFilter=rowFilter;
-		this.colsumList=colsumList;
-		this.rowsumList=rowsumList;
-		this.rowsumHeading=rowsumHeading;
-		this.sumFunc=sumFunc;
-    this.tbl.cleanHead=[];
+		var columnfilter=[];
+		var sortcolumn="UNK";
+		var sortkind=-1;
+		var ascending=false;
+		var tbl=tbl;
+		var tableid=tableid;
+		var filterid=filterid;
+		var caption=caption;
+		var renderCell=renderCell;
+		var renderSortOptions=renderSortOptions;
+		var renderColumnFilter=renderColumnFilter;
+		var rowFilter=rowFilter;
+		var colsumList=colsumList;
+		var rowsumList=rowsumList;
+		var rowsumHeading=rowsumHeading;
+		var sumFunc=sumFunc;
+    tbl.cleanHead=[];
     
-    for(let i=0;i<this.tbl.tblhead.length;i++){
-        this.tbl.cleanHead.push(this.tbl.tblhead[i].toLowerCase().replace(/[^a-zA-Z0-9]+/g, ""));      
+    for(let i=0;i<tbl.tblhead.length;i++){
+        tbl.cleanHead.push(tbl.tblhead[i].toLowerCase().replace(/[^a-zA-Z0-9]+/g, ""));      
     }    
 								
     sortableTables.push(this);
@@ -92,6 +94,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		this.renderTable = function ()
 		{
 				this.reRender();
+        //lmh();
 		}
 		
 		this.reRender = function ()
@@ -100,60 +103,60 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				currentTable=this;
 
 				// Global that contains rendered html for column filter div
-				this.columnfilter = JSON.parse(localStorage.getItem(this.tableid+"_filtercolnames"));
+				columnfilter = JSON.parse(localStorage.getItem(tableid+"_filtercolnames"));
 
 				// Summing array
 				var sumContent=[];
 
 				let isFirstVisit=false;
-				if(this.columnfilter == null) {
+				if(columnfilter == null) {
 						isFirstVisit=true;
-						this.columnfilter=[];
+						columnfilter=[];
 				} 
 
 				var filterstr="";
-				for(let colno in this.tbl.tblhead){
-						var col=this.tbl.tblhead[colno];
+				for(let colno in tbl.tblhead){
+						var col=tbl.tblhead[colno];
 						if(isFirstVisit){
-								this.columnfilter.push(col);
+								columnfilter.push(col);
 						} 
-						filterstr+=this.renderColumnFilter(col,this.columnfilter.indexOf(col)>-1);							
+						filterstr+=renderColumnFilter(col,columnfilter.indexOf(col)>-1);							
 						
 				}
-				document.getElementById(this.filterid).innerHTML=filterstr;
+				document.getElementById(filterid).innerHTML=filterstr;
 
 				// Global that contains rendered html for table
 				var str="";
         var mhstr="";
         
-        mhstr+="<table style='border-collapse: collapse;background-color:#fed;display:none;position:fixed;margin:0;' id='"+this.tableid+"_magic'>";
-        str+="<table style='border-collapse: collapse;' id='"+this.tableid+"_tbl'>";
-				str+= "<caption>"+this.caption+"</caption>";
+        mhstr+="<table style='border-collapse: collapse;background-color:#fed;display:none;position:fixed;margin:0;' id='"+tableid+"_magic'>";
+        str+="<table style='border-collapse: collapse;' id='"+tableid+"_tbl'>";
+				str+= "<caption>"+caption+"</caption>";
 
         mhstr+= "<thead>";
         mhstr+= "<tr>";
         str+= "<thead>";
 				str+= "<tr id='"+currentTable.tblid+"_firstrow'>";
-				for(let colno in this.tbl.tblhead){
-						var col=this.tbl.tblhead[colno];
-            var cleancol=this.tbl.cleanHead[colno];
-						if(this.columnfilter.indexOf(col)>-1){
-								if(col==this.sortcolumn){
-                    mhstr+= "<th id='"+cleancol+"_"+this.tableid+"_mh'>"+this.renderSortOptions(col,this.sortkind)+"</th>";
-										str+= "<th id='"+cleancol+"_"+this.tableid+"_tbl'>"+this.renderSortOptions(col,this.sortkind)+"</th>";
+				for(let colno in tbl.tblhead){
+						var col=tbl.tblhead[colno];
+            var cleancol=tbl.cleanHead[colno];
+						if(columnfilter.indexOf(col)>-1){
+								if(col==sortcolumn){
+                    mhstr+= "<th id='"+cleancol+"_"+tableid+"_mh'>"+renderSortOptions(col,sortkind)+"</th>";
+										str+= "<th id='"+cleancol+"_"+tableid+"_tbl'>"+renderSortOptions(col,sortkind)+"</th>";
 								}else{
-                    mhstr+= "<th id='"+cleancol+"_"+this.tableid+"_mh'>"+this.renderSortOptions(col,-1)+"</th>";
-										str+= "<th id='"+cleancol+"_"+this.tableid+"_tbl'>"+this.renderSortOptions(col,-1)+"</th>";
+                    mhstr+= "<th id='"+cleancol+"_"+tableid+"_mh'>"+renderSortOptions(col,-1)+"</th>";
+										str+= "<th id='"+cleancol+"_"+tableid+"_tbl'>"+renderSortOptions(col,-1)+"</th>";
 								}
 						}
 				}
-				if(this.rowsumList.length>0){
-						if(this.rowsumHeading==this.sortcolumn){
-                mhstr+= "<th>"+this.renderSortOptions(this.rowsumHeading,this.sortkind)+"</th>";
-								str+= "<th>"+this.renderSortOptions(this.rowsumHeading,this.sortkind)+"</th>";
+				if(rowsumList.length>0){
+						if(rowsumHeading==sortcolumn){
+                mhstr+= "<th>"+renderSortOptions(rowsumHeading,sortkind)+"</th>";
+								str+= "<th>"+renderSortOptions(rowsumHeading,sortkind)+"</th>";
 						}else{
-                mhstr+= "<th>"+this.renderSortOptions(this.rowsumHeading,-1)+"</th>";
-                str+= "<th>"+this.renderSortOptions(this.rowsumHeading,-1)+"</th>";
+                mhstr+= "<th>"+renderSortOptions(rowsumHeading,-1)+"</th>";
+                str+= "<th>"+renderSortOptions(rowsumHeading,-1)+"</th>";
 						}
 				}
         mhstr+= "</tr>";
@@ -165,8 +168,8 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 
 				// Render table body
 				str+= "<tbody>";
-					for(let rowno in this.tbl.tblbody){
-							var row=this.tbl.tblbody[rowno]
+					for(let rowno in tbl.tblbody){
+							var row=tbl.tblbody[rowno]
 							if(rowFilter(row)){
 								
 								// Keep row sum total here
@@ -177,26 +180,26 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 									col=row[colno];
 																		
 									// If we show this column...
-									if(this.columnfilter.indexOf(this.tbl.tblhead[colno])>-1){
+									if(columnfilter.indexOf(tbl.tblhead[colno])>-1){
 											
 											// This condition is true if column is in summing list and in that case perform the sum like a BOSS
-											if(this.colsumList.indexOf(this.tbl.tblhead[colno])>-1){
-													if(typeof(sumContent[this.tbl.tblhead[colno]]) == "undefined") sumContent[this.tbl.tblhead[colno]]=0;
-													sumContent[this.tbl.tblhead[colno]]+=this.sumFunc(this.tbl.tblhead[colno],col);		
+											if(colsumList.indexOf(tbl.tblhead[colno])>-1){
+													if(typeof(sumContent[tbl.tblhead[colno]]) == "undefined") sumContent[tbl.tblhead[colno]]=0;
+													sumContent[tbl.tblhead[colno]]+=sumFunc(tbl.tblhead[colno],col);		
 											}
 
-											if(this.rowsumList.indexOf(this.tbl.tblhead[colno])>-1){
-													rowsum+=this.sumFunc(this.tbl.tblhead[colno],col);
+											if(rowsumList.indexOf(tbl.tblhead[colno])>-1){
+													rowsum+=sumFunc(tbl.tblhead[colno],col);
 											}
 
 											let cellid="r"+rowno+"c"+colno;
 											str+="<td id='"+cellid+"'>";
-											str+=this.renderCell(col,this.tbl.tblhead[colno],cellid);
+											str+=renderCell(col,tbl.tblhead[colno],cellid);
 											str+="</td>";						
 									}
 								}
 								
-								if(this.rowsumList.length>0){
+								if(rowsumList.length>0){
 										str+="<td>";
 										str+=rowsum;
 										str+="</td>";
@@ -209,16 +212,16 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 
 				str+= "<tfoot style='border-top:2px solid #000'>";
 				str+= "<tr style='font-style:italic;'>";
-				for(let colno in this.tbl.tblfoot){
+				for(let colno in tbl.tblfoot){
 						// If we show this column...
-						if(this.columnfilter.indexOf(this.tbl.tblhead[colno])>-1){
+						if(columnfilter.indexOf(tbl.tblhead[colno])>-1){
 
-								if(this.colsumList.indexOf(this.tbl.tblhead[colno])>-1){
+								if(colsumList.indexOf(tbl.tblhead[colno])>-1){
 										// If writing sum - just write it
-										str+="<td>"+sumContent[this.tbl.tblhead[colno]]+"</td>";						
+										str+="<td>"+sumContent[tbl.tblhead[colno]]+"</td>";						
 								}else{
-										if (this.tbl.tblfoot[col]!="UNK"){
-												str+="<td>"+this.tbl.tblfoot[colno]+"</td>";
+										if (tbl.tblfoot[col]!="UNK"){
+												str+="<td>"+tbl.tblfoot[colno]+"</td>";
 										} else {
 												str+="<td>&nbsp;</td>";
 										}
@@ -230,7 +233,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 
         str+=mhstr;
 
-				document.getElementById(this.tableid).innerHTML=str;
+				document.getElementById(tableid).innerHTML=str;
 
 		}
 
@@ -239,13 +242,13 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				// Assign currently active table
 				currentTable=this;
 
-				if(this.columnfilter.indexOf(col)==-1){
-						this.columnfilter.push(col);
+				if(columnfilter.indexOf(col)==-1){
+						columnfilter.push(col);
 				}else{
-						this.columnfilter.splice(this.columnfilter.indexOf(col),1);
+						columnfilter.splice(columnfilter.indexOf(col),1);
 				}
 
-				localStorage.setItem(this.tableid+"_filtercolnames", JSON.stringify(this.columnfilter));
+				localStorage.setItem(tableid+"_filtercolnames", JSON.stringify(columnfilter));
 
 				this.reRender();
 		}
@@ -255,16 +258,57 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				// Assign currently active table
 				currentTable=this;
 				
-				this.sortcolumn=col;
-				this.sortkind=kind;		
+				sortcolumn=col;
+				sortkind=kind;		
 				
-				this.ascending=!this.ascending;
+				ascending=!ascending;
 				
 				// Sort the body of the table again
-				this.tbl.tblbody.sort(sortableInternalSort);
+				tbl.tblbody.sort(sortableInternalSort);
 								
 				this.reRender();
 		}
-
+    
+    // Add eventlistner for the table's magic heading
+    // 
+    var lhm = function (){
+        var leftMostCol="";        
+        
+        document.getElementById(tableid+"_magic").style.width=document.getElementById(tableid+"_tbl").clientWidth+"px";
+        
+        for(let colno in tbl.tblhead){
+            var col=tbl.tblhead[colno];
+            if(columnfilter.indexOf(col)>-1){
+              let ccol=col.toLowerCase().replace(/[^a-zA-Z0-9]+/g, "");
+              let mhcol=ccol+"_"+tableid+"_mh";
+              ccol+="_"+tableid+"_tbl";
+              let w=document.getElementById(ccol).clientWidth;
+              let s=document.getElementById(ccol).getBoundingClientRect();
+              pl=window.getComputedStyle(document.getElementById(ccol), null).getPropertyValue('padding-left');
+              pr=window.getComputedStyle(document.getElementById(ccol), null).getPropertyValue('padding-right');
+              pl=parseInt(pl.replace("px",""));
+              pr=parseInt(pr.replace("px",""));
+              padding=pl+pr;
+              document.getElementById(mhcol).style.width=(w-padding)+"px";
+            }
+        }
+        
+        // Display magic heading if part of the table has scrolled past the top 
+        // BUT the entire table has not scrolled out of view.
+        var top=document.getElementById(tableid).getBoundingClientRect().top;
+        var height=document.getElementById(tableid).getBoundingClientRect().height;
+        if (top < 0 && top+height > 0){
+          // Position mh table
+          document.getElementById(tableid+"_magic").style.top="0px";
+          // display
+          document.getElementById(tableid+"_magic").style.display="block";
+        } else {
+          // hide
+          document.getElementById(tableid+"_magic").style.display="none";          
+        } 
+    }
+    
+    window.addEventListener("scroll",lhm);
+    
 }
 
