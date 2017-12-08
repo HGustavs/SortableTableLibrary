@@ -157,7 +157,8 @@ function setup(){
       ["Pnr","Num","Trumma"],
       ["Pnr","Num"],				
       "RowSum",
-      function(col, val, row){return makeSum(col,val,row);}
+      function(col, val, row){return makeSum(col,val,row);},
+      "Pnr"
   );
   myTable2 = new SortableTable(tabledata,"thetable2","columnfilter2","Booyah!",
       function(celldata,col,cellid){return renderCell(celldata,col,cellid)},
@@ -167,7 +168,8 @@ function setup(){
       ["Pnr","Num","Trumma"],
       ["Pnr","Num"],				
       "RowSum",
-      function(col, val, row){return makeSum(col,val,row);}
+      function(col, val, row){return makeSum(col,val,row);},
+      "First/Last"
   );
 		myTable.renderTable();
     myTable2.renderTable();
