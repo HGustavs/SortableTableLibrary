@@ -83,6 +83,8 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		var rowsumList=rowsumList;
 		var rowsumHeading=rowsumHeading;
 		var sumFunc=sumFunc;
+    var freezePane="Pnr";
+    var freezePaneArr=[];
     tbl.cleanHead=[];
     
     for(let i=0;i<tbl.tblhead.length;i++){
@@ -94,7 +96,6 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		this.renderTable = function ()
 		{
 				this.reRender();
-        //lmh();
 		}
 		
 		this.reRender = function ()
@@ -127,47 +128,42 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 
 				// Global that contains rendered html for table
 				var str="";
-        var mhstr="";
         
-        mhstr+="<table style='border-collapse: collapse;background-color:#fed;display:none;position:fixed;margin:0;' id='"+tableid+"_magic'>";
         str+="<table style='border-collapse: collapse;' id='"+tableid+"_tbl'>";
 				str+= "<caption>"+caption+"</caption>";
 
-        mhstr+= "<thead>";
-        mhstr+= "<tr>";
-        str+= "<thead>";
-				str+= "<tr id='"+currentTable.tblid+"_firstrow'>";
-				for(let colno in tbl.tblhead){
+        str+= "<thead id='"+tableid+"_tblhead'>";
+				str+= "<tr>";        
+        var freezePanePos=tbl.tblhead.indexOf(freezePane);
+        //alert(freezePanePos);
+				for(let colno=0;colno<tbl.tblhead.length; colno++){
 						var col=tbl.tblhead[colno];
             var cleancol=tbl.cleanHead[colno];
 						if(columnfilter.indexOf(col)>-1){
+                var cls="freeze_vertical";
+                if(colno <= freezePanePos){
+                    freezePaneArr.push(col);
+                    cls="freeze";
+                }
 								if(col==sortcolumn){
-                    mhstr+= "<th id='"+cleancol+"_"+tableid+"_mh'>"+renderSortOptions(col,sortkind)+"</th>";
-										str+= "<th id='"+cleancol+"_"+tableid+"_tbl'>"+renderSortOptions(col,sortkind)+"</th>";
+										str+= "<th id='"+cleancol+"_"+tableid+"_tbl' class='"+tableid+" "+cls+"'>"+renderSortOptions(col,sortkind)+"</th>";
 								}else{
-                    mhstr+= "<th id='"+cleancol+"_"+tableid+"_mh'>"+renderSortOptions(col,-1)+"</th>";
-										str+= "<th id='"+cleancol+"_"+tableid+"_tbl'>"+renderSortOptions(col,-1)+"</th>";
+										str+= "<th id='"+cleancol+"_"+tableid+"_tbl' class='"+tableid+" "+cls+"'>"+renderSortOptions(col,-1)+"</th>";
 								}
 						}
 				}
 				if(rowsumList.length>0){
 						if(rowsumHeading==sortcolumn){
-                mhstr+= "<th>"+renderSortOptions(rowsumHeading,sortkind)+"</th>";
-								str+= "<th>"+renderSortOptions(rowsumHeading,sortkind)+"</th>";
+								str+= "<th id='"+rowsumHeading+"_"+tableid+"_tbl' class='"+tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,sortkind)+"</th>";
 						}else{
-                mhstr+= "<th>"+renderSortOptions(rowsumHeading,-1)+"</th>";
-                str+= "<th>"+renderSortOptions(rowsumHeading,-1)+"</th>";
+                str+= "<th id='"+rowsumHeading+"_"+tableid+"_tbl' class='"+tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,-1)+"</th>";
 						}
 				}
-        mhstr+= "</tr>";
-				mhstr+= "</thead>";
-        mhstr+= "</table>";
-        
         str+= "</tr>";
 				str+= "</thead>";
 
 				// Render table body
-				str+= "<tbody>";
+				str+= "<tbody id='"+tableid+"_body'>";
 					for(let rowno in tbl.tblbody){
 							var row=tbl.tblbody[rowno]
 							if(rowFilter(row)){
@@ -178,6 +174,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 								str+="<tr>";
 								for(let colno in row){
 									col=row[colno];
+                  cleancol=tbl.cleanHead[colno];
 																		
 									// If we show this column...
 									if(columnfilter.indexOf(tbl.tblhead[colno])>-1){
@@ -192,10 +189,15 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 													rowsum+=sumFunc(tbl.tblhead[colno],col);
 											}
 
-											let cellid="r"+rowno+"c"+colno;
-											str+="<td id='"+cellid+"'>";
+											let cellid="r"+rowno+"_"+tableid+"_"+cleancol;
+											str+="<td id='"+cellid+"' ";
+                      if(freezePaneArr.indexOf(tbl.tblhead[colno])>-1){
+                          str+="class='"+tableid+" freeze_horizontal'";
+                      }			                      
+                      str+=">";
 											str+=renderCell(col,tbl.tblhead[colno],cellid);
-											str+="</td>";						
+											str+="</td>";		
+                      
 									}
 								}
 								
@@ -205,7 +207,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 										str+="</td>";
 								}
 								
-								str+="</tr>";
+                str+="</tr>";
 							}
 					}
 				str+= "</tbody>";
@@ -230,8 +232,6 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				}
 				str+="</tr>";
 				str+= "</tfoot></table>";
-
-        str+=mhstr;
 
 				document.getElementById(tableid).innerHTML=str;
 
@@ -306,9 +306,50 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
           // hide
           document.getElementById(tableid+"_magic").style.display="none";          
         } 
+        var mhbodyPos=document.getElementById(tableid+"_body_magic").getBoundingClientRect();
+        var bodyPos=document.getElementById(tableid+"_body").getBoundingClientRect();
+        document.getElementById(tableid+"_body_magic").style.top=bodyPos.top;
+        document.getElementById(tableid+"_body_magic").style.left=(bodyPos.left-8)+"px";
+        
     }
     
-    window.addEventListener("scroll",lhm);
-    
-}
+    //window.addEventListener("scroll",lhm);
 
+    var freezePaneHandler = function(){
+        var tableHeadPos=document.getElementById(tableid+"_tblhead").getBoundingClientRect();
+        var tableHeight=document.getElementById(tableid+"_tbl").getBoundingClientRect().height;
+        var tableWidth=document.getElementById(tableid+"_tbl").getBoundingClientRect().width;
+        var i;
+        
+        var topPos=(tableHeadPos.top < 0 && tableHeadPos.top+tableHeight>0)? Math.abs(tableHeadPos.top):0;
+        var leftPos=(tableHeadPos.left < 0 && tableHeadPos.left+tableWidth>0) ?  Math.abs(tableHeadPos.left):0;
+        
+        var translate_y = (topPos !== 0) ? "translateY("+topPos+"px)" : "";
+        var translate_x = (leftPos !== 0) ? "translateX(" +leftPos+ "px)" : "";
+        var translate_xy = "translate(";
+        translate_xy += (leftPos !== 0) ? leftPos +"px,":"0px,";
+        translate_xy += (topPos!==0) ? topPos + "px)":"0px)";
+
+        var fixed_vertical_elts = document.getElementsByClassName(tableid + " freeze_vertical");
+        var fixed_horizontal_elts = document.getElementsByClassName(tableid + " freeze_horizontal");
+        var fixed_both_elts = document.getElementsByClassName(tableid + " freeze");
+
+        // The webkitTransforms are for a set of ancient smartphones/browsers,
+        // one of which I have, so I code it for myself:
+        for (i = 0; i < fixed_horizontal_elts.length; i++) {
+            fixed_horizontal_elts[i].style.webkitTransform = translate_x;
+            fixed_horizontal_elts[i].style.transform = translate_x;
+        }
+
+        for (i = 0; i < fixed_vertical_elts.length; i++) {
+             fixed_vertical_elts[i].style.webkitTransform = translate_y;
+             fixed_vertical_elts[i].style.transform = translate_y;
+        }
+
+        for (i = 0; i < fixed_both_elts.length; i++) {
+             fixed_both_elts[i].style.webkitTransform = translate_xy;
+             fixed_both_elts[i].style.transform = translate_xy;
+        }
+    }
+    window.addEventListener("scroll",freezePaneHandler);
+}

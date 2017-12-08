@@ -2,8 +2,28 @@
 <head>
     <meta charset="utf-8">
     <style>
+        thead {
+            z-index: 100;
+        }
         th,td {
             padding:0 5px;
+            white-space: nowrap;
+            background-color: #FFF;
+        }
+        
+        .thetable.freeze {
+            z-index: 10;
+            position: relative;
+        }
+
+        .thetable.freeze_vertical {
+            z-index: 5;
+            position: relative;
+        }
+
+        .thetable.freeze_horizontal {
+            z-index: 1;
+            position: relative;
         }
     </style>
  		<script src="sortableTable.js"></script> 
