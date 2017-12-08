@@ -65,7 +65,7 @@ function sortableInternalSort(a,b)
 		return ret;
 }
 
-function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,colsumList,rowsumList,rowsumHeading,sumFunc) {
+function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,colsumList,rowsumList,rowsumHeading,sumFunc,freezePane) {
 
 		var columnfilter=[];
 		var sortcolumn="UNK";
@@ -83,7 +83,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		var rowsumList=rowsumList;
 		var rowsumHeading=rowsumHeading;
 		var sumFunc=sumFunc;
-    var freezePane="Pnr";
+    var freezePane=freezePane;
     var freezePaneArr=[];
     tbl.cleanHead=[];
     
