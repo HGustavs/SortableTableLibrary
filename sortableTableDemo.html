@@ -54,10 +54,16 @@ var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 		
 for(i=0;i<200;i++){
 
+		var wordcnt=Math.round(Math.random()*5);
 		var str="";
-		for(k=0;k<50;k++){
-				str += possible.charAt(Math.floor(Math.random() * possible.length));
+		for(j=0;j<wordcnt;j++){
+				var charcnt=Math.round(Math.random()*10);
+				for(var k=0;k<charcnt;k++){
+						str += possible.charAt(Math.floor(Math.random() * possible.length));
+				}
+				str+=" ";
 		}
+		
 		
 		
 		tabledata.tblbody.push([str,str,Math.random()*5000,Math.round(Math.random*20),{x:500,y:500,col:"Free Shevacadoo"}]);
