@@ -2,26 +2,32 @@
 <head>
     <meta charset="utf-8">
     <style>
-        thead {
-            z-index: 100;
-        }
+
         th,td {
             padding:0 5px;
-            white-space: nowrap;
-            background-color: #FFF;
+            white-space: nowrap;            
+        }
+        tr,td,th {
+            background-color: inherit;
+        }
+        tr:nth-child(odd) {
+            background-color: #dddddd;
+        }
+        tr:nth-child(even) {
+            background-color: #ffffff;
         }
         
-        .thetable.freeze {
+        .thetable.freeze,.thetable2.freeze {
             z-index: 10;
             position: relative;
         }
 
-        .thetable.freeze_vertical {
+        .thetable.freeze_vertical,.thetable2.freeze_vertical {
             z-index: 5;
             position: relative;
         }
 
-        .thetable.freeze_horizontal {
+        .thetable.freeze_horizontal,.thetable2.freeze_horizontal {
             z-index: 1;
             position: relative;
         }
