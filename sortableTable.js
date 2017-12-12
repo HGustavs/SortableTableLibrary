@@ -351,5 +351,6 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
              fixed_both_elts[i].style.transform = translate_xy;
         }
     }
-    window.addEventListener("scroll",freezePaneHandler);
+    setInterval(freezePaneHandler,30);
+    //window.addEventListener("scroll",freezePaneHandler);
 }
