@@ -160,18 +160,18 @@ function renderSortOptions(col,status){
 						// First up/down vs Last up/down
 						if(status==0||status==1){
 								if(status==0){
-										str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",1)'>First&#x25b4;</span>/";								
+										str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",1)'>First&#x25b2;</span>/";								
 								}else{
-										str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",0)'>First&#x25be;</span>/";								
+										str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",0)'>First&#x25bc;</span>/";								
 								}
 								str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",2)'>Last</span>";								
 						}
 						else if(status==2||status==3){
 								str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",1)'>First</span>/";								
 								if(status==2){
-										str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",3)'>Last&#x25b4;</span>";								
+										str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",3)'>Last&#x25b2;</span>";								
 								}else{
-										str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",2)'>Last&#x25be;</span>";								
+										str+="<span onclick='myTable.toggleSortStatus(\"First/Last\",2)'>Last&#x25bc;</span>";								
 								}
 						}		            
 				} else if(col=="Trumma"){
@@ -179,16 +179,16 @@ function renderSortOptions(col,status){
             str+="<span>"+col+"</span>";
             str+="<select onchange='myTable.toggleSortStatus(\""+col+"\",this.value)'>";
             str+="<option hidden disabled selected value>Select Sort</option>"
-            str+="<option value='0'>x&#x25b4;/y</option>";
-            str+="<option value='1'>x&#x25be;/y</option>";
-            str+="<option value='2'>x/y&#x25b4;</option>";
-            str+="<option value='3'>x/y&#x25be;</option>";
+            str+="<option value='0'>x&#x25b2;/y</option>";
+            str+="<option value='1'>x&#x25bc;/y</option>";
+            str+="<option value='2'>x/y&#x25b2;</option>";
+            str+="<option value='3'>x/y&#x25bc;</option>";
             str+="</select>";
 				} else{
 						if(status){
-								str+="<span onclick='myTable.toggleSortStatus(\""+col+"\",0)'>"+col+"&#x25be;</span>";
+								str+="<span onclick='myTable.toggleSortStatus(\""+col+"\",0)'>"+col+"&#x25bc;</span>";
 						}else{
-								str+="<span onclick='myTable.toggleSortStatus(\""+col+"\",1)'>"+col+"&#x25b4;</span>";
+								str+="<span onclick='myTable.toggleSortStatus(\""+col+"\",1)'>"+col+"&#x25b2;</span>";
 						}
 				}
 		}
