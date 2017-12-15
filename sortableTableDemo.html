@@ -60,19 +60,25 @@ var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 		
 for(i=0;i<200;i++){
 
-		var wordcnt=Math.round(Math.random()*5);
+		var wordcnt=Math.round(Math.random()*5+1);
 		var str="";
+		var str2="";
+		var str3="";
 		for(j=0;j<wordcnt;j++){
 				var charcnt=Math.round(Math.random()*10);
 				for(var k=0;k<charcnt;k++){
 						str += possible.charAt(Math.floor(Math.random() * possible.length));
+            str2 += possible.charAt(Math.floor(Math.random() * possible.length));
+            str3 += possible.charAt(Math.floor(Math.random() * possible.length));
 				}
-				str+=" ";
+        str+=" ";
+        str2+=" ";
+        str3+=" ";
 		}
 		
 		
 		
-		tabledata.tblbody.push([str,str,Math.random()*5000,Math.round(Math.random*20),{x:500,y:500,col:"Free Shevacadoo"}]);
+		tabledata.tblbody.push([str,Math.random()*5000,Math.round(Math.random()*20),str2,str3,{xk:Math.round(Math.random()*2000+1000),yk:Math.round(Math.random()*500),col:"Free Shevacadoo"}]);
 }
 
 var myTable,myTable2;
@@ -223,8 +229,8 @@ function rowFilter(row){
 //--------------------------------------------------------------------------
 function compare(a,b){
     // Find out which column and part of column are we sorting on from currentTable
-    let col=currentTable.sortcolumn;
-    let kind=currentTable.sortkind;
+    let col=currentTable.getSortcolumn();
+    let kind=currentTable.getSortkind();
     
     if (col == "Trumma"){
         if(kind==0 || kind==1){ 

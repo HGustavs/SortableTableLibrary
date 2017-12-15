@@ -53,7 +53,8 @@ function magicHeading(){
 function sortableInternalSort(a,b)
 {
 		let ret=0;		
-		let colno=currentTable.tbl.tblhead.indexOf(currentTable.sortcolumn);
+    //let colno=currentTable.tbl.tblhead.indexOf(currentTable.sortcolumn);
+    let colno=currentTable.getSortcolumnNum();
 		
 		if(currentTable.ascending){
 				//alert("Compare: "+a+" "+b);			
@@ -70,7 +71,6 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		var columnfilter=[];
 		var sortcolumn="UNK";
 		var sortkind=-1;
-		var ascending=false;
 		var tbl=tbl;
 		var tableid=tableid;
 		var filterid=filterid;
@@ -85,6 +85,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		var sumFunc=sumFunc;
     var freezePane=freezePane;
     var freezePaneArr=[];
+    this.ascending=false;
     tbl.cleanHead=[];
     
     for(let i=0;i<tbl.tblhead.length;i++){
@@ -261,13 +262,25 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				sortcolumn=col;
 				sortkind=kind;		
 				
-				ascending=!ascending;
+				this.ascending=!this.ascending;
 				
 				// Sort the body of the table again
 				tbl.tblbody.sort(sortableInternalSort);
 								
 				this.reRender();
 		}
+    
+    this.getSortcolumn = function (){
+        return sortcolumn;
+    } 
+
+    this.getSortcolumnNum = function (){
+        return tbl.tblhead.indexOf(sortcolumn);
+    } 
+    
+    this.getSortkind = function (){
+        return sortkind;
+    }    
     
     // Add eventlistner for the table's magic heading
     // 
