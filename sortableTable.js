@@ -25,7 +25,6 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		var sortcolumn="UNK";
 		var sortkind=-1;
 		var tbl=tbl;
-		var tableid=tableid;
 		var filterid=filterid;
 		var caption=caption;
 		var renderCell=renderCell;
@@ -38,7 +37,10 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		var sumFunc=sumFunc;
     var freezePane=freezePane;
     var freezePaneArr=[];
-    this.ascending=false;
+
+		this.ascending=false;
+		this.tableid=tableid;
+	
     tbl.cleanHead=[];
     
     for(let i=0;i<tbl.tblhead.length;i++){
@@ -85,7 +87,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				var	mhstr="";
         
         str+="<table style='border-collapse: collapse;' id='"+tableid+"_tbl'>";
-        mhstr+="<table style='border-collapse: collapse;position:fixed;top:0px;' id='"+tableid+"_tbl_mh'>";
+        mhstr+="<table style='border-collapse: collapse;position:fixed;top:0px;left:0px;' id='"+tableid+"_tbl_mh'>";
 
 				str+= "<caption>"+caption+"</caption>";
 
@@ -122,7 +124,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 						}
 				}
         str+= "</tr></thead>";
-        mhstr+= "</tr></thead>";
+        mhstr+= "</tr></thead></table>";
 
 				// Render table body
 				str+= "<tbody id='"+tableid+"_body'>";
@@ -206,7 +208,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 						document.getElementById(theid+"_mh").style.width=thewidth;
 				}
 			
-				document.getElementById("MHTEST").innerHTML=mhstr;
+				//document.getElementById("MHTEST").innerHTML=mhstr;
 }
 
 		this.toggleColumn = function(col)
@@ -259,11 +261,25 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 	
 		function freezePaneHandler()
 		{
-				alert(stortableTables.length);
-				// Update left position of horizontal magic headings
+				// Hide magic headings and find minimum overdraft
+				var min=-500000;
 				for(var i=0;i<sortableTables.length;i++){
-							thetab=sortableTables[i];
-							alert(thetab.tableid)
+							document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.display="none";
+							var thetab=document.getElementById(sortableTables[i].tableid+"_tbl").getBoundingClientRect();
+							var toptab=Math.round(thetab.top);
+							var bottomtab=Math.round(thetab.bottom);
+							if(toptab>min&&toptab<0&&thetab.bottom>=0) min=toptab;
+				}
+				// If overdraft is found - assign left position and display mh table
+				if(min>-500000){
+						for(var i=0;i<sortableTables.length;i++){
+									var thetab=document.getElementById(sortableTables[i].tableid+"_tbl").getBoundingClientRect();
+									if(toptab==Math.round(thetab.top)){
+											console.log(sortableTables[i].tableid+"_tbl_mh");
+											document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.left=Math.round(thetab.left)+"px";
+											document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.display="block";
+									}
+						}
 				}
 		}
 	
