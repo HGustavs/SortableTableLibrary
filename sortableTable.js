@@ -2,53 +2,6 @@
 var currentTable=null;
 var sortableTables=[];
 
-// Magic heading updated based on scroll position
-//window.onscroll = function() {magicHeading()};
-
-// Global function for magic Headings
-/*
-function magicHeading(){  
-    for (let i=0;i<sortableTables.length;i++){
-        // Update col widths
-        var tintin=sortableTables[i];        
-        var leftMostCol="";        
-        
-        document.getElementById(tintin.getID()+"_magic").style.width=document.getElementById(tintin.getID()+"_tbl").clientWidth+"px";
-        
-        for(let colno in tintin.tbl.tblhead){
-						var col=tintin.tbl.tblhead[colno];
-						if(tintin.columnfilter.indexOf(col)>-1){
-              let ccol=col.toLowerCase().replace(/[^a-zA-Z0-9]+/g, "");
-              let mhcol=ccol+"_"+tintin.tableid+"_mh";
-              ccol+="_"+tintin.tableid+"_tbl";
-              let w=document.getElementById(ccol).clientWidth;
-              let s=document.getElementById(ccol).getBoundingClientRect();
-              pl=window.getComputedStyle(document.getElementById(ccol), null).getPropertyValue('padding-left');
-              pr=window.getComputedStyle(document.getElementById(ccol), null).getPropertyValue('padding-right');
-              pl=parseInt(pl.replace("px",""));
-              pr=parseInt(pr.replace("px",""));
-              padding=pl+pr;
-              document.getElementById(mhcol).style.width=(w-padding)+"px";
-						}
-				}
-        
-        // Display magic heading if part of the table has scrolled past the top 
-        // BUT the entire table has not scrolled out of view.
-        var top=document.getElementById(tintin.tableid).getBoundingClientRect().top;
-        var height=document.getElementById(tintin.tableid).getBoundingClientRect().height;
-        if (top < 0 && top+height > 0){
-          // Position mh table
-          document.getElementById(tintin.tableid+"_magic").style.top="0px";
-          // display
-          document.getElementById(tintin.tableid+"_magic").style.display="block";
-        } else {
-          // hide
-          document.getElementById(tintin.tableid+"_magic").style.display="none";          
-        }        
-    }
-}
-*/
-
 // Global sorting function global
 function sortableInternalSort(a,b)
 {
@@ -104,10 +57,10 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				// Assign currently active table
 				currentTable=this;
 
-				// Global that contains rendered html for column filter div
+				// Private array that contains names of filtered columns
 				columnfilter = JSON.parse(localStorage.getItem(tableid+"_filtercolnames"));
 
-				// Summing array
+				// Local variable that contains summing array
 				var sumContent=[];
 
 				let isFirstVisit=false;
@@ -127,41 +80,49 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				}
 				document.getElementById(filterid).innerHTML=filterstr;
 
-				// Global that contains rendered html for table
+				// Local variable that contains html code for main table and local variable that contains magic headings table
 				var str="";
+				var	mhstr="";
         
         str+="<table style='border-collapse: collapse;' id='"+tableid+"_tbl'>";
+        mhstr+="<table style='border-collapse: collapse;position:fixed;top:0px;' id='"+tableid+"_tbl_mh'>";
+
 				str+= "<caption>"+caption+"</caption>";
 
-        str+= "<thead id='"+tableid+"_tblhead'>";
-				str+= "<tr>";        
-        var freezePanePos=tbl.tblhead.indexOf(freezePane);
-        //alert(freezePanePos);
+				// Make headings Clean Contains headings using only A-Z a-z 0-9 ... move to function removes lines of code and removes redundant code/data!?
+        str+= "<thead id='"+tableid+"_tblhead'><tr>";
+        mhstr+= "<thead id='"+tableid+"_tblhead_mh'><tr>";
+        var freezePaneIndex=tbl.tblhead.indexOf(freezePane);
 				for(let colno=0;colno<tbl.tblhead.length; colno++){
 						var col=tbl.tblhead[colno];
             var cleancol=tbl.cleanHead[colno];
+						// If column is visible
 						if(columnfilter.indexOf(col)>-1){
                 var cls="freeze_vertical";
-                if(colno <= freezePanePos){
+                if(colno <= freezePaneIndex){
                     freezePaneArr.push(col);
                     cls="freeze";
                 }
 								if(col==sortcolumn){
 										str+= "<th id='"+cleancol+"_"+tableid+"_tbl' class='"+tableid+" "+cls+"'>"+renderSortOptions(col,sortkind)+"</th>";
+										mhstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mh' class='"+tableid+" "+cls+"'>"+renderSortOptions(col,sortkind)+"</th>";
 								}else{
 										str+= "<th id='"+cleancol+"_"+tableid+"_tbl' class='"+tableid+" "+cls+"'>"+renderSortOptions(col,-1)+"</th>";
+										mhstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mh' class='"+tableid+" "+cls+"'>"+renderSortOptions(col,-1)+"</th>";
 								}
 						}
 				}
 				if(rowsumList.length>0){
 						if(rowsumHeading==sortcolumn){
 								str+= "<th id='"+rowsumHeading+"_"+tableid+"_tbl' class='"+tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,sortkind)+"</th>";
+								mhstr+= "<th id='"+rowsumHeading+"_"+tableid+"_tbl_mh' class='"+tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,sortkind)+"</th>";
 						}else{
                 str+= "<th id='"+rowsumHeading+"_"+tableid+"_tbl' class='"+tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,-1)+"</th>";
+                mhstr+= "<th id='"+rowsumHeading+"_"+tableid+"_tbl_mh' class='"+tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,-1)+"</th>";
 						}
 				}
-        str+= "</tr>";
-				str+= "</thead>";
+        str+= "</tr></thead>";
+        mhstr+= "</tr></thead>";
 
 				// Render table body
 				str+= "<tbody id='"+tableid+"_body'>";
@@ -218,7 +179,6 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				for(let colno in tbl.tblfoot){
 						// If we show this column...
 						if(columnfilter.indexOf(tbl.tblhead[colno])>-1){
-
 								if(colsumList.indexOf(tbl.tblhead[colno])>-1){
 										// If writing sum - just write it
 										str+="<td>"+sumContent[tbl.tblhead[colno]]+"</td>";						
@@ -234,9 +194,20 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				str+="</tr>";
 				str+= "</tfoot></table>";
 
-				document.getElementById(tableid).innerHTML=str;
+				// Assign table and magic headings table(s)
+				document.getElementById(tableid).innerHTML=mhstr+"<br><br>BOOYAH!<br><br>"+str;
 
-		}
+				// Update widths for table and all headings -- does not handle global td cell padding as it is added after the css pixel with after the fact
+				document.getElementById(tableid+"_tbl_mh").style.width=document.getElementById(tableid+"_tbl").getBoundingClientRect().width+"px";
+				children=document.getElementById(tableid+"_tbl").getElementsByTagName('TH');
+				for(i=0;i<children.length;i++){
+						var thewidth=children[i].getBoundingClientRect().width;
+						var theid=children[i].id;
+						document.getElementById(theid+"_mh").style.width=thewidth;
+				}
+			
+				document.getElementById("MHTEST").innerHTML=mhstr;
+}
 
 		this.toggleColumn = function(col)
 		{
@@ -282,88 +253,18 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
         return sortkind;
     }    
     
-    // Add eventlistner for the table's magic heading
-    // 
-    var lhm = function (){
-        var leftMostCol="";        
-        
-        document.getElementById(tableid+"_magic").style.width=document.getElementById(tableid+"_tbl").clientWidth+"px";
-        
-        for(let colno in tbl.tblhead){
-            var col=tbl.tblhead[colno];
-            if(columnfilter.indexOf(col)>-1){
-              let ccol=col.toLowerCase().replace(/[^a-zA-Z0-9]+/g, "");
-              let mhcol=ccol+"_"+tableid+"_mh";
-              ccol+="_"+tableid+"_tbl";
-              let w=document.getElementById(ccol).clientWidth;
-              let s=document.getElementById(ccol).getBoundingClientRect();
-              pl=window.getComputedStyle(document.getElementById(ccol), null).getPropertyValue('padding-left');
-              pr=window.getComputedStyle(document.getElementById(ccol), null).getPropertyValue('padding-right');
-              pl=parseInt(pl.replace("px",""));
-              pr=parseInt(pr.replace("px",""));
-              padding=pl+pr;
-              document.getElementById(mhcol).style.width=(w-padding)+"px";
-            }
-        }
-        
-        // Display magic heading if part of the table has scrolled past the top 
-        // BUT the entire table has not scrolled out of view.
-        var top=document.getElementById(tableid).getBoundingClientRect().top;
-        var height=document.getElementById(tableid).getBoundingClientRect().height;
-        if (top < 0 && top+height > 0){
-          // Position mh table
-          document.getElementById(tableid+"_magic").style.top="0px";
-          // display
-          document.getElementById(tableid+"_magic").style.display="block";
-        } else {
-          // hide
-          document.getElementById(tableid+"_magic").style.display="none";          
-        } 
-        var mhbodyPos=document.getElementById(tableid+"_body_magic").getBoundingClientRect();
-        var bodyPos=document.getElementById(tableid+"_body").getBoundingClientRect();
-        document.getElementById(tableid+"_body_magic").style.top=bodyPos.top;
-        document.getElementById(tableid+"_body_magic").style.left=(bodyPos.left-8)+"px";
-        
-    }
-    
-    //window.addEventListener("scroll",lhm);
-
-    var freezePaneHandler = function(){
-        var tableHeadPos=document.getElementById(tableid+"_tblhead").getBoundingClientRect();
-        var tableHeight=document.getElementById(tableid+"_tbl").getBoundingClientRect().height;
-        var tableWidth=document.getElementById(tableid+"_tbl").getBoundingClientRect().width;
-        var i;
-        
-        var topPos=(tableHeadPos.top < 0 && tableHeadPos.top+tableHeight>0)? Math.abs(tableHeadPos.top):0;
-        var leftPos=(tableHeadPos.left < 0 && tableHeadPos.left+tableWidth>0) ?  Math.abs(tableHeadPos.left):0;
-        
-        var translate_y = (topPos !== 0) ? "translateY("+topPos+"px)" : "";
-        var translate_x = (leftPos !== 0) ? "translateX(" +leftPos+ "px)" : "";
-        var translate_xy = "translate(";
-        translate_xy += (leftPos !== 0) ? leftPos +"px,":"0px,";
-        translate_xy += (topPos!==0) ? topPos + "px)":"0px)";
-
-        var fixed_vertical_elts = document.getElementsByClassName(tableid + " freeze_vertical");
-        var fixed_horizontal_elts = document.getElementsByClassName(tableid + " freeze_horizontal");
-        var fixed_both_elts = document.getElementsByClassName(tableid + " freeze");
-
-        // The webkitTransforms are for a set of ancient smartphones/browsers,
-        // one of which I have, so I code it for myself:
-        for (i = 0; i < fixed_horizontal_elts.length; i++) {
-            fixed_horizontal_elts[i].style.webkitTransform = translate_x;
-            fixed_horizontal_elts[i].style.transform = translate_x;
-        }
-
-        for (i = 0; i < fixed_vertical_elts.length; i++) {
-             fixed_vertical_elts[i].style.webkitTransform = translate_y;
-             fixed_vertical_elts[i].style.transform = translate_y;
-        }
-
-        for (i = 0; i < fixed_both_elts.length; i++) {
-             fixed_both_elts[i].style.webkitTransform = translate_xy;
-             fixed_both_elts[i].style.transform = translate_xy;
-        }
-    }
-    setInterval(freezePaneHandler,30);
-    //window.addEventListener("scroll",freezePaneHandler);
+		// Simpler magic heading v. III
+		
+		setInterval(freezePaneHandler,30);
+	
+		function freezePaneHandler()
+		{
+				alert(stortableTables.length);
+				// Update left position of horizontal magic headings
+				for(var i=0;i<sortableTables.length;i++){
+							thetab=sortableTables[i];
+							alert(thetab.tableid)
+				}
+		}
+	
 }
