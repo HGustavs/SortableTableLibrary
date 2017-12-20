@@ -264,9 +264,8 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
     }    
     
 		// Simpler magic heading v. III
-		
 		setInterval(freezePaneHandler,30);
-	
+
 		function freezePaneHandler()
 		{
 				// Hide magic headings and find minimum overdraft
@@ -276,7 +275,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 							if(thetab.top<0&&((thetab.bottom+thetab.height)>0)){
 									document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.left=Math.round(thetab.left)+"px";
 									document.getElementById(sortableTables[i].tableid+"_tbl_mhv").style.top=Math.round(thetab.top)+"px";
-									document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.display="none";
+									document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.display="block";
 									document.getElementById(sortableTables[i].tableid+"_tbl_mhv").style.display="block";
 							}else{
 									document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.display="none";
