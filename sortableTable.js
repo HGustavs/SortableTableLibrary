@@ -83,15 +83,18 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				document.getElementById(filterid).innerHTML=filterstr;
 
 				// Local variable that contains html code for main table and local variable that contains magic headings table
-				var str="<table style='border-collapse: collapse;' id='"+tableid+"_tbl'>";
-				var	mhstr="<table style='border-collapse: collapse;position:fixed;top:0px;left:0px;' id='"+tableid+"_tbl_mh'>";;
-      	var mhvstr="<table style='border-collapse: collapse;position:fixed;left:-200px;' id='"+tableid+"_tbl_mhv'>";
+				var str="<table style='border-collapse: collapse;margin-left:200px;' id='"+tableid+"_tbl'>";
+				var	mhstr="<table style='border-collapse: collapse;position:fixed;top:0px;left:0px;z-index:2000;' id='"+tableid+"_tbl_mh'>";;
+      	var mhvstr="<table style='border-collapse: collapse;position:fixed;left:0px;z-index:1000;' id='"+tableid+"_tbl_mhv'>";
+      	var mhfstr="<table style='border-collapse: collapse;position:fixed;left:0px;top:0px;z-index:3000;' id='"+tableid+"_tbl_mhf'>";
 			
 				str+= "<caption>"+caption+"</caption>";
 
 				// Make headings Clean Contains headings using only A-Z a-z 0-9 ... move to function removes lines of code and removes redundant code/data!?
         str+= "<thead id='"+tableid+"_tblhead'><tr>";
         mhstr+= "<thead id='"+tableid+"_tblhead_mh'><tr>";
+        mhvstr+= "<thead id='"+tableid+"_tblhead_mhv'><tr>";
+        mhfstr+= "<thead id='"+tableid+"_tblhead_mhf'><tr>";
 				
         var freezePaneIndex=tbl.tblhead.indexOf(freezePane);
 				for(let colno=0;colno<tbl.tblhead.length; colno++){
@@ -101,8 +104,10 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 						if(columnfilter.indexOf(col)>-1){
                 if(colno <= freezePaneIndex){
 										if(col==sortcolumn){
+												mhfstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhf' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
 												mhvstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhv' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
 										}else{
+												mhfstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhf' class='"+tableid+"'>"+renderSortOptions(col,-1)+"</th>";
 												mhvstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhv' class='"+tableid+"'>"+renderSortOptions(col,-1)+"</th>";
 										}
 								}
@@ -126,7 +131,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				}
         str+= "</tr></thead>";
         mhstr+= "</tr></thead></table>";
-        mhvstr+= "</tr></thead>";
+        mhfstr+= "</tr></thead></table>";
 			
 
 				// Render table body
@@ -200,23 +205,22 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				mhvstr+= "</table>";
 
 				// Assign table and magic headings table(s)
-				document.getElementById(tableid).innerHTML=mhstr+"<br><br>BOOYAH!<br><br>"+mhvstr+"<br><br>BOOYAH!<br><br>"+str;
+				document.getElementById(tableid).innerHTML=mhstr+"<br><br>BOOYAH!<br><br>"+mhvstr+"<br><br>BOOYAH!<br><br>"+mhfstr+"<br><br>BOOYAH!<br><br>"+str;
 
 				// Update widths for table and all headings -- does not handle global td cell padding as it is added after the css pixel with after the fact
 				document.getElementById(tableid+"_tbl_mh").style.width=document.getElementById(tableid+"_tbl").getBoundingClientRect().width+"px";
 				children=document.getElementById(tableid+"_tbl").getElementsByTagName('TH');
 				for(i=0;i<children.length;i++){
-						var thewidth=children[i].getBoundingClientRect().width;
-						var theid=children[i].id;
-						document.getElementById(theid+"_mh").style.width=thewidth;
+						document.getElementById(children[i].id+"_mh").style.width=children[i].getBoundingClientRect().width;
 				}
 
-				// Do we even need this if content is the same?
-				children=document.getElementById(tableid+"_body").getElementsByTagName('TR');
-				vchildren=document.getElementById(tableid+"_mhvbody").getElementsByTagName('TR');
+				document.getElementById(tableid+"_tbl_mhf").style.width=Math.round(document.getElementById(tableid+"_tbl_mhv").getBoundingClientRect().width)+"px";
+				children=document.getElementById(tableid+"_tbl_mhv").getElementsByTagName('TH');
 				for(i=0;i<children.length;i++){
-						vchildren[i].style.height=Math.round(children[i].getBoundingClientRect().height)+"px";
+						document.getElementById(children[i].id.slice(0, -1)+"f").style.width=children[i].getBoundingClientRect().width;
 				}
+			
+
 }
 
 		this.toggleColumn = function(col)
@@ -271,16 +275,30 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				// Hide magic headings and find minimum overdraft
 				for(var i=0;i<sortableTables.length;i++){
 							var thetab=document.getElementById(sortableTables[i].tableid+"_tbl").getBoundingClientRect();
+							var thetabhead=document.getElementById(sortableTables[i].tableid+"_tblhead").getBoundingClientRect();
 							// If top is negative and top+height is positive draw mh otherwise hide
-							if(thetab.top<0&&((thetab.bottom+thetab.height)>0)){
+							// Vertical
+							if(thetabhead.top<0&&thetab.bottom>0){
 									document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.left=Math.round(thetab.left)+"px";
-									document.getElementById(sortableTables[i].tableid+"_tbl_mhv").style.top=Math.round(thetab.top)+"px";
 									document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.display="block";
-									document.getElementById(sortableTables[i].tableid+"_tbl_mhv").style.display="block";
 							}else{
 									document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.display="none";
+							}
+							// Horizontal
+							if(thetab.left<0&&thetab.right>0){
+									document.getElementById(sortableTables[i].tableid+"_tbl_mhv").style.top=Math.round(thetabhead.top)+"px";
+									document.getElementById(sortableTables[i].tableid+"_tbl_mhv").style.display="block";
+							}else{
 									document.getElementById(sortableTables[i].tableid+"_tbl_mhv").style.display="none";							
 							}
+					
+							// Fixed
+							if(thetab.left<0&&thetab.right>0&&thetabhead.top<0&&thetab.bottom>0){
+									document.getElementById(sortableTables[i].tableid+"_tbl_mhf").style.display="block";
+							}else{
+									document.getElementById(sortableTables[i].tableid+"_tbl_mhf").style.display="none";
+							}
+							
 				}
 		}
 	
