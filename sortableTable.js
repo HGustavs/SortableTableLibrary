@@ -301,14 +301,14 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 							// If top is negative and top+height is positive draw mh otherwise hide
 							// Vertical
 							if(thetabhead.top<0&&thetab.bottom>0){
-									document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.left=Math.round(thetab.left)+"px";
+									document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.left=thetab.left+"px";
 									document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.display="table";
 							}else{
 									document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.display="none";
 							}
 							// Horizontal
 							if(thetab.left<0&&thetab.right>0){
-									document.getElementById(sortableTables[i].tableid+"_tbl_mhv").style.top=Math.round(thetabhead.top)+"px";
+									document.getElementById(sortableTables[i].tableid+"_tbl_mhv").style.top=thetabhead.top+"px";
 									document.getElementById(sortableTables[i].tableid+"_tbl_mhv").style.display="table";
 							}else{
 									document.getElementById(sortableTables[i].tableid+"_tbl_mhv").style.display="none";							
