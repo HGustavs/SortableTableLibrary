@@ -19,6 +19,25 @@ function sortableInternalSort(a,b)
 		return ret;
 }
 
+function rowHighlightOn(row){
+    let arr=row.id.split("_");
+    let rowno=arr[1];
+    
+    document.getElementById("tblrow_"+rowno).style.border="2px solid rgba(255,0,0,1)";
+    document.getElementById("tblrowmvh_"+rowno).style.borderLeft="2px solid rgba(255,0,0,1)";
+    document.getElementById("tblrowmvh_"+rowno).style.borderTop="2px solid rgba(255,0,0,1)";
+    document.getElementById("tblrowmvh_"+rowno).style.borderBottom="2px solid rgba(255,0,0,1)";
+}
+
+function rowHighlightOff(row){
+    let arr=row.id.split("_");
+    let rowno=arr[1];
+    document.getElementById("tblrow_"+rowno).style.border="";
+    document.getElementById("tblrowmvh_"+rowno).style.borderLeft="";
+    document.getElementById("tblrowmvh_"+rowno).style.borderTop="";
+    document.getElementById("tblrowmvh_"+rowno).style.borderBottom="";
+}
+
 function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,colsumList,rowsumList,rowsumHeading,sumFunc,freezePane) {
 
 		var columnfilter=[];
@@ -144,8 +163,8 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 								// Keep row sum total here
 								var rowsum=0;
 								
-								str+="<tr>";
-								mhvstr+="<tr>";
+								str+="<tr id='tblrow_"+rowno+"' onmouseover='rowHighlightOn(this)' onmouseout='rowHighlightOff(this)' style='box-sizing:border-box'>";
+								mhvstr+="<tr id='tblrowmvh_"+rowno+"' onmouseover='rowHighlightOn(this)' onmouseout='rowHighlightOff(this)' style='box-sizing:border-box'>";
 								for(let colno in row){
 									col=row[colno];
                   cleancol=tbl.cleanHead[colno];
@@ -304,5 +323,4 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 							
 				}
 		}
-	
 }
