@@ -2,9 +2,13 @@
 <head>
     <meta charset="utf-8">
     <style>
+        table {
+          padding: 0 75px;
+        }
 
         th,td {
-            white-space: nowrap;            
+            white-space: nowrap;
+            padding: 0 50px;           
         }
         tr,td,th {
             background-color: inherit;
@@ -90,8 +94,8 @@ function setup(){
   );
   myTable2 = new SortableTable(tabledata,"thetable2","columnfilter2","Booyah!",
       function(celldata,col,cellid){return renderCell(celldata,col,cellid)},
-      function(col, kind){return renderSortOptions(col,kind)},
-      function(col, status){return renderColumnFilter(col,status)},
+      function(col, kind){return renderSortOptions2(col,kind)},
+      function(col, status){return renderColumnFilter2(col,status)},
       function(row){ return rowFilter(row)},
       ["Pnr","Num","Trumma"],
       ["Pnr","Num"],				
@@ -117,6 +121,18 @@ function renderColumnFilter(col,status){
 				str="<label>"+col+"</label>:<input type='checkbox' checked onclick='myTable.toggleColumn(\""+col+"\")'>";
 		}else{
 				str="<label>"+col+"</label>:<input type='checkbox' onclick='myTable.toggleColumn(\""+col+"\")'>";
+		}
+
+		return str;
+}
+
+function renderColumnFilter2(col,status){
+		
+		str="";
+		if(status){
+				str="<label>"+col+"</label>:<input type='checkbox' checked onclick='myTable2.toggleColumn(\""+col+"\")'>";
+		}else{
+				str="<label>"+col+"</label>:<input type='checkbox' onclick='myTable2.toggleColumn(\""+col+"\")'>";
 		}
 
 		return str;
@@ -172,6 +188,57 @@ function renderSortOptions(col,status){
 								str+="<span onclick='myTable.toggleSortStatus(\""+col+"\",0)'>"+col+"&#x25bc;</span>";
 						}else{
 								str+="<span onclick='myTable.toggleSortStatus(\""+col+"\",1)'>"+col+"&#x25b2;</span>";
+						}
+				}
+		}
+
+		return str;
+}
+
+function renderSortOptions2(col,status){
+		str="";
+		
+		if(status==-1){
+				if(col=="First/Last"){
+						str+="<span onclick='myTable2.toggleSortStatus(\"First/Last\",1)'>First</span>/";								
+						str+="<span onclick='myTable2.toggleSortStatus(\"First/Last\",3)'>Last</span>";								
+				}else{
+						str+="<span onclick='myTable2.toggleSortStatus(\""+col+"\",1)'>"+col+"</span>";				
+				}
+		}else{
+				if(col=="First/Last"){
+						// First up/down vs Last up/down
+						if(status==0||status==1){
+								if(status==0){
+										str+="<span onclick='myTable2.toggleSortStatus(\"First/Last\",1)'>First&#x25b2;</span>/";								
+								}else{
+										str+="<span onclick='myTable2.toggleSortStatus(\"First/Last\",0)'>First&#x25bc;</span>/";								
+								}
+								str+="<span onclick='myTable2.toggleSortStatus(\"First/Last\",2)'>Last</span>";								
+						}
+						else if(status==2||status==3){
+								str+="<span onclick='myTable2.toggleSortStatus(\"First/Last\",1)'>First</span>/";								
+								if(status==2){
+										str+="<span onclick='myTable2.toggleSortStatus(\"First/Last\",3)'>Last&#x25b2;</span>";								
+								}else{
+										str+="<span onclick='myTable2.toggleSortStatus(\"First/Last\",2)'>Last&#x25bc;</span>";								
+								}
+						}		            
+				} else if(col=="Trumma"){
+						// Special sort for Trumma (JSON structure)
+            str+="<span>"+col+"</span>";
+            str+="<select onchange='myTable2.toggleSortStatus(\""+col+"\",this.value)'>";
+            str+="<option hidden disabled selected value>Select Sort</option>"
+            str+="<option value='0'>x&#x25b2;/y</option>";
+            str+="<option value='1'>x&#x25bc;/y</option>";
+            str+="<option value='2'>x/y&#x25b2;</option>";
+            str+="<option value='3'>x/y&#x25bc;</option>";
+            str+="</select>";
+				} else{
+						if(status){
+								str+="<span onclick='myTable2.toggleSortStatus(\""+col+"\",0)'>"+col+"&#x25bc;</span>";
+						}else{
+								str+="<span onclick='myTable2.toggleSortStatus(\""+col+"\",1)'>"+col+"&#x25b2;</span>";
 						}
 				}
 		}

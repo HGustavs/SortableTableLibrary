@@ -84,9 +84,9 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 
 				// Local variable that contains html code for main table and local variable that contains magic headings table
 				var str="<table style='border-collapse: collapse;margin-left:200px;' id='"+tableid+"_tbl'>";
-				var	mhstr="<table style='border-collapse: collapse;position:fixed;top:0px;left:0px;z-index:2000;' id='"+tableid+"_tbl_mh'>";;
-      	var mhvstr="<table style='border-collapse: collapse;position:fixed;left:0px;z-index:1000;' id='"+tableid+"_tbl_mhv'>";
-      	var mhfstr="<table style='border-collapse: collapse;position:fixed;left:0px;top:0px;z-index:3000;' id='"+tableid+"_tbl_mhf'>";
+				var	mhstr="<table style='table-layout:fixed;border-collapse: collapse;position:fixed;top:0px;left:0px;z-index:2000;' id='"+tableid+"_tbl_mh'>";;
+      	var mhvstr="<table style='table-layout:fixed;border-collapse: collapse;position:fixed;left:0px;z-index:1000;' id='"+tableid+"_tbl_mhv'>";
+      	var mhfstr="<table style='table-layout:fixed;border-collapse: collapse;position:fixed;left:0px;top:0px;z-index:3000;' id='"+tableid+"_tbl_mhf'>";
 			
 				str+= "<caption>"+caption+"</caption>";
 
@@ -207,18 +207,21 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				// Assign table and magic headings table(s)
 				document.getElementById(tableid).innerHTML=mhstr+"<br><br>BOOYAH!<br><br>"+mhvstr+"<br><br>BOOYAH!<br><br>"+mhfstr+"<br><br>BOOYAH!<br><br>"+str;
 
-				// Update widths for table and all headings -- does not handle global td cell padding as it is added after the css pixel with after the fact
-				document.getElementById(tableid+"_tbl_mh").style.width=document.getElementById(tableid+"_tbl").getBoundingClientRect().width+"px";
+        document.getElementById(tableid+"_tbl_mh").style.width=document.getElementById(tableid+"_tbl").getBoundingClientRect().width+"px";
+        document.getElementById(tableid+"_tbl_mh").style.boxSizing = "border-box";          
 				children=document.getElementById(tableid+"_tbl").getElementsByTagName('TH');
 				for(i=0;i<children.length;i++){
-						document.getElementById(children[i].id+"_mh").style.width=children[i].getBoundingClientRect().width;
+          document.getElementById(children[i].id+"_mh").style.width=children[i].getBoundingClientRect().width;
+          document.getElementById(children[i].id+"_mh").style.boxSizing = "border-box";          
 				}
 
-				document.getElementById(tableid+"_tbl_mhf").style.width=Math.round(document.getElementById(tableid+"_tbl_mhv").getBoundingClientRect().width)+"px";
+        document.getElementById(tableid+"_tbl_mhf").style.width=Math.round(document.getElementById(tableid+"_tbl_mhv").getBoundingClientRect().width)+"px";
+        document.getElementById(tableid+"_tbl_mhf").style.boxSizing = "border-box";
 				children=document.getElementById(tableid+"_tbl_mhv").getElementsByTagName('TH');
 				for(i=0;i<children.length;i++){
-						document.getElementById(children[i].id.slice(0, -1)+"f").style.width=children[i].getBoundingClientRect().width;
-				}
+          document.getElementById(children[i].id.slice(0, -1)+"f").style.width=children[i].getBoundingClientRect().width;
+          document.getElementById(children[i].id.slice(0, -1)+"f").style.boxSizing = "border-box";
+  			}
 			
 
 }
@@ -280,21 +283,21 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 							// Vertical
 							if(thetabhead.top<0&&thetab.bottom>0){
 									document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.left=Math.round(thetab.left)+"px";
-									document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.display="block";
+									document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.display="table";
 							}else{
 									document.getElementById(sortableTables[i].tableid+"_tbl_mh").style.display="none";
 							}
 							// Horizontal
 							if(thetab.left<0&&thetab.right>0){
 									document.getElementById(sortableTables[i].tableid+"_tbl_mhv").style.top=Math.round(thetabhead.top)+"px";
-									document.getElementById(sortableTables[i].tableid+"_tbl_mhv").style.display="block";
+									document.getElementById(sortableTables[i].tableid+"_tbl_mhv").style.display="table";
 							}else{
 									document.getElementById(sortableTables[i].tableid+"_tbl_mhv").style.display="none";							
 							}
 					
 							// Fixed
 							if(thetab.left<0&&thetab.right>0&&thetabhead.top<0&&thetab.bottom>0){
-									document.getElementById(sortableTables[i].tableid+"_tbl_mhf").style.display="block";
+									document.getElementById(sortableTables[i].tableid+"_tbl_mhf").style.display="table";
 							}else{
 									document.getElementById(sortableTables[i].tableid+"_tbl_mhf").style.display="none";
 							}
