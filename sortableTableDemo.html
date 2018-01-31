@@ -19,13 +19,14 @@
         tr:nth-child(even) {
             background-color: #ffffff;
         }
+			
                 
      </style>
  		<script src="sortableTable.js"></script> 
 		<script>
 
 // -------------------------------------------------------------------------------------------------------
-// -----------------=============######## Sourtable Table Demo Code ########=============-----------------
+// -----------------=============######## Sortable Table Demo Code ########=============-----------------
 // -------------------------------------------------------------------------------------------------------
 //  Copyright a97marbr / HGustavs 
 //
@@ -82,16 +83,18 @@ var myTable,myTable2;
 
 function setup(){
   myTable = new SortableTable(tabledata,"thetable","columnfilter","Booyah!",
-      function(celldata,col,cellid){return renderCell(celldata,col,cellid)},
-      function(col, kind){return renderSortOptions(col,kind)},
-      function(col, status){return renderColumnFilter(col,status)},
-      function(row){ return rowFilter(row)},
+      renderCell,
+      renderSortOptions,
+      renderColumnFilter,
+      rowFilter,
       ["Pnr","Num","Trumma"],
       ["Pnr","Num"],				
       "RowSum",
-      function(col, val, row){return makeSum(col,val,row);},
-      "Pnr"
-  );
+      makeSum,
+      "Pnr",
+			rowHighlightOn,
+			rowHighlightOff
+	);
   myTable2 = new SortableTable(tabledata,"thetable2","columnfilter2","Booyah!",
       function(celldata,col,cellid){return renderCell(celldata,col,cellid)},
       function(col, kind){return renderSortOptions2(col,kind)},
@@ -101,13 +104,35 @@ function setup(){
       ["Pnr","Num"],				
       "RowSum",
       function(col, val, row){return makeSum(col,val,row);},
-      "First/Last"
-  );
+      "First/Last",
+			rowHighlightOn,
+			rowHighlightOff
+		);
 		myTable.renderTable();
     myTable2.renderTable();
 		
 }
 
+//--------------------------------------------------------------------------
+// rowHighlight
+// ---------------
+//  Callback function that highlights the currently hovered row
+//--------------------------------------------------------------------------
+			
+function rowHighlightOn(rowid,rowno){
+    document.getElementById(rowid).style.border="2px solid rgba(255,0,0,1)";
+    document.getElementById(rowid+"_mvh").style.borderLeft="2px solid rgba(255,0,0,1)";
+    document.getElementById(rowid+"_mvh").style.borderTop="2px solid rgba(255,0,0,1)";
+    document.getElementById(rowid+"_mvh").style.borderBottom="2px solid rgba(255,0,0,1)";
+}
+
+function rowHighlightOff(rowid,rowno){
+    document.getElementById(rowid).style.border="";
+    document.getElementById(rowid+"_mvh").style.borderLeft="";
+    document.getElementById(rowid+"_mvh").style.borderTop="";
+    document.getElementById(rowid+"_mvh").style.borderBottom="";
+}
+			
 //--------------------------------------------------------------------------
 // renderColumnFilter
 // ---------------

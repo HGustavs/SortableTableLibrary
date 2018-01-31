@@ -19,27 +19,38 @@ function sortableInternalSort(a,b)
 		return ret;
 }
 
-function rowHighlightOn(row){
-    let arr=row.id.split("_");
-    let rowno=arr[1];
-    
-    document.getElementById("tblrow_"+rowno).style.border="2px solid rgba(255,0,0,1)";
-    document.getElementById("tblrowmvh_"+rowno).style.borderLeft="2px solid rgba(255,0,0,1)";
-    document.getElementById("tblrowmvh_"+rowno).style.borderTop="2px solid rgba(255,0,0,1)";
-    document.getElementById("tblrowmvh_"+rowno).style.borderBottom="2px solid rgba(255,0,0,1)";
+// clickedInternal
+function clickedInternal(clickobj)
+{
+		var clickstr=clickobj.target.id;
+		alert("Internal Click!!!\n"+clickstr);
 }
 
-function rowHighlightOff(row){
+// We call all highlights in order to allow hover of non-active tables
+function rowHighlightInternal(event,row)
+{
+		console.log(event);
+		console.log(row);
     let arr=row.id.split("_");
     let rowno=arr[1];
-    document.getElementById("tblrow_"+rowno).style.border="";
-    document.getElementById("tblrowmvh_"+rowno).style.borderLeft="";
-    document.getElementById("tblrowmvh_"+rowno).style.borderTop="";
-    document.getElementById("tblrowmvh_"+rowno).style.borderBottom="";
+		for(let i=0;i<sortableTables.length;i++){
+				sortableTables[i].highlightRow(row.id,rowno);
+    }    
 }
 
-function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,colsumList,rowsumList,rowsumHeading,sumFunc,freezePane) {
+// We call all deHighlights in order to allow hover of non-active tables
+function rowDeHighlightInternal(event,row)
+{
+		let arr=row.id.split("_");
+    let rowno=arr[1];
+		for(let i=0;i<sortableTables.length;i++){
+				sortableTables[i].deHighlightRow(row.id,rowno);
+    }    
+}
 
+function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,colsumList,rowsumList,rowsumHeading,sumFunc,freezePane,highlightRow,deHighlightRow) {
+
+		// Private members
 		var columnfilter=[];
 		var sortcolumn="UNK";
 		var sortkind=-1;
@@ -57,6 +68,10 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
     var freezePane=freezePane;
     var freezePaneArr=[];
 
+		// Publick Callback Declarations
+		this.highlightRow=highlightRow;
+		this.deHighlightRow=deHighlightRow;
+	
 		this.ascending=false;
 		this.tableid=tableid;
 	
@@ -163,8 +178,8 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 								// Keep row sum total here
 								var rowsum=0;
 								
-								str+="<tr id='tblrow_"+rowno+"' onmouseover='rowHighlightOn(this)' onmouseout='rowHighlightOff(this)' style='box-sizing:border-box'>";
-								mhvstr+="<tr id='tblrowmvh_"+rowno+"' onmouseover='rowHighlightOn(this)' onmouseout='rowHighlightOff(this)' style='box-sizing:border-box'>";
+								str+="<tr id='"+tableid+"_"+rowno+"' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box'>";
+								mhvstr+="<tr id='"+tableid+"_"+rowno+"_mvh' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box'>";
 								for(let colno in row){
 									col=row[colno];
                   cleancol=tbl.cleanHead[colno];
@@ -183,7 +198,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 											}
 
 											let cellid="r"+rowno+"_"+tableid+"_"+cleancol;
-											str+="<td id='"+cellid+"' >"+renderCell(col,tbl.tblhead[colno],cellid)+"</td>";
+											str+="<td id='"+cellid+"' onclick='clickedInternal(event);' class='"+tableid+"-"+tbl.cleanHead[colno]+"'>"+renderCell(col,tbl.tblhead[colno],cellid)+"</td>";
 											if(colno <= freezePaneIndex){
 													mhvstr+="<td id='"+cellid+"' >"+renderCell(col,tbl.tblhead[colno],cellid)+"</td>";                      
 											}			                      
