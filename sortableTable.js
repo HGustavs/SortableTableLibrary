@@ -20,21 +20,33 @@ function sortableInternalSort(a,b)
 }
 
 // clickedInternal
-function clickedInternal(clickobj)
+function clickedInternal(event,clickdobj)
 {
-		var clickstr=clickobj.target.id;
-		alert("Internal Click!!!\n"+clickstr);
+		// Which table has same ID as row element?
+		for(let i=0;i<sortableTables.length;i++){
+				sortableTables[i].highlightRow(row.id,rowno);
+    }   
+
+		console.log(clickdobj);
+		console.log(event);
+		console.log(clickdobj.parentElement);
+	
+		var clickstr=event.target.id;
+
+		console.log(currentTable);
+	
+		currentTable.showEditCell();
+
 }
 
 // We call all highlights in order to allow hover of non-active tables
 function rowHighlightInternal(event,row)
 {
-		console.log(event);
-		console.log(row);
     let arr=row.id.split("_");
-    let rowno=arr[1];
+    let rowno=arr[1];		
+		let centerel=event.target.closest("td");
 		for(let i=0;i<sortableTables.length;i++){
-				sortableTables[i].highlightRow(row.id,rowno);
+				sortableTables[i].highlightRow(row.id,rowno,centerel.className,centerel);
     }    
 }
 
@@ -43,12 +55,13 @@ function rowDeHighlightInternal(event,row)
 {
 		let arr=row.id.split("_");
     let rowno=arr[1];
+		let centerel=event.target.closest("td");
 		for(let i=0;i<sortableTables.length;i++){
-				sortableTables[i].deHighlightRow(row.id,rowno);
+				sortableTables[i].deHighlightRow(row.id,rowno,centerel.className,centerel);
     }    
 }
 
-function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,colsumList,rowsumList,rowsumHeading,sumFunc,freezePane,highlightRow,deHighlightRow) {
+function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,colsumList,rowsumList,rowsumHeading,sumFunc,freezePane,highlightRow,deHighlightRow,showEditCell) {
 
 		// Private members
 		var columnfilter=[];
@@ -71,6 +84,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		// Publick Callback Declarations
 		this.highlightRow=highlightRow;
 		this.deHighlightRow=deHighlightRow;
+		this.showEditCell=showEditCell;
 	
 		this.ascending=false;
 		this.tableid=tableid;
@@ -198,7 +212,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 											}
 
 											let cellid="r"+rowno+"_"+tableid+"_"+cleancol;
-											str+="<td id='"+cellid+"' onclick='clickedInternal(event);' class='"+tableid+"-"+tbl.cleanHead[colno]+"'>"+renderCell(col,tbl.tblhead[colno],cellid)+"</td>";
+											str+="<td id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+tableid+"-"+tbl.cleanHead[colno]+"'>"+renderCell(col,tbl.tblhead[colno],cellid)+"</td>";
 											if(colno <= freezePaneIndex){
 													mhvstr+="<td id='"+cellid+"' >"+renderCell(col,tbl.tblhead[colno],cellid)+"</td>";                      
 											}			                      
