@@ -20,22 +20,24 @@ function sortableInternalSort(a,b)
 }
 
 // clickedInternal
+// data, rowno, rowelement, cellelement, kolumnnamn, rowdata, tableid
 function clickedInternal(event,clickdobj)
 {
-		// Which table has same ID as row element?
-		for(let i=0;i<sortableTables.length;i++){
-				sortableTables[i].highlightRow(row.id,rowno);
-    }   
+		
+		var cellelement=event.target.closest("td");
+    let arr=cellelement.className.split("-");
+		var columnname=arr[1];
+		var columnno=arr[2];
 
-		console.log(clickdobj);
-		console.log(event);
-		console.log(clickdobj.parentElement);
+		var rowelement=event.target.closest("tr");
+    let barr=rowelement.id.split("_");
+		var rowno=parseInt(barr[1]);
+		var tableid=barr[0];
+		
+		var rowdata=currentTable.getRow(rowno);
+		var coldata=rowdata[columnno];
 	
-		var clickstr=event.target.id;
-
-		console.log(currentTable);
-	
-		currentTable.showEditCell();
+		currentTable.showEditCell(coldata,rowno,rowelement,cellelement,columnname,rowdata,coldata,tableid);
 
 }
 
@@ -43,7 +45,7 @@ function clickedInternal(event,clickdobj)
 function rowHighlightInternal(event,row)
 {
     let arr=row.id.split("_");
-    let rowno=arr[1];		
+    let rowno=parseInt(arr[1]);
 		let centerel=event.target.closest("td");
 		for(let i=0;i<sortableTables.length;i++){
 				sortableTables[i].highlightRow(row.id,rowno,centerel.className,centerel);
@@ -54,7 +56,7 @@ function rowHighlightInternal(event,row)
 function rowDeHighlightInternal(event,row)
 {
 		let arr=row.id.split("_");
-    let rowno=arr[1];
+    let rowno=parseInt(arr[1]);
 		let centerel=event.target.closest("td");
 		for(let i=0;i<sortableTables.length;i++){
 				sortableTables[i].deHighlightRow(row.id,rowno,centerel.className,centerel);
@@ -100,6 +102,11 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		this.renderTable = function ()
 		{
 				this.reRender();
+		}
+		
+		this.getRow = function (rowno)
+		{
+				return tbl.tblbody[rowno];
 		}
 		
 		this.reRender = function ()
@@ -212,7 +219,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 											}
 
 											let cellid="r"+rowno+"_"+tableid+"_"+cleancol;
-											str+="<td id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+tableid+"-"+tbl.cleanHead[colno]+"'>"+renderCell(col,tbl.tblhead[colno],cellid)+"</td>";
+											str+="<td id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+tableid+"-"+tbl.cleanHead[colno]+"-"+colno+"'>"+renderCell(col,tbl.tblhead[colno],cellid)+"</td>";
 											if(colno <= freezePaneIndex){
 													mhvstr+="<td id='"+cellid+"' >"+renderCell(col,tbl.tblhead[colno],cellid)+"</td>";                      
 											}			                      
