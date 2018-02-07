@@ -8,7 +8,7 @@
 
         th,td {
             white-space: nowrap;
-            padding: 0 50px;           
+            padding: 0 0px;           
         }
         tr,td,th {
             background-color: inherit;
@@ -30,11 +30,15 @@
 						background-color: #82a43a; 
 				}
 			
-			.icon {
-					width:20px;
-					height:20px;
-					padding:0px;
-			}                
+  			.icon {
+  					width:20px;
+  					height:20px;
+  					padding:0px;
+  			}                
+        
+        input{
+            width:calc(100%-8px);
+        }
 			
      </style>
  		<script src="sortableTable.js"></script> 
@@ -150,8 +154,8 @@ function displayCellEdit(celldata,rowno,rowelement,cellelement,column,rowdata){
 		popoverelement.style.left=Math.round(lmnt.left+xscroll)+"px";
 		popoverelement.style.top=Math.round(lmnt.top+yscroll)+"px";
 		popoverelement.style.height=Math.round(lmnt.height)+"px";
-		popoverelement.style.width=Math.round(lmnt.width)+"px";
-	
+		popoverelement.style.width=(Math.round(lmnt.width)+40)+"px";
+	  document.getElementById("popoveredit").size=celldata.toString().length;
 		popoveredit.value=celldata;
 	
 }
@@ -466,8 +470,8 @@ function makeSum(col,value,row){
   <br>
   <br>
 	
-	<div id="popover">
-				<input type='text' id="popoveredit" />
+	<div id="popover" style="display:flex;">
+				<input type='text' id="popoveredit" style="flex-grow:1" />
 				<img class="icon" src="Icon_Tick.svg">
 				<img class="icon" src="Icon_Cross.svg">
 	</div>
