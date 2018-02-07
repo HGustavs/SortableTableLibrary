@@ -4,9 +4,9 @@ var sortableTables=[];
 
 function keypressHandler(event){    
     if(event.keyCode == 13) {
-        currentTable.storeCellEdit();
+        currentTable.updateCellInternal();
     }else if(event.keyCode == 27){
-        currentTable.cancelCellEdit();
+        currentTable.cancelUpdateCellInternal();
     }  
 }
 
@@ -76,7 +76,7 @@ function rowDeHighlightInternal(event,row)
     }    
 }
 
-function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,colsumList,rowsumList,rowsumHeading,sumFunc,freezePane,highlightRow,deHighlightRow,showEditCell) {
+function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,colsumList,rowsumList,rowsumHeading,sumFunc,freezePane,highlightRow,deHighlightRow,showEditCell,updateCell) {
 
 		// Private members
 		var columnfilter=[];
@@ -100,6 +100,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		this.highlightRow=highlightRow;
 		this.deHighlightRow=deHighlightRow;
 		this.showEditCell=showEditCell;
+    this.updateCell=updateCell;
 	
 		this.ascending=false;
 		this.tableid=tableid;
@@ -372,13 +373,15 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 							
 				}
 		}
-    this.cancelCellEdit = function(){
+    this.cancelUpdateCellInternal = function(){
         document.getElementById('popover').style.display="none";
     }
-    this.storeCellEdit = function(){      
+    this.updateCellInternal = function(){      
         let rowno=document.getElementById("editRowno").value;
         let colno=document.getElementById("editColno").value;
-        tbl.tblbody[rowno][colno]=popoveredit.value;
+        let newCellData=document.getElementById('popoveredit').value;
+        tbl.tblbody[rowno][colno]=newCellData;
+        this.updateCell(newCellData,rowno,tbl.cleanHead[colno],colno,this.tableid);
         document.getElementById('popover').style.display="none";
         this.reRender();
     }

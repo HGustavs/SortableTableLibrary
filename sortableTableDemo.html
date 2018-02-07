@@ -113,7 +113,8 @@ function setup(){
       "Pnr",
 			rowHighlightOn,
 			rowHighlightOff,
-			displayCellEdit
+			displayCellEdit,
+      updateCellCallback
 	);
   myTable2 = new SortableTable(tabledata,"thetable2","columnfilter2","Booyah!",
       function(celldata,col,cellid){return renderCell(celldata,col,cellid)},
@@ -127,7 +128,8 @@ function setup(){
       "First/Last",
 			rowHighlightOn,
 			rowHighlightOff,
-			displayCellEdit
+			displayCellEdit,
+      updateCellCallback
 		);
 		myTable.renderTable();
     myTable2.renderTable();
@@ -161,6 +163,15 @@ function displayCellEdit(celldata,rowno,rowelement,cellelement,column,colno,rowd
     document.getElementById("editRowno").value=rowno;
     document.getElementById("editColno").value=colno;
     popoverelement.style.display="flex";	
+}
+
+//--------------------------------------------------------------------------
+// storeEditCell
+// ---------------
+//  Callback function for storing value after editing a cell
+//--------------------------------------------------------------------------
+function updateCellCallback(newcelldata,rowno,col,colno,tableid){
+    console.log(newcelldata,rowno,col,colno,tableid);
 }
 			
 
@@ -479,8 +490,8 @@ function makeSum(col,value,row){
         <input type='hidden' id="editTableID" />
         <input type='hidden' id="editRowno" />
         <input type='hidden' id="editColno" />
-				<img id="popovertick" class="icon" src="Icon_Tick.svg" onclick="currentTable.storeCellEdit();">
-				<img id="popovercross" class="icon" src="Icon_Cross.svg" onclick="currentTable.cancelCellEdit();">
+				<img id="popovertick" class="icon" src="Icon_Tick.svg" onclick="currentTable.updateCellInternal();">
+				<img id="popovercross" class="icon" src="Icon_Cross.svg" onclick="currentTable.cancelUpdateCellInternal();">
 	</div>
 	
 	<div id="dropdown"></div>
