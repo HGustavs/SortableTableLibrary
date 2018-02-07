@@ -2,6 +2,14 @@
 var currentTable=null;
 var sortableTables=[];
 
+function keypressHandler(event){    
+    if(event.keyCode == 13) {
+        currentTable.storeCellEdit();
+    }else if(event.keyCode == 27){
+        currentTable.cancelCellEdit();
+    }  
+}
+
 // Global sorting function global
 function sortableInternalSort(a,b)
 {
@@ -22,8 +30,7 @@ function sortableInternalSort(a,b)
 // clickedInternal
 // data, rowno, rowelement, cellelement, kolumnnamn, rowdata, tableid
 function clickedInternal(event,clickdobj)
-{
-		
+{    
 		var cellelement=event.target.closest("td");
     let arr=cellelement.className.split("-");
 		var columnname=arr[1];
@@ -33,11 +40,17 @@ function clickedInternal(event,clickdobj)
     let barr=rowelement.id.split("_");
 		var rowno=parseInt(barr[1]);
 		var tableid=barr[0];
+
+    for(let i=0;i<sortableTables.length;i++){
+        if (sortableTables[i].tableid==tableid){
+            currentTable=sortableTables[i];
+        }
+    }
 		
 		var rowdata=currentTable.getRow(rowno);
 		var coldata=rowdata[columnno];
 	
-		currentTable.showEditCell(coldata,rowno,rowelement,cellelement,columnname,rowdata,coldata,tableid);
+		currentTable.showEditCell(coldata,rowno,rowelement,cellelement,columnname,columnno,rowdata,coldata,tableid);
 
 }
 
@@ -359,4 +372,14 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 							
 				}
 		}
+    this.cancelCellEdit = function(){
+        document.getElementById('popover').style.display="none";
+    }
+    this.storeCellEdit = function(){      
+        let rowno=document.getElementById("editRowno").value;
+        let colno=document.getElementById("editColno").value;
+        tbl.tblbody[rowno][colno]=popoveredit.value;
+        document.getElementById('popover').style.display="none";
+        this.reRender();
+    }
 }

@@ -142,7 +142,7 @@ function setup(){
 			
 // coldata,rowno,rowelement,cellelement,columnname,rowdata,coldata,tableid
 
-function displayCellEdit(celldata,rowno,rowelement,cellelement,column,rowdata){
+function displayCellEdit(celldata,rowno,rowelement,cellelement,column,colno,rowdata,coldata,tableid){
 
 		var lmnt=cellelement.getBoundingClientRect();
 		console.log(lmnt.top, lmnt.right, lmnt.bottom, lmnt.left, lmnt.height, lmnt.width);
@@ -157,7 +157,10 @@ function displayCellEdit(celldata,rowno,rowelement,cellelement,column,rowdata){
 		popoverelement.style.width=(Math.round(lmnt.width)+40)+"px";
 	  document.getElementById("popoveredit").size=celldata.toString().length;
 		popoveredit.value=celldata;
-	
+    document.getElementById("editTableID").value=tableid;
+    document.getElementById("editRowno").value=rowno;
+    document.getElementById("editColno").value=colno;
+    popoverelement.style.display="flex";	
 }
 			
 
@@ -470,10 +473,14 @@ function makeSum(col,value,row){
   <br>
   <br>
 	
-	<div id="popover" style="display:flex;">
-				<input type='text' id="popoveredit" style="flex-grow:1" />
-				<img class="icon" src="Icon_Tick.svg">
-				<img class="icon" src="Icon_Cross.svg">
+	<div id="popover" style="display:none;">
+				<input type='text' id="popoveredit" style="flex-grow:1" onkeypress="keypressHandler(event)"/>
+        <input type='hidden' id="editCellID" />
+        <input type='hidden' id="editTableID" />
+        <input type='hidden' id="editRowno" />
+        <input type='hidden' id="editColno" />
+				<img id="popovertick" class="icon" src="Icon_Tick.svg" onclick="currentTable.storeCellEdit();">
+				<img id="popovercross" class="icon" src="Icon_Cross.svg" onclick="currentTable.cancelCellEdit();">
 	</div>
 	
 	<div id="dropdown"></div>
