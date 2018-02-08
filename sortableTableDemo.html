@@ -23,7 +23,7 @@
 							background-image: radial-gradient(yellow,#f06d06);
 				}
 		
-				#popover{
+				#editpopover{
 						border:1px solid red;
 						box-shadow:2px 2px 2px #000;
 						position:absolute;
@@ -37,7 +37,7 @@
   			}                
         
         input{
-            width:calc(100%-8px);
+            width:100%;
         }
 			
      </style>
@@ -146,24 +146,39 @@ function setup(){
 
 function displayCellEdit(celldata,rowno,rowelement,cellelement,column,colno,rowdata,coldata,tableid){
 
-		var lmnt=cellelement.getBoundingClientRect();
-		console.log(lmnt.top, lmnt.right, lmnt.bottom, lmnt.left, lmnt.height, lmnt.width);
-		var popoverelement=document.getElementById("popover");
-		var popoveredit=document.getElementById("popoveredit");
-		var xscroll=window.pageXOffset;
-		var yscroll=window.pageYOffset;
-
-		popoverelement.style.left=Math.round(lmnt.left+xscroll)+"px";
-		popoverelement.style.top=Math.round(lmnt.top+yscroll)+"px";
-		popoverelement.style.height=Math.round(lmnt.height)+"px";
-		popoverelement.style.width=(Math.round(lmnt.width)+40)+"px";
-	  document.getElementById("popoveredit").size=celldata.toString().length;
-    popoverelement.style.display="flex";	
+    let str="";
     if(column=="trumma"){
-        popoveredit.value=celldata.xk;
+        str+="<div style='display:flex;flex-direction:column;flex-grow:1;'>";
+        str+="<input type='text' id='popoveredit_xk' class='popoveredit' style='flex-grow:1' onkeypress='keypressHandler(event)' value='"+celldata[property]+"' size="+celldata[property].toString().length+"/>";
+        str+="<input type='text' id='popoveredit_yk' class='popoveredit' style='flex-grow:1' onkeypress='keypressHandler(event)' value='"+celldata[property]+"' size="+celldata[property].toString().length+"/>";
+        str+="<input type='text' id='popoveredit_col' class='popoveredit' style='flex-grow:1' onkeypress='keypressHandler(event)' value='"+celldata[property]+"' size="+celldata[property].toString().length+"/>";
+        str+="</div>";
+  /*
+            for (var property in celldata) {
+                if (celldata.hasOwnProperty(property)) {
+                    if(firstValue===null){
+                        firstValue=property;
+                    }
+                    str+="<input type='text' id='popoveredit_"+property+"' class='popoveredit' style='flex-grow:1' onkeypress='keypressHandler(event)' value='"+celldata[property]+"' size="+celldata[property].toString().length+"/>";
+                }
+            }
+            str+="</div>";
+            document.getElementById("popoveredit").innerHTML=str;
+            document.getElementById("popoveredit_"+firstValue).setSelectionRange(0, document.getElementById("popoveredit_"+firstValue).value.length);
+            document.getElementById("popoveredit_"+firstValue).focus();
+        }
+    */
     }else{
-        popoveredit.value=celldata;            
+        str+="<input type='text' id='popoveredit0' class='popoveredit' style='flex-grow:1' onkeypress='keypressHandler(event)' size='"+celldata.toString().length+"'/>";
+        /*
+        document.getElementById("popoveredit0").size=celldata.toString().length;
+        document.getElementById("popoveredit0").value=celldata;
+        document.getElementById("popoveredit0").selected=celldata;
+        document.getElementById("popoveredit0").setSelectionRange(0, document.getElementById("popoveredit0").value.length);
+        document.getElementById("popoveredit0").focus();
+        */
     }
+    return str;          
 }
 
 //--------------------------------------------------------------------------
@@ -181,13 +196,18 @@ function updateCellCallback(oldcelldata,newcelldata,rowno,colno,column,tableid){
             return newcelldata;
         }          
     }else if(column=="trumma"){
-        newcelldata=parseInt(newcelldata);
-        if(isNaN(newcelldata)){
-            return oldcelldata;     
-        }else{
-            oldcelldata.xk=newcelldata;        
-            return oldcelldata;
-        }          
+      var obj={xk:documment.getElementById("popoveredit_xk").value,xy:documment.getElementById("popoveredit_yk").value,col:documment.getElementById("popoveredit_col").value};
+      //var sortabletable.save(obj);
+      return obj;
+
+      /*
+        for (var property in newcelldata) {
+            if (newcelldata.hasOwnProperty(property)) {
+                // do check if entered values are of correct type.
+            }
+        }
+      */
+        //return newcelldata;
     }else{
         return newcelldata;
     }
@@ -503,11 +523,7 @@ function makeSum(col,value,row){
   <br>
   <br>
 	
-	<div id="popover" style="display:none;">
-				<input type='text' id="popoveredit" style="flex-grow:1" onkeypress="keypressHandler(event)"/>
-				<img id="popovertick" class="icon" src="Icon_Tick.svg" onclick="currentTable.updateCellInternal();">
-				<img id="popovercross" class="icon" src="Icon_Cross.svg" onclick="currentTable.cancelUpdateCellInternal();">
-	</div>
+	<div id="editpopover" style="display:none;"></div>
 	
 	<div id="dropdown"></div>
 	

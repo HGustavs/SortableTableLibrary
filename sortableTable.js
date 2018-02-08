@@ -1,12 +1,19 @@
 // Keep track of Currently active Table and all sortable tables
-var currentTable=null;
-var sortableTables=[];
+var sortableTable={
+    currentTable=null,
+    sortableTables=[],
+    var edit_rowno=-1,
+    var edit_columnno=-1,
+    var edit_columnname=null,
+    var edit_tableid=null   
+}
 
 function keypressHandler(event){    
+    console.log(event);
     if(event.keyCode == 13) {
-        currentTable.updateCellInternal();
+        updateCellInternal(event.orginalTarget);
     }else if(event.keyCode == 27){
-        currentTable.cancelUpdateCellInternal();
+        cancelUpdateCellInternal(event.orginalTarget);
     }  
 }
 
@@ -27,34 +34,71 @@ function sortableInternalSort(a,b)
 		return ret;
 }
 
+function cancelUpdateCellInternal(event){
+    let rowelement=event.target.closest("tr");
+    let barr=rowelement.id.split("_");
+    let tableid=barr[0];
+    for(let i=0;i<sortableTables.length;i++){
+       if (sortableTables[i].tableid==tableid){
+           sortableTables[i].setEditCell(-1,-1,null,null);
+       }
+    }
+    document.getElementById('popover').style.display="none";
+}
+function updateCellInternal(d){
+    console.log(d);
+    let rowelement=d.closest("tr");
+    let barr=rowelement.id.split("_");
+    let tableid=barr[0];
+    for(let i=0;i<sortableTables.length;i++){
+        if (sortableTables[i].tableid==tableid){
+            sortableTables[i].updateCell(newVal);
+        }
+    }
+}
+
 // clickedInternal
-// data, rowno, rowelement, cellelement, kolumnnamn, rowdata, tableid
 function clickedInternal(event,clickdobj)
 {    
-		var cellelement=event.target.closest("td");
+		let cellelement=event.target.closest("td");
     let arr=cellelement.className.split("-");
-		var columnname=arr[1];
-		var columnno=arr[2];
-
-		var rowelement=event.target.closest("tr");
+		let rowelement=event.target.closest("tr");
     let barr=rowelement.id.split("_");
-		var rowno=parseInt(barr[1]);
-		var tableid=barr[0];
 
+    var columnname=arr[1];
+		var columnno=arr[2];
+		var rowno=parseInt(barr[1]);
+		var tableid=barr[0];    
+    var str="";
     for(let i=0;i<sortableTables.length;i++){
         if (sortableTables[i].tableid==tableid){
             currentTable=sortableTables[i];
         }
     }
+    
+    setEditCell(rowno,columnno,columnname,tableid);
 		
 		var rowdata=currentTable.getRow(rowno);
 		var coldata=rowdata[columnno];
     
-    currentTable.setEditRow(rowno);
-    currentTable.setEditCol(columnno);
-  
-		currentTable.showEditCell(coldata,rowno,rowelement,cellelement,columnname,columnno,rowdata,coldata,tableid);
+    str+="<div id='input-container' style='flex-grow:1'>";
+		str+=currentTable.showEditCell(coldata,rowno,rowelement,cellelement,columnname,columnno,rowdata,coldata,tableid);
+    str+="</div>";
+    str+="<img id='popovertick' class='icon' src='Icon_Tick.svg' onclick='updateCellInternal();'>";
+    str+="<img id='popovercross' class='icon' src='Icon_Cross.svg' onclick='cancelUpdateCellInternal();'>";
+    var lmnt=cellelement.getBoundingClientRect();
+    console.log(lmnt.top, lmnt.right, lmnt.bottom, lmnt.left, lmnt.height, lmnt.width);
+    var popoverelement=document.getElementById("editpopover");
+    popoverelement.innerHTML=str;
+    var popoveredit=document.getElementById("popoveredit");
+    var xscroll=window.pageXOffset;
+    var yscroll=window.pageYOffset;
 
+    popoverelement.style.left=Math.round(lmnt.left+xscroll)+"px";
+    popoverelement.style.top=Math.round(lmnt.top+yscroll)+"px";
+    popoverelement.style.minHeight=Math.round(lmnt.height)+"px";
+    popoverelement.style.minWidth=(Math.round(lmnt.width)+40)+"px";
+    popoverelement.style.display="flex";	
 }
 
 // We call all highlights in order to allow hover of non-active tables
@@ -107,6 +151,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 	
 		this.ascending=false;
 		this.tableid=tableid;
+    
 	
     tbl.cleanHead=[];
     
@@ -376,21 +421,18 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 							
 				}
 		}
-    this.cancelUpdateCellInternal = function(){
-        document.getElementById('popover').style.display="none";
+    this.setEditCell = function(rowno,columnno,columnname,tableid){
+        edit_rowno=rowno;
+        edit_columnno=columnno;
+        edit_columnname=columnname;
+        edit_tableid=tableid;   
+        console.log(edit_rowno,edit_columnno,edit_columnname,edit_tableid)     
     }
-    this.updateCellInternal = function(){      
-        console.log(this.editRowno + " : " + this.editColno);
-        let oldcelldata=tbl.tblbody[this.editRowno][this.editColno];
-        let newCellData=document.getElementById('popoveredit').value;        
-        document.getElementById('popover').style.display="none";
-        tbl.tblbody[this.editRowno][this.editColno]=this.updateCell(oldcelldata,newCellData,this.editRowno,this.editColno,tbl.cleanHead[this.editColno],this.tableid);
-        this.reRender();
+    this.updateCell = function(newVal){
+        console.log(edit_rowno,edit_columnno,edit_columnname,edit_tableid)     
+        tbl.tblbody[edit_rowno][edit_columnno]=newVal;
+        this.setEditCell(-1,-1,null,null);
+        // callback to App's AJAX call
     }
-    this.setEditRow = function(rowno){      
-        this.editRowno=rowno;
-    }
-    this.setEditCol = function(colno){      
-        this.editColno=colno;
-    }
+
 }
