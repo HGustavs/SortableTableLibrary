@@ -158,11 +158,12 @@ function displayCellEdit(celldata,rowno,rowelement,cellelement,column,colno,rowd
 		popoverelement.style.height=Math.round(lmnt.height)+"px";
 		popoverelement.style.width=(Math.round(lmnt.width)+40)+"px";
 	  document.getElementById("popoveredit").size=celldata.toString().length;
-		popoveredit.value=celldata;
-    document.getElementById("editTableID").value=tableid;
-    document.getElementById("editRowno").value=rowno;
-    document.getElementById("editColno").value=colno;
     popoverelement.style.display="flex";	
+    if(column=="trumma"){
+        popoveredit.value=celldata.xk;
+    }else{
+        popoveredit.value=celldata;            
+    }
 }
 
 //--------------------------------------------------------------------------
@@ -170,8 +171,26 @@ function displayCellEdit(celldata,rowno,rowelement,cellelement,column,colno,rowd
 // ---------------
 //  Callback function for storing value after editing a cell
 //--------------------------------------------------------------------------
-function updateCellCallback(newcelldata,rowno,col,colno,tableid){
-    console.log(newcelldata,rowno,col,colno,tableid);
+function updateCellCallback(oldcelldata,newcelldata,rowno,colno,column,tableid){
+    console.log(oldcelldata,newcelldata,rowno,colno,column,tableid);
+    if(column=="pnr"){
+        newcelldata=parseFloat(newcelldata);
+        if(isNaN(newcelldata)){
+            return oldcelldata;     
+        }else{
+            return newcelldata;
+        }          
+    }else if(column=="trumma"){
+        newcelldata=parseInt(newcelldata);
+        if(isNaN(newcelldata)){
+            return oldcelldata;     
+        }else{
+            oldcelldata.xk=newcelldata;        
+            return oldcelldata;
+        }          
+    }else{
+        return newcelldata;
+    }
 }
 			
 
@@ -486,10 +505,6 @@ function makeSum(col,value,row){
 	
 	<div id="popover" style="display:none;">
 				<input type='text' id="popoveredit" style="flex-grow:1" onkeypress="keypressHandler(event)"/>
-        <input type='hidden' id="editCellID" />
-        <input type='hidden' id="editTableID" />
-        <input type='hidden' id="editRowno" />
-        <input type='hidden' id="editColno" />
 				<img id="popovertick" class="icon" src="Icon_Tick.svg" onclick="currentTable.updateCellInternal();">
 				<img id="popovercross" class="icon" src="Icon_Cross.svg" onclick="currentTable.cancelUpdateCellInternal();">
 	</div>

@@ -49,7 +49,10 @@ function clickedInternal(event,clickdobj)
 		
 		var rowdata=currentTable.getRow(rowno);
 		var coldata=rowdata[columnno];
-	
+    
+    currentTable.setEditRow(rowno);
+    currentTable.setEditCol(columnno);
+  
 		currentTable.showEditCell(coldata,rowno,rowelement,cellelement,columnname,columnno,rowdata,coldata,tableid);
 
 }
@@ -377,12 +380,17 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
         document.getElementById('popover').style.display="none";
     }
     this.updateCellInternal = function(){      
-        let rowno=document.getElementById("editRowno").value;
-        let colno=document.getElementById("editColno").value;
-        let newCellData=document.getElementById('popoveredit').value;
-        tbl.tblbody[rowno][colno]=newCellData;
-        this.updateCell(newCellData,rowno,tbl.cleanHead[colno],colno,this.tableid);
+        console.log(this.editRowno + " : " + this.editColno);
+        let oldcelldata=tbl.tblbody[this.editRowno][this.editColno];
+        let newCellData=document.getElementById('popoveredit').value;        
         document.getElementById('popover').style.display="none";
+        tbl.tblbody[this.editRowno][this.editColno]=this.updateCell(oldcelldata,newCellData,this.editRowno,this.editColno,tbl.cleanHead[this.editColno],this.tableid);
         this.reRender();
+    }
+    this.setEditRow = function(rowno){      
+        this.editRowno=rowno;
+    }
+    this.setEditCol = function(colno){      
+        this.editColno=colno;
     }
 }
