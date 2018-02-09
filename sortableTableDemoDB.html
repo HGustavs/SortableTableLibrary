@@ -55,8 +55,16 @@
 //--------------------------------------------------------------------------------------------------------
 
 //------------==========########### GLOBALS ###########==========------------
-
+var tables=["thetable","thetable2"];
 var tabledata={
+	tblhead:[
+		"ID","First/Last","Pnr","Num","Foo","Holk","Trumma"
+	],
+	tblbody:[
+	],
+	tblfoot:["","","Pnr","Num","","","Trumma"]
+}
+var tabledata2={
 	tblhead:[
 		"ID","First/Last","Pnr","Num","Foo","Holk","Trumma"
 	],
@@ -81,11 +89,12 @@ function setup(){
   
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-          var data= JSON.parse(this.responseText);
-          console.log(data);
-          tabledata.tblbody=data;
-          myTable = new SortableTable(tabledata,"thetable","columnfilter","Booyah!",
+      if (this.readyState == 4 && this.status == 200) {          
+          var serverdata= JSON.parse(this.responseText);
+          console.log(serverdata);
+          tabledata.tblbody=serverdata[tables[0]];
+          tabledata2.tblbody=serverdata[tables[1]];
+          myTable = new SortableTable(tabledata,tables[0],"columnfilter","Booyah!",
               renderCell,
               renderSortOptions,
               renderColumnFilter,
@@ -100,7 +109,7 @@ function setup(){
               displayCellEdit,
               updateCellCallback
           );
-          myTable2 = new SortableTable(tabledata,"thetable2","columnfilter2","Booyah!",
+          myTable2 = new SortableTable(tabledata,tables[1],"columnfilter2","Booyah!",
               function(celldata,col,cellid){return renderCell(celldata,col,cellid)},
               function(col, kind){return renderSortOptions2(col,kind)},
               function(col, status){return renderColumnFilter2(col,status)},
@@ -119,7 +128,7 @@ function setup(){
             myTable2.renderTable();
       }
   };
-  xhttp.open("GET", "db_service.php", true);
+  xhttp.open("GET", "db_service.php?dbarr="+JSON.stringify(tables), true);
   xhttp.send();  		
 }
 			
@@ -155,7 +164,7 @@ function updateCellCallback(rowno,colno,column,tableid){
         if(isNaN(newcelldata)){
             return -1;// This must be handled
         }else{
-            updateDB(rowno,column,newcelldata);
+            updateDB(tableid,rowno,column,newcelldata);
             return newcelldata;
         }          
     }else if(column=="num"){
@@ -163,28 +172,49 @@ function updateCellCallback(rowno,colno,column,tableid){
         if(isNaN(newcelldata)){
             return -1;// This must be handled
         }else{
-            updateDB(rowno,column,newcelldata);
+            updateDB(tableid,rowno,column,newcelldata);
             return newcelldata;
         }          
     }else if(column=="trumma"){
         // TODO: Check of individual parts needs to be done.
         var obj={xk:parseInt(document.getElementById("popoveredit_xk").value),yk:parseInt(document.getElementById("popoveredit_yk").value),col:document.getElementById("popoveredit_col").value};
-        updateDB(rowno,column,JSON.stringify(obj));
+        updateDB(tableid,rowno,column,JSON.stringify(obj));
         return obj;
     }else{
-        updateDB(rowno,column,document.getElementById("popoveredit0").value);
+        updateDB(tableid,rowno,column,document.getElementById("popoveredit0").value);
         return document.getElementById("popoveredit0").value;
     }    
 }
 			
-function updateDB(id,col,val){
+//--------------------------------------------------------------------------
+// updateDB
+// ---------------
+// AJAX call to update cell value in database on server
+//--------------------------------------------------------------------------
+function updateDB(tableid,id,col,val){
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
           alert("snus");
       }
   };
-  xhttp.open("GET", "db_service.php?command=update&updateid="+id+"&updatecol="+col+"&updatevalue="+val, true);
+  xhttp.open("GET", "db_service.php?command=update&updateid="+id+"&updatecol="+col+"&updatevalue="+val+"&tableid="+tableid+"&dbarr="+JSON.stringify(tables), true);
+  xhttp.send();
+}
+
+//--------------------------------------------------------------------------
+// genDB
+// ---------------
+// AJAX call to update cell value in database on server
+//--------------------------------------------------------------------------
+function genDB(){
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          alert("Database generated.");
+      }
+  };
+  xhttp.open("GET", "db_service.php?command=gendata&dbarr="+JSON.stringify(tables), true);
   xhttp.send();
 }
 
@@ -456,7 +486,7 @@ function makeSum(col,value,row){
 </head>
 <body onload="setup();" onkeypress='keypressHandler(event)'>
   <h2>Example Table 1</h2>
-	
+	<button onclick="genDB();">Generate new databases</button>
 	<div id='MHTEST'></div>
 	<!-- Column filter div -->
 	<div id="columnfilter"></div>

@@ -6,6 +6,12 @@ if(isset($_GET['command'])){
     $command="UNK";  
 }
 
+if(isset($_GET['dbarr'])){
+    $dbarr=json_decode($_GET['dbarr']);    
+}else{
+    $dbarr="UNK";  
+}
+
 if(isset($_GET['updatecol'])){
     $updatecol=$_GET['updatecol'];    
 }else{
@@ -56,50 +62,52 @@ function genData(){
   return $tblbody;
 }
 
-if($command==="gendata"){
-    $db->exec("DROP TABLE IF EXISTS free_shavocado");
+if($command==="gendata" && $dbarr !== "UNK"){    
+    foreach ($dbarr as $database){
+        $db->exec("DROP TABLE IF EXISTS ".$database);
 
-    //"id","First/Last","Pnr","Num","Foo","Holk","Trumma"
-    $db->exec(
-    "CREATE TABLE IF NOT EXISTS free_shavocado (
-        id INTEGER PRIMARY KEY, 
-        firstlast TEXT, 
-        pnr REAL,
-        num INTEGER,
-        foo TEXT,
-        holk TEXT,
-        trumma TEXT)"
-    );
+        //"id","First/Last","Pnr","Num","Foo","Holk","Trumma"
+        $db->exec(
+        "CREATE TABLE IF NOT EXISTS ".$database." (
+            id INTEGER PRIMARY KEY, 
+            firstlast TEXT, 
+            pnr REAL,
+            num INTEGER,
+            foo TEXT,
+            holk TEXT,
+            trumma TEXT)"
+        );
 
-    // Prepare INSERT statement 
-    $insert = "INSERT INTO free_shavocado (id,firstlast,pnr,num,foo,holk,trumma) VALUES (:id,:firstlast,:pnr,:num,:foo,:holk,:trumma)";
-    $stmt = $db->prepare($insert);
+        // Prepare INSERT statement 
+        $insert = "INSERT INTO ".$database." (id,firstlast,pnr,num,foo,holk,trumma) VALUES (:id,:firstlast,:pnr,:num,:foo,:holk,:trumma)";
+        $stmt = $db->prepare($insert);
 
-    // Bind parameters to statement variables
-    $stmt->bindParam(':id', $id);
-    $stmt->bindParam(':firstlast', $first_last);
-    $stmt->bindParam(':pnr', $pnr);
-    $stmt->bindParam(':num', $num);
-    $stmt->bindParam(':foo', $foo);
-    $stmt->bindParam(':holk', $holk);
-    $stmt->bindParam(':trumma', $trumma);
+        // Bind parameters to statement variables
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':firstlast', $first_last);
+        $stmt->bindParam(':pnr', $pnr);
+        $stmt->bindParam(':num', $num);
+        $stmt->bindParam(':foo', $foo);
+        $stmt->bindParam(':holk', $holk);
+        $stmt->bindParam(':trumma', $trumma);
 
-    // Insert all of the items in the array
-    foreach (genData() as $item) {
-        $id = intval($item[0]);
-        $first_last = $item[1];
-        $pnr = floatval($item[2]);
-        $num = intval($item[3]);
-        $foo = $item[4];
-        $holk = $item[5];
-        $trumma = json_encode($item[6]);
+        // Insert all of the items in the array
+        foreach (genData() as $item) {
+            $id = intval($item[0]);
+            $first_last = $item[1];
+            $pnr = floatval($item[2]);
+            $num = intval($item[3]);
+            $foo = $item[4];
+            $holk = $item[5];
+            $trumma = json_encode($item[6]);
 
-        try {    
-            $stmt->execute();
-        } catch(PDOException $e) {
-            echo $e->getMessage();
-        }
-    }  
+            try {    
+                $stmt->execute();
+            } catch(PDOException $e) {
+                echo $e->getMessage();
+            }
+        }        
+    }
 }
 
 if($command==="update"){
@@ -117,11 +125,20 @@ if($command==="update"){
 
 }
 
-
-$results = $db->query('SELECT * FROM free_shavocado');
 $data=array();
-foreach ($results as $result) {
-    array_push($data,array(intval($result['id']),$result['firstlast'],floatval($result['pnr']),intval($result['num']),$result['foo'],$result['holk'],json_decode($result['trumma'])));
+if($dbarr !== "UNK"){
+    foreach ($dbarr as $database){
+        $tbl=array();
+        try {   
+            $results = $db->query('SELECT * FROM '.$database);
+            while ($result = $results->fetch(PDO::FETCH_ASSOC)) { 
+                array_push($tbl,array(intval($result['id']),$result['firstlast'],floatval($result['pnr']),intval($result['num']),$result['foo'],$result['holk'],json_decode($result['trumma'])));
+            }
+            $data[$database]=$tbl;
+        } catch(PDOException $e) {
+            echo $e->getMessage();
+        }        
+    }
 }
 echo json_encode($data);
 ?>
