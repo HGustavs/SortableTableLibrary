@@ -62,14 +62,10 @@ function clickedInternal(event,clickdobj)
 		var rowno=parseInt(barr[1]);
 		var tableid=barr[0];    
     var str="";
-    for(let i=0;i<sortableTable.sortableTables.length;i++){
-        if (sortableTable.sortableTables[i].tableid==tableid){          
-            sortableTable.edit_rowno=rowno;
-            sortableTable.edit_columnno=columnno;
-            sortableTable.edit_columnname=columnname;
-            sortableTable.edit_tableid=tableid;
-        }
-    }
+    sortableTable.edit_rowno=rowno;
+    sortableTable.edit_columnno=columnno;
+    sortableTable.edit_columnname=columnname;
+    sortableTable.edit_tableid=tableid;    
     		
 		var rowdata=sortableTable.currentTable.getRow(rowno);
 		var coldata=rowdata[columnno];

@@ -18,6 +18,13 @@ if(isset($_GET['updatecol'])){
     $updatecol="UNK";  
 }
 
+if(isset($_GET['updatetable'])){
+    $updatetable=$_GET['updatetable'];    
+}else{
+    $updatetable="UNK";  
+}
+
+
 if(isset($_GET['updatevalue'])){
     $updatevalue=$_GET['updatevalue'];    
 }else{
@@ -110,10 +117,10 @@ if($command==="gendata" && $dbarr !== "UNK"){
     }
 }
 
-if($command==="update"){
+if($command==="update" && $updatetable!=="UNK" && $updateid!=="UNK" && $updatevalue!=="UNK"){
 
     // Updating
-    $update = "UPDATE free_shavocado SET ".$updatecol." = :updatevalue WHERE id = :id";
+    $update = "UPDATE ".$updatetable." SET ".$updatecol." = :updatevalue WHERE id = :id";
     $stmt = $db->prepare($update);
     $stmt->bindParam(':updatevalue', $updatevalue);
     $stmt->bindParam(':id', $updateid);
@@ -131,8 +138,10 @@ if($dbarr !== "UNK"){
         $tbl=array();
         try {   
             $results = $db->query('SELECT * FROM '.$database);
-            while ($result = $results->fetch(PDO::FETCH_ASSOC)) { 
-                array_push($tbl,array(intval($result['id']),$result['firstlast'],floatval($result['pnr']),intval($result['num']),$result['foo'],$result['holk'],json_decode($result['trumma'])));
+            if($results){
+                while ($result = $results->fetch(PDO::FETCH_ASSOC)) { 
+                    array_push($tbl,array(intval($result['id']),$result['firstlast'],floatval($result['pnr']),intval($result['num']),$result['foo'],$result['holk'],json_decode($result['trumma'])));
+                }              
             }
             $data[$database]=$tbl;
         } catch(PDOException $e) {

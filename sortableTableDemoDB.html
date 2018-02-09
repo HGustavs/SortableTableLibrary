@@ -109,7 +109,7 @@ function setup(){
               displayCellEdit,
               updateCellCallback
           );
-          myTable2 = new SortableTable(tabledata,tables[1],"columnfilter2","Booyah!",
+          myTable2 = new SortableTable(tabledata2,tables[1],"columnfilter2","Booyah!",
               function(celldata,col,cellid){return renderCell(celldata,col,cellid)},
               function(col, kind){return renderSortOptions2(col,kind)},
               function(col, status){return renderColumnFilter2(col,status)},
@@ -195,23 +195,25 @@ function updateDB(tableid,id,col,val){
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-          alert("snus");
+          alert("Cell updated on server side.");
       }
   };
-  xhttp.open("GET", "db_service.php?command=update&updateid="+id+"&updatecol="+col+"&updatevalue="+val+"&tableid="+tableid+"&dbarr="+JSON.stringify(tables), true);
+  xhttp.open("GET", "db_service.php?command=update&updateid="+id+"&updatecol="+col+"&updatevalue="+val+"&updatetable="+tableid+"&dbarr="+JSON.stringify(tables), true);
   xhttp.send();
 }
 
 //--------------------------------------------------------------------------
 // genDB
 // ---------------
-// AJAX call to update cell value in database on server
+// AJAX call to generate new databases on server.
+// THIS COMPLETELY REMOVES PREVIOUS DATABASES
 //--------------------------------------------------------------------------
 function genDB(){
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
           alert("Database generated.");
+          location.reload();
       }
   };
   xhttp.open("GET", "db_service.php?command=gendata&dbarr="+JSON.stringify(tables), true);
