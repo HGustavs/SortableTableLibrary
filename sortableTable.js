@@ -160,7 +160,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		this.ascending=false;
 		this.tableid=tableid;
     
-	  this.hasMagicHeadings=false;
+	  this.hasMagicHeadings=hasmagic;
 	
     tbl.cleanHead=[];
     
@@ -348,8 +348,8 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 
 				// Assign table and magic headings table(s)
 				if(this.hasMagicHeadings){					 
-						document.getElementById(tableid).innerHTML=mhstr+mhvstr+mhfstr;
-
+						document.getElementById(tableid).innerHTML=str+mhstr+mhvstr+mhfstr;
+					
 						document.getElementById(tableid+"_tbl_mh").style.width=document.getElementById(tableid+"_tbl").getBoundingClientRect().width+"px";
 						document.getElementById(tableid+"_tbl_mh").style.boxSizing = "border-box";          
 						children=document.getElementById(tableid+"_tbl").getElementsByTagName('TH');
@@ -365,10 +365,9 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 							document.getElementById(children[i].id.slice(0, -1)+"f").style.width=children[i].getBoundingClientRect().width;
 							document.getElementById(children[i].id.slice(0, -1)+"f").style.boxSizing = "border-box";
 						}
-				}	
-				document.getElementById(tableid).innerHTML=str;
-
-			
+				}else{
+						document.getElementById(tableid).innerHTML=str;
+				}
 
 }
 
@@ -425,29 +424,31 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				for(var i=0;i<sortableTable.sortableTables.length;i++){
 							let table=sortableTable.sortableTables[i];
 							if(table.hasMagicHeadings){
-									var thetab=document.getElementById(table.tableid+"_tbl").getBoundingClientRect();
-									var thetabhead=document.getElementById(table.tableid+"_tblhead").getBoundingClientRect();
-									// If top is negative and top+height is positive draw mh otherwise hide
-									// Vertical
-									if(thetabhead.top<0&&thetab.bottom>0){
-											document.getElementById(table.tableid+"_tbl_mh").style.left=thetab.left+"px";
-											document.getElementById(table.tableid+"_tbl_mh").style.display="table";
-									}else{
-											document.getElementById(table.tableid+"_tbl_mh").style.display="none";
-									}
-									// Horizontal
-									if(thetab.left<0&&thetab.right>0){
-											document.getElementById(table.tableid+"_tbl_mhv").style.top=thetabhead.top+"px";
-											document.getElementById(table.tableid+"_tbl_mhv").style.display="table";
-									}else{
-											document.getElementById(table.tableid+"_tbl_mhv").style.display="none";							
-									}
+									if(document.getElementById(table.tableid+"_tbl")!=null){
+											var thetab=document.getElementById(table.tableid+"_tbl").getBoundingClientRect();
+											var thetabhead=document.getElementById(table.tableid+"_tblhead").getBoundingClientRect();
+											// If top is negative and top+height is positive draw mh otherwise hide
+											// Vertical
+											if(thetabhead.top<0&&thetab.bottom>0){
+													document.getElementById(table.tableid+"_tbl_mh").style.left=thetab.left+"px";
+													document.getElementById(table.tableid+"_tbl_mh").style.display="table";
+											}else{
+													document.getElementById(table.tableid+"_tbl_mh").style.display="none";
+											}
+											// Horizontal
+											if(thetab.left<0&&thetab.right>0){
+													document.getElementById(table.tableid+"_tbl_mhv").style.top=thetabhead.top+"px";
+													document.getElementById(table.tableid+"_tbl_mhv").style.display="table";
+											}else{
+													document.getElementById(table.tableid+"_tbl_mhv").style.display="none";							
+											}
 
-									// Fixed
-									if(thetab.left<0&&thetab.right>0&&thetabhead.top<0&&thetab.bottom>0){
-											document.getElementById(table.tableid+"_tbl_mhf").style.display="table";
-									}else{
-											document.getElementById(table.tableid+"_tbl_mhf").style.display="none";
+											// Fixed
+											if(thetab.left<0&&thetab.right>0&&thetabhead.top<0&&thetab.bottom>0){
+													document.getElementById(table.tableid+"_tbl_mhf").style.display="table";
+											}else{
+													document.getElementById(table.tableid+"_tbl_mhf").style.display="none";
+											}
 									}
 							}
 				}
