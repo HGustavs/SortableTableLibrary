@@ -136,7 +136,6 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		var renderCell=renderCell;
 		var renderSortOptions=renderSortOptions;
 		var renderColumnFilter=renderColumnFilter;
-		
 		if(rowFilter==null){
 				var rowFilter=defaultRowFilter;		
 		}else{
@@ -203,11 +202,11 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 						if(isFirstVisit){
 								columnfilter.push(col);
 						} 
-						if(this.renderColumnFilter!=null){
+						if(renderColumnFilter!=null){
 								filterstr+=renderColumnFilter(col,columnfilter.indexOf(col)>-1);							
 						}
 				}
-				if(this.renderColumnFilter!=null){
+				if(renderColumnFilter!=null){
 						document.getElementById(filterid).innerHTML=filterstr;
 				}
 
