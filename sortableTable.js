@@ -230,7 +230,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
             var cleancol=tbl.cleanHead[colno];
 						// If column is visible
 						if(columnfilter.indexOf(col)>-1){
-                if(this.renderSortOptions!=null){
+                if(renderSortOptions!=null){
 										if(colno <= freezePaneIndex){
 												if(col==sortcolumn){
 														mhfstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhf' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";

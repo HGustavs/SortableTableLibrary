@@ -114,7 +114,8 @@ function setup(){
 			rowHighlightOn,
 			rowHighlightOff,
 			displayCellEdit,
-      updateCellCallback
+      updateCellCallback,
+			true
 	);
   myTable2 = new SortableTable(tabledata,"thetable2","columnfilter2","Booyah!",
       function(celldata,col,cellid){return renderCell(celldata,col,cellid)},
@@ -129,8 +130,10 @@ function setup(){
 			rowHighlightOn,
 			rowHighlightOff,
 			displayCellEdit,
-      updateCellCallback
+      updateCellCallback,
+			true
 		);
+
 		myTable.renderTable();
     myTable2.renderTable();
 		
