@@ -390,8 +390,8 @@ function rowFilter(row){
 //--------------------------------------------------------------------------
 function compare(a,b){
     // Find out which column and part of column are we sorting on from currentTable
-    let col=currentTable.getSortcolumn();
-    let kind=currentTable.getSortkind();
+    let col=sortableTable.currentTable.getSortcolumn();
+    let kind=sortableTable.currentTable.getSortkind();
     
     if (col == "Trumma"){
         if(kind==0 || kind==1){ 
@@ -420,7 +420,7 @@ function compare(a,b){
         return 0; 
     } else {
         // We allways sort none numbers below 
-        let tmp=(currentTable.ascending) ? -1000000 : 1000000;
+        let tmp=(sortableTable.currentTable.ascending) ? -1000000 : 1000000;
         
         let left = (isNaN(a)) ? tmp : +a; 
         let right = (isNaN(b)) ? tmp : +b; 

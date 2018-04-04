@@ -5,7 +5,7 @@ var sortableTable={
     edit_rowno:-1,
     edit_columnno:-1,
     edit_columnname:null,
-    edit_tableid:null
+    edit_tableid:null,
 }
 
 function keypressHandler(event){    
@@ -14,6 +14,11 @@ function keypressHandler(event){
     }else if(event.keyCode == 27){
         clearUpdateCellInternal();
     }      
+}
+
+function defaultRowFilter()
+{
+		return true;
 }
 
 // Global sorting function global
@@ -52,42 +57,45 @@ function updateCellInternal(){
 // clickedInternal
 function clickedInternal(event,clickdobj)
 {    
-		let cellelement=event.target.closest("td");
-    let arr=cellelement.className.split("-");
-		let rowelement=event.target.closest("tr");
-    let barr=rowelement.id.split("_");
+		if(sortableTable.currentTable.showEditCell!=null){
+				let cellelement=event.target.closest("td");
+				let arr=cellelement.className.split("-");
+				let rowelement=event.target.closest("tr");
+				let barr=rowelement.id.split("_");
 
-    var columnname=arr[1];
-		var columnno=arr[2];
-		var rowno=parseInt(barr[1]);
-		var tableid=barr[0];    
-    var str="";
-    sortableTable.edit_rowno=rowno;
-    sortableTable.edit_columnno=columnno;
-    sortableTable.edit_columnname=columnname;
-    sortableTable.edit_tableid=tableid;    
-    		
-		var rowdata=sortableTable.currentTable.getRow(rowno);
-		var coldata=rowdata[columnno];
-    
-    str+="<div id='input-container' style='flex-grow:1'>";
-		str+=sortableTable.currentTable.showEditCell(coldata,rowno,rowelement,cellelement,columnname,columnno,rowdata,coldata,tableid);
-    str+="</div>";
-    str+="<img id='popovertick' class='icon' src='Icon_Tick.svg' onclick='updateCellInternal();'>";
-    str+="<img id='popovercross' class='icon' src='Icon_Cross.svg' onclick='clearUpdateCellInternal();'>";
-    var lmnt=cellelement.getBoundingClientRect();
-    console.log(lmnt.top, lmnt.right, lmnt.bottom, lmnt.left, lmnt.height, lmnt.width);
-    var popoverelement=document.getElementById("editpopover");
-    popoverelement.innerHTML=str;
-    var popoveredit=document.getElementById("popoveredit");
-    var xscroll=window.pageXOffset;
-    var yscroll=window.pageYOffset;
+				var columnname=arr[1];
+				var columnno=arr[2];
+				var rowno=parseInt(barr[1]);
+				var tableid=barr[0];    
+				var str="";
+				sortableTable.edit_rowno=rowno;
+				sortableTable.edit_columnno=columnno;
+				sortableTable.edit_columnname=columnname;
+				sortableTable.edit_tableid=tableid;    
 
-    popoverelement.style.left=Math.round(lmnt.left+xscroll)+"px";
-    popoverelement.style.top=Math.round(lmnt.top+yscroll)+"px";
-    popoverelement.style.minHeight=Math.round(lmnt.height)+"px";
-    popoverelement.style.minWidth=(Math.round(lmnt.width)+40)+"px";
-    popoverelement.style.display="flex";	
+				var rowdata=sortableTable.currentTable.getRow(rowno);
+				var coldata=rowdata[columnno];
+
+				str+="<div id='input-container' style='flex-grow:1'>";
+				str+=sortableTable.currentTable.showEditCell(coldata,rowno,rowelement,cellelement,columnname,columnno,rowdata,coldata,tableid);		
+				str+="</div>";
+				str+="<img id='popovertick' class='icon' src='Icon_Tick.svg' onclick='updateCellInternal();'>";
+				str+="<img id='popovercross' class='icon' src='Icon_Cross.svg' onclick='clearUpdateCellInternal();'>";
+				var lmnt=cellelement.getBoundingClientRect();
+				console.log(lmnt.top, lmnt.right, lmnt.bottom, lmnt.left, lmnt.height, lmnt.width);
+				var popoverelement=document.getElementById("editpopover");
+
+				popoverelement.innerHTML=str;
+				var popoveredit=document.getElementById("popoveredit");
+				var xscroll=window.pageXOffset;
+				var yscroll=window.pageYOffset;
+
+				popoverelement.style.left=Math.round(lmnt.left+xscroll)+"px";
+				popoverelement.style.top=Math.round(lmnt.top+yscroll)+"px";
+				popoverelement.style.minHeight=Math.round(lmnt.height)+"px";
+				popoverelement.style.minWidth=(Math.round(lmnt.width)+40)+"px";
+				popoverelement.style.display="flex";	
+		}
 }
 
 // We call all highlights in order to allow hover of non-active tables
@@ -97,7 +105,9 @@ function rowHighlightInternal(event,row)
     let rowno=parseInt(arr[1]);
 		let centerel=event.target.closest("td");
 		for(let i=0;i<sortableTable.sortableTables.length;i++){
-				sortableTable.sortableTables[i].highlightRow(row.id,rowno,centerel.className,centerel);
+				if(sortableTable.sortableTables[i].highlightRow!=null){
+						sortableTable.sortableTables[i].highlightRow(row.id,rowno,centerel.className,centerel);				
+				}
     }    
 }
 
@@ -108,11 +118,13 @@ function rowDeHighlightInternal(event,row)
     let rowno=parseInt(arr[1]);
 		let centerel=event.target.closest("td");
 		for(let i=0;i<sortableTable.sortableTables.length;i++){
-				sortableTable.sortableTables[i].deHighlightRow(row.id,rowno,centerel.className,centerel);
+				if(sortableTable.sortableTables[i].deHighlightRow!=null){
+						sortableTable.sortableTables[i].deHighlightRow(row.id,rowno,centerel.className,centerel);
+				}
     }    
 }
 
-function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,colsumList,rowsumList,rowsumHeading,sumFunc,freezePane,highlightRow,deHighlightRow,showEditCell,updateCell) {
+function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter,rowFilter,colsumList,rowsumList,rowsumHeading,sumFunc,freezePane,highlightRow,deHighlightRow,showEditCell,updateCell,hasmagic) {
 
 		// Private members
 		var columnfilter=[];
@@ -124,7 +136,14 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		var renderCell=renderCell;
 		var renderSortOptions=renderSortOptions;
 		var renderColumnFilter=renderColumnFilter;
-		var rowFilter=rowFilter;
+		
+		if(rowFilter==null){
+				var rowFilter=defaultRowFilter;		
+		}else{
+				var rowFilter=rowFilter;
+		}
+	
+	
 		var colsumList=colsumList;
 		var rowsumList=rowsumList;
 		var rowsumHeading=rowsumHeading;
@@ -141,6 +160,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		this.ascending=false;
 		this.tableid=tableid;
     
+	  this.hasMagicHeadings=false;
 	
     tbl.cleanHead=[];
     
@@ -162,7 +182,6 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		
 		this.reRender = function ()
 		{
-        console.log(tbl.tblbody);
 				// Assign currently active table
 				sortableTable.currentTable=this;
 
@@ -184,10 +203,13 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 						if(isFirstVisit){
 								columnfilter.push(col);
 						} 
-						filterstr+=renderColumnFilter(col,columnfilter.indexOf(col)>-1);							
-						
+						if(this.renderColumnFilter!=null){
+								filterstr+=renderColumnFilter(col,columnfilter.indexOf(col)>-1);							
+						}
 				}
-				document.getElementById(filterid).innerHTML=filterstr;
+				if(this.renderColumnFilter!=null){
+						document.getElementById(filterid).innerHTML=filterstr;
+				}
 
 				// Local variable that contains html code for main table and local variable that contains magic headings table
 				var str="<table style='border-collapse: collapse;margin-left:200px;' id='"+tableid+"_tbl'>";
@@ -209,21 +231,35 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
             var cleancol=tbl.cleanHead[colno];
 						// If column is visible
 						if(columnfilter.indexOf(col)>-1){
-                if(colno <= freezePaneIndex){
-										if(col==sortcolumn){
-												mhfstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhf' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
-												mhvstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhv' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
-										}else{
-												mhfstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhf' class='"+tableid+"'>"+renderSortOptions(col,-1)+"</th>";
-												mhvstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhv' class='"+tableid+"'>"+renderSortOptions(col,-1)+"</th>";
+                if(this.renderSortOptions!=null){
+										if(colno <= freezePaneIndex){
+												if(col==sortcolumn){
+														mhfstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhf' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
+														mhvstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhv' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
+												}else{
+														mhfstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhf' class='"+tableid+"'>"+renderSortOptions(col,-1)+"</th>";
+														mhvstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhv' class='"+tableid+"'>"+renderSortOptions(col,-1)+"</th>";
+												}
 										}
-								}
-								if(col==sortcolumn){
-										str+= "<th id='"+cleancol+"_"+tableid+"_tbl' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
-										mhstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mh' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
+										if(col==sortcolumn){
+												str+= "<th id='"+cleancol+"_"+tableid+"_tbl' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
+												mhstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mh' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
+										}else{
+												str+= "<th id='"+cleancol+"_"+tableid+"_tbl' class='"+tableid+"'>"+renderSortOptions(col,-1)+"</th>";
+												mhstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mh' class='"+tableid+"'>"+renderSortOptions(col,-1)+"</th>";
+										}
 								}else{
-										str+= "<th id='"+cleancol+"_"+tableid+"_tbl' class='"+tableid+"'>"+renderSortOptions(col,-1)+"</th>";
-										mhstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mh' class='"+tableid+"'>"+renderSortOptions(col,-1)+"</th>";
+										if(colno <= freezePaneIndex){
+												if(col==sortcolumn){
+														mhfstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhf' class='"+tableid+"'>"+col+"</th>";
+														mhvstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhv' class='"+tableid+"'>"+col+"</th>";
+												}else{
+														mhfstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhf' class='"+tableid+"'>"+col+"</th>";
+														mhvstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mhv' class='"+tableid+"'>"+col+"</th>";
+												}
+										}
+										str+= "<th id='"+cleancol+"_"+tableid+"_tbl' class='"+tableid+"'>"+col+"</th>";											
+										mhstr+= "<th id='"+cleancol+"_"+tableid+"_tbl_mh' class='"+tableid+"'>"+col+"</th>";										
 								}
 						}
 				}
@@ -239,7 +275,6 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
         str+= "</tr></thead>";
         mhstr+= "</tr></thead></table>";
         mhfstr+= "</tr></thead></table>";
-			
 
 				// Render table body
 				str+= "<tbody id='"+tableid+"_body'>";
@@ -312,23 +347,27 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 				mhvstr+= "</table>";
 
 				// Assign table and magic headings table(s)
-				document.getElementById(tableid).innerHTML=mhstr+"<br><br>BOOYAH!<br><br>"+mhvstr+"<br><br>BOOYAH!<br><br>"+mhfstr+"<br><br>BOOYAH!<br><br>"+str;
+				if(this.hasMagicHeadings){					 
+						document.getElementById(tableid).innerHTML=mhstr+mhvstr+mhfstr;
 
-        document.getElementById(tableid+"_tbl_mh").style.width=document.getElementById(tableid+"_tbl").getBoundingClientRect().width+"px";
-        document.getElementById(tableid+"_tbl_mh").style.boxSizing = "border-box";          
-				children=document.getElementById(tableid+"_tbl").getElementsByTagName('TH');
-				for(i=0;i<children.length;i++){
-          document.getElementById(children[i].id+"_mh").style.width=children[i].getBoundingClientRect().width;
-          document.getElementById(children[i].id+"_mh").style.boxSizing = "border-box";          
-				}
+						document.getElementById(tableid+"_tbl_mh").style.width=document.getElementById(tableid+"_tbl").getBoundingClientRect().width+"px";
+						document.getElementById(tableid+"_tbl_mh").style.boxSizing = "border-box";          
+						children=document.getElementById(tableid+"_tbl").getElementsByTagName('TH');
+						for(i=0;i<children.length;i++){
+							document.getElementById(children[i].id+"_mh").style.width=children[i].getBoundingClientRect().width;
+							document.getElementById(children[i].id+"_mh").style.boxSizing = "border-box";          
+						}
 
-        document.getElementById(tableid+"_tbl_mhf").style.width=Math.round(document.getElementById(tableid+"_tbl_mhv").getBoundingClientRect().width)+"px";
-        document.getElementById(tableid+"_tbl_mhf").style.boxSizing = "border-box";
-				children=document.getElementById(tableid+"_tbl_mhv").getElementsByTagName('TH');
-				for(i=0;i<children.length;i++){
-          document.getElementById(children[i].id.slice(0, -1)+"f").style.width=children[i].getBoundingClientRect().width;
-          document.getElementById(children[i].id.slice(0, -1)+"f").style.boxSizing = "border-box";
-  			}
+						document.getElementById(tableid+"_tbl_mhf").style.width=Math.round(document.getElementById(tableid+"_tbl_mhv").getBoundingClientRect().width)+"px";
+						document.getElementById(tableid+"_tbl_mhf").style.boxSizing = "border-box";
+						children=document.getElementById(tableid+"_tbl_mhv").getElementsByTagName('TH');
+						for(i=0;i<children.length;i++){
+							document.getElementById(children[i].id.slice(0, -1)+"f").style.width=children[i].getBoundingClientRect().width;
+							document.getElementById(children[i].id.slice(0, -1)+"f").style.boxSizing = "border-box";
+						}
+				}	
+				document.getElementById(tableid).innerHTML=str;
+
 			
 
 }
@@ -379,39 +418,41 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
     
 		// Simpler magic heading v. III
 		setInterval(freezePaneHandler,30);
-
+	
 		function freezePaneHandler()
 		{
 				// Hide magic headings and find minimum overdraft
 				for(var i=0;i<sortableTable.sortableTables.length;i++){
-              let table=sortableTable.sortableTables[i];
-							var thetab=document.getElementById(table.tableid+"_tbl").getBoundingClientRect();
-							var thetabhead=document.getElementById(table.tableid+"_tblhead").getBoundingClientRect();
-							// If top is negative and top+height is positive draw mh otherwise hide
-							// Vertical
-							if(thetabhead.top<0&&thetab.bottom>0){
-									document.getElementById(table.tableid+"_tbl_mh").style.left=thetab.left+"px";
-									document.getElementById(table.tableid+"_tbl_mh").style.display="table";
-							}else{
-									document.getElementById(table.tableid+"_tbl_mh").style.display="none";
+							let table=sortableTable.sortableTables[i];
+							if(table.hasMagicHeadings){
+									var thetab=document.getElementById(table.tableid+"_tbl").getBoundingClientRect();
+									var thetabhead=document.getElementById(table.tableid+"_tblhead").getBoundingClientRect();
+									// If top is negative and top+height is positive draw mh otherwise hide
+									// Vertical
+									if(thetabhead.top<0&&thetab.bottom>0){
+											document.getElementById(table.tableid+"_tbl_mh").style.left=thetab.left+"px";
+											document.getElementById(table.tableid+"_tbl_mh").style.display="table";
+									}else{
+											document.getElementById(table.tableid+"_tbl_mh").style.display="none";
+									}
+									// Horizontal
+									if(thetab.left<0&&thetab.right>0){
+											document.getElementById(table.tableid+"_tbl_mhv").style.top=thetabhead.top+"px";
+											document.getElementById(table.tableid+"_tbl_mhv").style.display="table";
+									}else{
+											document.getElementById(table.tableid+"_tbl_mhv").style.display="none";							
+									}
+
+									// Fixed
+									if(thetab.left<0&&thetab.right>0&&thetabhead.top<0&&thetab.bottom>0){
+											document.getElementById(table.tableid+"_tbl_mhf").style.display="table";
+									}else{
+											document.getElementById(table.tableid+"_tbl_mhf").style.display="none";
+									}
 							}
-							// Horizontal
-							if(thetab.left<0&&thetab.right>0){
-									document.getElementById(table.tableid+"_tbl_mhv").style.top=thetabhead.top+"px";
-									document.getElementById(table.tableid+"_tbl_mhv").style.display="table";
-							}else{
-									document.getElementById(table.tableid+"_tbl_mhv").style.display="none";							
-							}
-					
-							// Fixed
-							if(thetab.left<0&&thetab.right>0&&thetabhead.top<0&&thetab.bottom>0){
-									document.getElementById(table.tableid+"_tbl_mhf").style.display="table";
-							}else{
-									document.getElementById(table.tableid+"_tbl_mhf").style.display="none";
-							}
-							
 				}
 		}
+	
     this.updateCell = function(){
         console.log(sortableTable.edit_rowno,sortableTable.edit_columnno,sortableTable.edit_columnname,sortableTable.edit_tableid)     
         tbl.tblbody[sortableTable.edit_rowno][sortableTable.edit_columnno]=updateCellCallback(sortableTable.edit_rowno,sortableTable.edit_columnno,sortableTable.edit_columnname,sortableTable.edit_tableid);
