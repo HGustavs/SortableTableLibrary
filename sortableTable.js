@@ -88,8 +88,8 @@ function clickedInternal(event,clickdobj) {
 		str += "<div id='input-container' style='flex-grow:1'>";
 		str += sortableTable.currentTable.showEditCell(coldata,rowno,rowelement,cellelement,columnname,columnno,rowdata,coldata,tableid);
 		str += "</div>";
-		str += "<img id='popovertick' class='icon' src='../Shared/SortableTableLibrary/Icon_Tick.svg' onclick='updateCellInternal();'>";
-		str += "<img id='popovercross' class='icon' src='../Shared/SortableTableLibrary/Icon_Cross.svg' onclick='clearUpdateCellInternal();'>";
+		str += "<img id='popovertick' class='icon' src='Icon_Tick.svg' onclick='updateCellInternal();'>";
+		str += "<img id='popovercross' class='icon' src='Icon_Cross.svg' onclick='clearUpdateCellInternal();'>";
 		var lmnt = cellelement.getBoundingClientRect();
 		console.log(lmnt.top, lmnt.right, lmnt.bottom, lmnt.left, lmnt.height, lmnt.width);
 		var popoverelement = document.getElementById("editpopover");

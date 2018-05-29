@@ -202,12 +202,14 @@
         //--------------------------------------------------------------------------
         function updateDB(tableid,id,col,val){
             var xhttp = new XMLHttpRequest();
+            var updateStr="db_service.php?command=update&updateid=" + id + "&updatecol=" + col + "&updatevalue=" + val + "&updatetable=" + tableid + "&dbarr=" + JSON.stringify(tables);
+            console.log(updateStr);
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     alert("Cell updated on server side.");
                 }
             };
-            xhttp.open("GET", "db_service.php?command=update&updateid=" + id + "&updatecol=" + col + "&updatevalue=" + val + "&updatetable=" + tableid + "&dbarr=" + JSON.stringify(tables), true);
+            xhttp.open("GET", updateStr, true);
             xhttp.send();
         }
 
@@ -531,7 +533,7 @@
     <div id="thetable2"></div>
     <br>
   	
-  	<div id="editpopover" style="display:none;"></div>
+  	<div id="editpopover" style="display:none;position:absolute"></div>
   	
   	<div id="dropdown"></div>
 </body>
