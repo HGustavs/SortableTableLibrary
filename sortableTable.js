@@ -207,7 +207,6 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 
 		// Private array that contains names of filtered columns
 		columnfilter = JSON.parse(localStorage.getItem(tableid+"_filtercolnames"));
-		//columnfilter = tbl.tblhead;
 
 		// Local variable that contains summing array
 		var sumContent = [];
@@ -219,7 +218,7 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 		}
 
 		var filterstr = "";
-		for (var colname in tbl.tblhead) {
+		for (var colname in tbl.tblhead) {   
 				var col = tbl.tblhead[colname];
 				if (isFirstVisit || typeof columnfilter[colname] == "undefined") {
 					//columnfilter.push(col);
@@ -229,6 +228,10 @@ function SortableTable(tbl,tableid,filterid,caption,renderCell,renderSortOptions
 					filterstr += renderColumnFilter(colname,col,columnfilter[colname] != null);
 				}
 		}
+    
+    if(isFirstVisit){
+        localStorage.setItem(tableid+"_filtercolnames",JSON.stringify(columnfilter));
+    }
 
 		if (renderColumnFilter != null) {
 			document.getElementById(filterid).innerHTML = filterstr;

@@ -1,5 +1,5 @@
 <?php
-  $db = new PDO("mysql:host=localhost;port=20001;dbname=c16linst", "c16linst", "password");
+  $db = new PDO('sqlite:free_shavocado.sqlite3');
   if (isset($_GET['command'])) {
       $command = $_GET['command']; 
   } else {
@@ -135,14 +135,17 @@
               $results = $db->query('SELECT * FROM ' . $database);
               if ($results) {
                   while ($result = $results->fetch(PDO::FETCH_ASSOC)) {
-                      array_push(
-                        $tbl,
-                        array(
-                          intval($result['cid']),
-                          intval($result['lid']),
-                          getType($result['entryname'])
-                        )
-                      );
+                      array_push($tbl,
+                          array(
+                              'id'=>intval($result['id']),
+                              'firstlast'=>$result['firstlast'],
+                              'pnr'=>floatval($result['pnr']),
+                              'num'=>intval($result['num']),
+                              'foo'=>$result['foo'],
+                              'holk'=>$result['holk'],
+                              'trumma'=>json_decode($result['trumma'])
+                          )
+                      ); 
                   }             
               }
               $data[$database] = $tbl;

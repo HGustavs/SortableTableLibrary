@@ -14,18 +14,30 @@
         //--------------------------------------------------------------------------------------------------------
 
         //------------==========########### GLOBALS ###########==========------------
-        var tables = ["listentries","thetable2"];
+        var tables = ["thetable","thetable2"];
         var tabledata = {
-        	tblhead:[
-        		"lid","cid","entryname"
-        	],
+        	tblhead:{
+        		id:"ID",
+            firstlast:"First/Last",
+            pnr:"Pnr",
+            num:"Num",
+            foo:"Foo",
+            holk:"Holk",
+            trumma:"Trumma"
+        	},
         	tblbody:[],
-        	tblfoot:["","","","","","",""]
+        	tblfoot:[]
         }
         var tabledata2 = {
-        	tblhead:[
-        		"ID","First/Last","Pnr","Num","Foo","Holk","Trumma"
-        	],
+          tblhead:{
+        		id:"ID",
+            firstlast:"First/Last",
+            pnr:"Pnr",
+            num:"Num",
+            foo:"Foo",
+            holk:"Holk",
+            trumma:"Trumma"
+        	},
         	tblbody:[],
         	tblfoot:["","","Pnr","Num","","","Trumma"]
         }
@@ -45,10 +57,8 @@
         function setup() {
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    console.log(this.responseText);                 
+                if (this.readyState == 4 && this.status == 200) {      
                     var serverdata = JSON.parse(this.responseText);
-                    console.log(serverdata);
                     
                     tabledata.tblbody = serverdata[tables[0]];
                     tabledata2.tblbody = serverdata[tables[1]];
@@ -56,7 +66,7 @@
                         tabledata,
                         tables[0],
                         "columnfilter",
-                        "listentries",
+                        "The Example Table",
                         renderCell,
                         renderSortOptions,
                         renderColumnFilter,
@@ -65,7 +75,7 @@
                         ["lid","cid"],				
                         "RowSum",
                         makeSum,
-                        "lid",
+                        "id",
                         rowHighlightOn,
                         rowHighlightOff,
                         displayCellEdit,
@@ -242,25 +252,23 @@
         //--------------------------------------------------------------------------
         		
         function renderColumnFilter(col,status) {
-    		str = "";
-
-    		if (status) {
-    			str = "<label>" + col + "</label>:<input type='checkbox' checked onclick='myTable.toggleColumn(\"" + col + "\")'>";
-    		} else {
-    			str = "<label>" + col + "</label>:<input type='checkbox' onclick='myTable.toggleColumn(\"" + col + "\")'>";
-    		}
-    		return str;
+        		str = "";
+        		if (status) {
+        			str = "<label>" + col + "</label>:<input type='checkbox' checked onclick='myTable.toggleColumn(\"" + col + "\")'>";
+        		} else {
+        			str = "<label>" + col + "</label>:<input type='checkbox' onclick='myTable.toggleColumn(\"" + col + "\")'>";
+        		}
+        		return str;
         }
 
         function renderColumnFilter2(col,status) {	
-    		str = "";
-
-    		if (status) {
-    			str = "<label>" + col + "</label>:<input type='checkbox' checked onclick='myTable2.toggleColumn(\"" + col + "\")'>";
-    		} else {
-    			str = "<label>" + col + "</label>:<input type='checkbox' onclick='myTable2.toggleColumn(\"" + col + "\")'>";
-    		}
-    		return str;
+        		str = "";
+        		if (status) {
+        			str = "<label>" + col + "</label>:<input type='checkbox' checked onclick='myTable2.toggleColumn(\"" + col + "\")'>";
+        		} else {
+        			str = "<label>" + col + "</label>:<input type='checkbox' onclick='myTable2.toggleColumn(\"" + col + "\")'>";
+        		}
+        		return str;
         }
 
         //--------------------------------------------------------------------------
@@ -373,11 +381,50 @@
         // ---------------
         //  Callback function that renders a specific cell in the table
         //--------------------------------------------------------------------------
-        		
-        function renderCell(celldata,col) {
-            if (col == "Trumma") {
+/*        
+        function renderCell(col,celldata,cellid) {
+        	var str="";
+
+        	if (col == "trashcan") {
+        		obj = JSON.parse(celldata);
+        	    str = "<span class='iconBox'><img id='dorf' class='trashcanIcon' src='../Shared/icons/Trashcan.svg' ";
+        		str += " onclick='deleteFile(\"" + obj.fileid + "\",\"" + obj.filename + "\");' ></span>";
+        		return str;
+        	} else if (col == "filename") {
+        		obj = JSON.parse(celldata);
+        		if (obj.kind == "Link") {
+        			return "<a class='nowrap-filename' href='" + obj.filename + "' target='_blank'>" + obj.filename + "</a>";
+        		} else {
+
+        			return "<span class='nowrap-filename' id='openFile' onclick='changeURL(\"showdoc.php?cid="+querystring['cid']+"&coursevers="+querystring['coursevers']+"&fname="+obj.filename+"\")'>" + obj.shortfilename + "</span>";
+        		}
+        	} else if (col == "filesize") {
+                var obj = JSON.parse(celldata);
+                if(obj.kind == "Link") {
+                    return "<span>-</span>";
+                }
+                return "<span>" + formatBytes(obj.size, 0) + "</span>";
+            } else if (col == "extension") {
+        	    return "<span>" + celldata + "</span>";
+        	} else if (col == "editor") {
+        		var obj = JSON.parse(celldata);
+        		str = "";
+        		if (obj.extension == "md" || obj.extension == "txt"){
+        			str = "<span class='iconBox'><img id='dorf' class='markdownIcon' src='../Shared/icons/markdownPen.svg' ";
+                    str += "onclick='loadPreview(\"" + obj.filePath + "\", \"" + obj.filename + "\", " + obj.kind + ")'></span>";
+        		} else if (obj.extension == "js" || obj.extension == "html" || obj.extension == "css" || obj.extension == "php"){
+                    str = "<span class='iconBox'><img id='dorf' class='markdownIcon' src='../Shared/icons/markdownPen.svg' ";
+                    str += "onclick='loadFile(\"" + obj.filePath + "\", \"" + obj.filename + "\", " + obj.kind + ")'></span>";
+                }
+        		return str;
+        	}
+        	return celldata;
+        }
+	*/	
+        function renderCell(col,celldata) {
+            if (col == "trumma") {
                 return "<div><span>" + celldata.xk + "</span>/<span>" + celldata.yk + "</span></div>";
-            } else if (col == "Pnr") {
+            } else if (col == "pnr") {
                 return "<div>" + celldata + "</div>";
             } 
         	return celldata;
@@ -400,8 +447,8 @@
         //--------------------------------------------------------------------------
         function compare(a,b) {
             // Find out which column and part of column are we sorting on from currentTable
-            let col = currentTable.getSortcolumn();
-            let kind = currentTable.getSortkind();
+            let col = sortableTable.currentTable.getSortcolumn();
+            let kind = sortableTable.currentTable.getSortkind();
             
             if (col == "Trumma") {
                 if (kind == 0 || kind == 1) { 
@@ -430,12 +477,12 @@
                 return 0; 
             } else {
                 // We allways sort none numbers below 
-                let tmp = (currentTable.ascending) ? -1000000 : 1000000;
+                let tmp = (sortableTable.currentTable.ascending) ? -1000000 : 1000000;
                 
                 let left = (isNaN(a)) ? tmp : +a; 
                 let right = (isNaN(b)) ? tmp : +b; 
                 
-                return right - left;     
+                return left-right;     
             }
         }
 
@@ -474,7 +521,7 @@
   	<div id="columnfilter"></div>
     
     <!-- Table placeholder -->
-    <div id="listentries"></div>
+    <div id="thetable"></div>
     <br>
     
     <!-- You can have multiple tables on the same page -->
