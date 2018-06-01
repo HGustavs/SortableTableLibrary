@@ -36,13 +36,6 @@
       $updateid = "UNK";  
   }
 
-  
-  $command="update";
-  $updatecol="first_last";
-  $updatevalue="Snus";
-  $updateid=1;
-  
-
   function genData() {
       $possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
       $tblbody = array();  		
@@ -115,13 +108,95 @@
   }
 
   if ($command === "update" && $updatetable !== "UNK" && $updateid !== "UNK" && $updatevalue !== "UNK") {
-      // Updating
-      $update = "UPDATE " . $updatetable . " SET " . $updatecol . " = :updatevalue WHERE id = :id";
-      $stmt = $db->prepare($update);
-      $stmt->bindParam(':updatevalue', $updatevalue);
-      $stmt->bindParam(':id', $updateid);
-      try {    
-          $stmt->execute();
+      try {  
+          // Upsert
+          // Select 
+          $current="SELECT id,firstlast,pnr,num,foo,holk,trumma FROM ".$updatetable." WHERE id=:id;";
+          $stmt = $db->prepare($current);
+          $stmt->bindParam(':id', $updateid);  
+          $results = $stmt->execute();
+          // Update OR Insert
+          if ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
+              $firstlast=$result['firstlast'];
+              $pnr=floatval($result['pnr']);
+              $num=intval($result['num']);
+              $foo=$result['foo'];
+              $holk=$result['holk'];
+              $trumma=json_decode($result['trumma']);
+              
+              $update = "UPDATE " . $updatetable . " SET (firstlast,pnr,num,foo,holk,trumma) = (:firstlast,:pnr,:num,:foo,:holk,:trumma) WHERE id = :id";
+              $stmt = $db->prepare($update);
+              $stmt->bindParam(':id', $updateid);              
+
+              if($updatecol=="firstlast"){
+                  $stmt->bindParam(':firstlast', $updatevalue);                  
+              }else{
+                  $stmt->bindParam(':firstlast', $firstlast);
+              }
+              if($updatecol=="pnr"){
+                  $stmt->bindParam(':pnr', $updatevalue);                  
+              }else{
+                  $stmt->bindParam(':pnr', $pnr);
+              }
+              if($updatecol=="num"){
+                  $stmt->bindParam(':num', $updatevalue);                  
+              }else{
+                  $stmt->bindParam(':num', $num);
+              }
+              if($updatecol=="foo"){
+                  $stmt->bindParam(':foo', $updatevalue);                  
+              }else{
+                  $stmt->bindParam(':foo', $foo);
+              }
+              if($updatecol=="holk"){
+                  $stmt->bindParam(':holk', $updatevalue);                  
+              }else{
+                  $stmt->bindParam(':holk', $holk);
+              }
+              if($updatecol=="trumma"){
+                  $j=json_decode($updatevalue);
+                  $stmt->bindParam(':trumma', $j);                  
+              }else{
+                  $stmt->bindParam(':trumma', $trumma);
+              }
+              $stmt->execute();
+          } else {
+              $update = "INSERT" . $updatetable . " (id,firstlast,pnr,num,foo,holk,trumma) VALUES(:id,:firstlast,:pnr,:num,:foo,:holk,:trumma)";
+              $stmt = $db->prepare($update);
+              $stmt->bindParam(':id', $updateid);              
+              if($updatecol=="firstlast"){
+                  $stmt->bindParam(':firstlast', $updatevalue);                  
+              }else{
+                  $stmt->bindParam(':firstlast', "UNK");
+              }
+              if($updatecol=="pnr"){
+                  $stmt->bindParam(':pnr', $updatevalue);                  
+              }else{
+                  $stmt->bindParam(':pnr', -1);
+              }
+              if($updatecol=="num"){
+                  $stmt->bindParam(':num', $updatevalue);                  
+              }else{
+                  $stmt->bindParam(':num', -1);
+              }
+              if($updatecol=="foo"){
+                  $stmt->bindParam(':foo', $updatevalue);                  
+              }else{
+                  $stmt->bindParam(':foo', "UNK");
+              }
+              if($updatecol=="holk"){
+                  $stmt->bindParam(':holk', $updatevalue);                  
+              }else{
+                  $stmt->bindParam(':holk', "UNK");
+              }
+              if($updatecol=="trumma"){
+                  $stmt->bindParam(':trumma', $updatevalue);                  
+              }else{
+                  $stmt->bindParam(':trumma', "{}");
+              }
+              $stmt->execute();
+          }
+          
       } catch(PDOException $e) {
           echo $e->getMessage();
       }
@@ -132,7 +207,7 @@
       foreach ($dbarr as $database) {
           $tbl = array();
           try {   
-              $results = $db->query('SELECT * FROM ' . $database);
+              $results = $db->query('SELECT id,firstlast,pnr,num,foo,holk,trumma FROM ' . $database);
               if ($results) {
                   while ($result = $results->fetch(PDO::FETCH_ASSOC)) {
                       array_push($tbl,

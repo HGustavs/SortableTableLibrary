@@ -26,7 +26,7 @@
             trumma:"Trumma"
         	},
         	tblbody:[],
-        	tblfoot:[]
+        	tblfoot:{}
         }
         var tabledata2 = {
           tblhead:{
@@ -39,7 +39,7 @@
             trumma:"Trumma"
         	},
         	tblbody:[],
-        	tblfoot:["","","Pnr","Num","","","Trumma"]
+        	tblfoot:{pnr:"Pnr",num:"Num",trumma:"Trumma"}
         }
 
         var myTable,myTable2;
@@ -48,10 +48,14 @@
 
         //--------------------------------------------------------------------------
         // setup
-        // ---------------
-        //  Creates the table object and assigns all mandatory pararmeters
-        //  
-        //  tbl,tableid,filterid,caption,renderCell,renderSortOptions,renderColumnFilter
+        // --------------- 
+        //  Creates the table object and assigns all mandatory pararmeters 
+        //   
+        // tabledata contains the data for the table contents 
+        // "thetable" is ID for table element 
+        // "TableTitle" is Title of Table 
+        // "renderCell" is Callback for rendering each cell 
+        // Changed last parameter (hasMagicHeadings) to true 
         //--------------------------------------------------------------------------
 
         function setup() {
@@ -79,7 +83,8 @@
                         rowHighlightOn,
                         rowHighlightOff,
                         displayCellEdit,
-                        updateCellCallback
+                        updateCellCallback,
+                        true
                     );
                     myTable2 = new SortableTable(
                         tabledata2,
@@ -98,7 +103,8 @@
                         rowHighlightOn,
                         rowHighlightOff,
                         displayCellEdit,
-                        updateCellCallback
+                        updateCellCallback,
+                        true
                       );
                       myTable.renderTable();
                       myTable2.renderTable();
@@ -147,6 +153,8 @@
         //  Callback function for showing a cell editing interface
         //--------------------------------------------------------------------------
         function displayCellEdit(celldata,rowno,rowelement,cellelement,column,colno,rowdata,coldata,tableid){
+            console.log(celldata,rowno,rowelement,cellelement,column,colno,rowdata,coldata,tableid);
+            sortableTable.edit_rowid=rowdata.id;
             let str = "";
             if (column == "trumma") {
                 str += "<div style='display:flex;flex-direction:column;flex-grow:1;'>";
@@ -165,15 +173,15 @@
         // ---------------
         //  Callback function for updating a cell value after editing a cell
         //--------------------------------------------------------------------------
-        function updateCellCallback(rowno,colno,column,tableid) {
+        function updateCellCallback(rowid,column,tableid) {
             // Make AJAX call and return 
-            console.log(rowno,colno,column,tableid);
+            console.log(rowid,column,tableid);
             if (column == "pnr") {        
                 var newcelldata = parseFloat(document.getElementById("popoveredit0").value);
                 if (isNaN(newcelldata)) {
                     return -1;// This must be handled
                 } else {
-                    updateDB(tableid,rowno,column,newcelldata);
+                    updateDB(tableid,rowid,column,newcelldata);
                     return newcelldata;
                 }        
             } else if (column == "num") {
@@ -181,16 +189,16 @@
                 if (isNaN(newcelldata)) {
                     return -1;// This must be handled
                 } else {
-                    updateDB(tableid,rowno,column,newcelldata);
+                    updateDB(tableid,rowid,column,newcelldata);
                     return newcelldata;
                 }          
             } else if (column == "trumma") {
                 // TODO: Check of individual parts needs to be done.
                 var obj = {xk:parseInt(document.getElementById("popoveredit_xk").value), yk:parseInt(document.getElementById("popoveredit_yk").value), col:document.getElementById("popoveredit_col").value};
-                updateDB(tableid, rowno, column, JSON.stringify(obj));
+                updateDB(tableid, rowid, column, JSON.stringify(obj));
                 return obj;
             } else {
-                updateDB(tableid, rowno, column, document.getElementById("popoveredit0").value);
+                updateDB(tableid, rowid, column, document.getElementById("popoveredit0").value);
                 return document.getElementById("popoveredit0").value;
             }    
         }
@@ -206,7 +214,7 @@
             console.log(updateStr);
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                    alert("Cell updated on server side.");
+                    //alert("Cell updated on server side.");
                 }
             };
             xhttp.open("GET", updateStr, true);
