@@ -124,7 +124,7 @@
               $holk=$result['holk'];
               $trumma=json_decode($result['trumma']);
               
-              $update = "UPDATE " . $updatetable . " SET (firstlast,pnr,num,foo,holk,trumma) = (:firstlast,:pnr,:num,:foo,:holk,:trumma) WHERE id = :id";
+              $update = "UPDATE " . $updatetable . " SET firstlast=:firstlast,pnr=:pnr,num=:num,foo=:foo,holk=:holk,trumma=:trumma WHERE id = :id";
               $stmt = $db->prepare($update);
               $stmt->bindParam(':id', $updateid);              
 
@@ -157,7 +157,7 @@
                   $j=json_decode($updatevalue);
                   $stmt->bindParam(':trumma', $j);                  
               }else{
-                  $stmt->bindParam(':trumma', $trumma);
+                  $stmt->bindParam(':trumma', json_encode($trumma));
               }
               $stmt->execute();
           } else {

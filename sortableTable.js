@@ -67,7 +67,16 @@ function updateCellInternal() {
 
 // clickedInternal
 function clickedInternal(event,clickdobj) {
-  console.log(event.target.closest("table"));
+  let clickedTbl=event.target.closest("table").id.substring(0,event.target.closest("table").id.indexOf("_tbl"));
+  let active=null;
+  for (let i=0;i<sortableTable.sortableTables.length;i++){
+      if(sortableTable.sortableTables[i].tableid==clickedTbl){
+          active=sortableTable.sortableTables[i];
+          break;
+      }
+  }
+  sortableTable.currentTable=active;
+  
 	if (sortableTable.currentTable.showEditCell != null) {
 		var cellelement = event.target.closest("td");
 		var arr = cellelement.id.split("_");
