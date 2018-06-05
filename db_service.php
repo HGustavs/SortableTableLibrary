@@ -154,8 +154,7 @@
                   $stmt->bindParam(':holk', $holk);
               }
               if($updatecol=="trumma"){
-                  $j=json_decode($updatevalue);
-                  $stmt->bindParam(':trumma', $j);                  
+                  $stmt->bindParam(':trumma', $updatevalue);                  
               }else{
                   $stmt->bindParam(':trumma', json_encode($trumma));
               }
