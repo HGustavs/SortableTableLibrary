@@ -16,11 +16,16 @@
         //------------==========########### GLOBALS ###########==========------------
 
         var tabledata = {
-        	tblhead:[
-        		"First/Last","Pnr","Num","Foo","Holk","Trumma"
-        	],
+        	tblhead:{
+            firstlast:"First/Last",
+            pnr:"Pnr",
+            num:"Num",
+            foo:"Foo",
+            holk:"Holk",
+            trumma:"Trumma"
+        	},
         	tblbody:[],
-        	tblfoot:[]
+        	tblfoot:{}
         }
 
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -91,7 +96,7 @@
         //  Callback function that renders a specific cell in the table
         //--------------------------------------------------------------------------
 		
-        function renderCell(celldata,col) {
+        function renderCell(col,celldata) {
             if (col == "Trumma"){
                 return "<div><span>" + celldata.xk + "</span>/<span>" + celldata.yk + "</span></div>";
             } else if (col == "Pnr") {
@@ -105,10 +110,10 @@
 <body onload="setup();" onkeypress='keypressHandler(event)'>
     <h2>Example Table 1</h2>
         	
-	<div id='MHTEST'></div>
+  	<div id='MHTEST'></div>
 
-	<!-- Column filter div -->
-	<div id="columnfilter"></div>
+  	<!-- Column filter div -->
+  	<div id="columnfilter"></div>
           
     <!-- Table placeholder -->
     <div id="thetable"></div>

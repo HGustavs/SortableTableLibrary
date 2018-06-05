@@ -17,12 +17,35 @@
 		//------------==========########### GLOBALS ###########==========------------
 
 		var tabledata = {
-			tblhead:[
-				"First/Last","Pnr","Num","Foo","Holk","Trumma"
-			],
-			tblbody:[],
-			tblfoot:["","Pnr","Num","","","Trumma"]
-		}
+      tblhead:{
+        firstlast:"First/Last",
+        pnr:"Pnr",
+        num:"Num",
+        foo:"Foo",
+        holk:"Holk",
+        trumma:"Trumma"
+      },
+      tblbody:[],
+      tblfoot:{
+        pnr:"Pnr",
+        num:"Num",
+        trumma:"Trumma"
+      }
+    }
+    
+    var tabledata2 = {
+      tblhead:{
+        id:"ID",
+        firstlast:"First/Last",
+        pnr:"Pnr",
+        num:"Num",
+        foo:"Foo",
+        holk:"Holk",
+        trumma:"Trumma"
+      },
+      tblbody:[],
+      tblfoot:{pnr:"Pnr",num:"Num",trumma:"Trumma"}
+    }
 
 		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 				
@@ -69,7 +92,7 @@
 				rowFilter,
 				["Pnr","Num","Trumma"],
 				["Pnr","Num"],				
-				"RowSum",
+				"Pnr+Num",
 				makeSum,
 				"Pnr",
 				rowHighlightOn,
@@ -77,6 +100,7 @@
 				displayCellEdit,
 				updateCellCallback
 			);
+
 			myTable2 = new SortableTable(
 				tabledata,
 				"thetable2",
@@ -304,7 +328,7 @@
 		//  Callback function that renders a specific cell in the table
 		//--------------------------------------------------------------------------
 				
-		function renderCell(celldata,col){
+		function renderCell(col,celldata){
 		    if (col == "Trumma") {
 		        return "<div><span>" + celldata.xk + "</span>/<span>" + celldata.yk + "</span></div>";
 		    } else if (col == "Pnr") {
@@ -418,6 +442,13 @@
 	<!-- Table placeholder -->
 	<div id="thetable"></div>
 	<br>
+  
+  <!-- You can have multiple tables on the same page -->
+  <h2>Example Table 2</h2>
+  <div id="columnfilter2"></div>
+
+  <div id="thetable2"></div>
+  <br>
 
 	<div id="editpopover" style="display:none;"></div>
 
