@@ -47,7 +47,15 @@
                 str3 += " ";
     		}
         		
-        	tabledata.tblbody.push([str,Math.random() * 5000, Math.round(Math.random() * 20), str2,str3, {xk:Math.round(Math.random() * 2000 + 1000), yk:Math.round(Math.random() * 500), col:"Free Shevacadoo"}]);
+        tabledata.tblbody.push(
+          { firstlast:str,
+            pnr:Math.random()*5000,
+            num:Math.round(Math.random()*20),
+            foo:str2,
+            holk:str3,
+            trumma:{xk:Math.round(Math.random()*2000+1000),yk:Math.round(Math.random()*500),col:"Free Shevacadoo"}
+          }
+        );
         }
 
         var myTable,myTable2;
