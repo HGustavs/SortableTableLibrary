@@ -97,7 +97,7 @@
 				renderCell,
 				renderSortOptions,
 				renderColumnFilter,
-				rowFilter,
+				null,
 				["Pnr","Num","Trumma"],
 				["Pnr","Num"],				
 				"Pnr+Num",
@@ -106,7 +106,8 @@
 				rowHighlightOn,
 				rowHighlightOff,
 				displayCellEdit,
-				updateCellCallback
+				updateCellCallback,
+        true
 			);
 
 			myTable2 = new SortableTable(
@@ -117,7 +118,7 @@
 				function(celldata,col,cellid){return renderCell(celldata,col,cellid)},
 				function(col, kind){return renderSortOptions2(col,kind)},
 				function(col, status){return renderColumnFilter2(col,status)},
-				function(row){ return rowFilter(row)},
+				null,
 				["Pnr","Num","Trumma"],
 				["Pnr","Num"],				
 				"RowSum",
@@ -126,7 +127,8 @@
 				rowHighlightOn,
 				rowHighlightOff,
 				displayCellEdit,
-				updateCellCallback
+				updateCellCallback,
+        true
 				);
 			myTable.renderTable();
 			myTable2.renderTable();
@@ -338,7 +340,6 @@
 		//--------------------------------------------------------------------------
 				
 		function renderCell(col,celldata){
-      console.log(col,celldata);
 		    if (col == "Trumma") {
 		        return "<div><span>" + celldata.xk + "</span>/<span>" + celldata.yk + "</span></div>";
 		    } else if (col == "Pnr") {
@@ -397,7 +398,7 @@
 		        let tmp = (sortableTable.currentTable.ascending) ? -1000000 : 1000000;
 		        let left = (isNaN(a)) ? tmp : +a; 
 		        let right = (isNaN(b)) ? tmp : +b; 
-		        return right - left;     
+		        return left-right;     
 		    }
 		}
 
