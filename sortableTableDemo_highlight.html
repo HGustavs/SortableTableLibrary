@@ -147,10 +147,10 @@ function setup(){
 //  Callback function that renders a specific cell in the table
 //--------------------------------------------------------------------------
 		
-function renderCell(celldata,col){
-    if (col=="Trumma"){
+function renderCell(col,celldata){
+    if (col=="trumma"){
         return "<div><span>"+celldata.xk+"</span>/<span>"+celldata.yk+"</span></div>";
-    } else if (col=="Pnr"){
+    } else if (col=="pnr"){
         return "<div style='text-align:right'>"+celldata+"</div>";
     }    
 		return celldata;
