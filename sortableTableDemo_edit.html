@@ -56,13 +56,17 @@
 
 //------------==========########### GLOBALS ###########==========------------
 
-var tabledata={
-	tblhead:[
-		"First/Last","Pnr","Num","Foo","Holk","Trumma"
-	],
-	tblbody:[
-	],
-	tblfoot:[]
+var tabledata = {
+  tblhead:{
+    firstlast:"First/Last",
+    pnr:"Pnr",
+    num:"Num",
+    foo:"Foo",
+    holk:"Holk",
+    trumma:"Trumma"
+  },
+  tblbody:[],
+  tblfoot:{}
 }
 
 var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -85,7 +89,15 @@ for(i=0;i<200;i++){
         str3+=" ";
 		}
 		
-		tabledata.tblbody.push([str,Math.random()*5000,Math.round(Math.random()*20),str2,str3,{xk:Math.round(Math.random()*2000+1000),yk:Math.round(Math.random()*500),col:"Free Shevacadoo"}]);
+		tabledata.tblbody.push(
+      { firstlast:str,
+        pnr:Math.random()*5000,
+        num:Math.round(Math.random()*20),
+        foo:str2,
+        holk:str3,
+        trumma:{xk:Math.round(Math.random()*2000+1000),yk:Math.round(Math.random()*500),col:"Free Shevacadoo"}
+      }
+    );
 }
 
 var myTable,myTable2;
@@ -135,10 +147,10 @@ function setup(){
 //  Callback function that renders a specific cell in the table
 //--------------------------------------------------------------------------
 		
-function renderCell(celldata,col){
-    if (col=="Trumma"){
+function renderCell(col,celldata){
+    if (col=="trumma"){
         return "<div><span>"+celldata.xk+"</span>/<span>"+celldata.yk+"</span></div>";
-    } else if (col=="Pnr"){
+    } else if (col=="pnr"){
         return "<div style='text-align:right'>"+celldata+"</div>";
     }    
 		return celldata;
