@@ -256,7 +256,7 @@ function SortableTable(
               columnfilter[colname] = tbl.tblhead[colname];
     			}
     			if (renderColumnFilter != null) {
-              filterstr += renderColumnFilter(colname,col,columnfilter[colname] != null);
+              filterstr += renderColumnFilter(colname,columnfilter[colname]);
     			}
     	}
       
