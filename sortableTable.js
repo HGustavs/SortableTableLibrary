@@ -143,8 +143,31 @@ function rowDeHighlightInternal(event,row) {
 		}
     }
 }
-
-function SortableTable(
+/*
+{
+    data:"tabledata",
+    tableElementId:"thetable",
+    filterElementId:"columnfilter",
+    tableCaption:"Booyah!",
+    renderCellCallback:renderCell,
+    renderSortOptionsCallback:renderSortOptions,
+    renderColumnFilterCallback:renderColumnFilter,
+    rowFilterCallback:null,
+    columnSum:["Pnr","Num","Trumma"],
+    rowSum:[["Pnr+Num", "Pnr","Num"]],				
+    columnSumCallback:makeSum,
+    columnOrder:[],
+    freezeColumns:["Pnr"],
+    rowHighlightOnCallback:rowHighlightOn,
+    rowHighlightOffCallback:rowHighlightOff,
+    displayCellEditCallback:displayCellEdit,
+    updateCellCallback:updateCellCallback,
+    hasMagicHeadings:true,
+    hasCounterColumn:true
+}
+*/
+function SortableTable(param)
+/*
     tbl,
     tableid,
     filterid,
@@ -164,58 +187,110 @@ function SortableTable(
     updateCell,
     hasmagic, 
     counter
-  ) {
-    // Private members
+  )*/ 
+{
+		//------------==========########### Fenced paramters ###########==========------------    
+    if(typeof param.data === "undefined"){
+        param.data={tblhead:{},tblbody:[],tblfoot:{}};
+    }
+    var tbl = param.data;
+    if(typeof param.tableElementId === "undefined"){
+        param.tableElementId="UNK";
+    }
+    this.tableid = param.tableElementId;
+    if(typeof param.filterElementId === "undefined"){
+        param.filterElementId="UNK";
+    }
+    var filterid = param.filterElementId;
+    if(typeof param.tableCaption === "undefined"){
+        param.tableCaption="UNK";
+    }   
+    var caption = param.tableCaption;
+     
+    if(typeof param.renderCellCallback === "undefined"){
+        param.renderCellCallback=null;
+    }
+    var renderCell = param.renderCellCallback;
+    if(typeof param.renderSortOptionsCallback === "undefined"){
+        param.renderSortOptionsCallback=null;
+    }
+    var renderSortOptions = param.renderSortOptionsCallback;
+    if(typeof param.renderColumnFilterCallback === "undefined"){
+        param.renderColumnFilterCallback=null;
+    }
+    var renderColumnFilter = param.renderColumnFilterCallback;
+
+    if(typeof param.rowFilterCallback === "undefined"){
+        param.rowFilterCallback=defaultRowFilter;
+    }
+    var rowFilter = param.rowFilterCallback;
+    
+    if(typeof param.columnSum === "undefined"){
+        param.columnSum=[];
+    }
+    var colsumList = param.columnSum;
+    if(typeof param.rowSum === "undefined"){
+        param.rowSum=[];
+    }
+    var rowsumList = param.rowSum;
+    if(typeof param.columnSumCallback === "undefined"){
+        param.columnSumCallback=null;
+    }
+    var sumFunc = param.columnSumCallback;
+    if(typeof param.columnOrder === "undefined"){
+        param.columnOrder=[];
+    }
+    var sumFunc = param.columnOrder;
+    if(typeof param.freezeColumns === "undefined"){
+        param.freezeColumns=[];
+    }
+    var sumFunc = param.freezeColumns;
+    if(typeof param.rowHighlightOnCallback === "undefined"){
+        param.rowHighlightOnCallback=null;
+    }
+    this.highlightRow = param.rowHighlightOnCallback;
+    if(typeof param.rowHighlightOffCallback === "undefined"){
+        param.rowHighlightOffCallback=null;
+    }
+    this.deHighlightRow = param.rowHighlightOffCallback;
+    if(typeof param.displayCellEditCallback === "undefined"){
+        param.displayCellEditCallback=null;
+    }
+    this.showEditCell = param.displayCellEditCallback;
+    if(typeof param.updateCellCallback === "undefined"){
+        param.updateCellCallback=null;
+    }
+    this.updateCell = param.updateCellCallback;
+    if(typeof param.hasMagicHeadings === "undefined"){
+        param.hasMagicHeadings=false;
+    }
+    this.hasMagicHeadings = param.hasMagicHeadings;
+    if(typeof param.hasCounterColumn === "undefined"){
+        param.hasCounterColumn=false;
+    }
+    this.hasCounter = param.hasCounterColumn;
+    
+    //------------==========########### Private member variables ###########==========------------        
     var result = 0;
     var columnfilter = null;
     var sortcolumn = "UNK";
     var sortkind = -1;
-    var tbl = tbl;
-    var filterid = filterid;
-    var caption = caption;
-    var renderCell = renderCell;
-    var renderSortOptions = renderSortOptions;
-    var renderColumnFilter = renderColumnFilter;
-
+    
     // Keeps track of the last picked sorting order
     var tableSort;
     var colSort;
     var reverseSort;
-
-    if (rowFilter == null) {
-        var rowFilter = defaultRowFilter;
-    } else {
-        var rowFilter = rowFilter;
-    }
-
-    var colsumList = colsumList;
-    var rowsumList = rowsumList;
     var rowsumHeading = rowsumHeading;
-    var sumFunc = sumFunc;
     var freezePane = freezePane;
     var freezePaneArr = [];
 
-    // Public Callback Declarations
-    this.highlightRow = highlightRow;
-    this.deHighlightRow = deHighlightRow;
-    this.showEditCell = showEditCell;
-    this.updateCell = updateCell;
     this.ascending = false;
-    this.tableid = tableid;
-    this.hasMagicHeadings = hasmagic;
-    this.hasCounter = counter;
 
     // Local variable that contains html code for main table and local variable that contains magic headings table
     var str = "";
     var mhstr = "";
     var mhvstr = "";
     var mhfstr = "";
-
-    tbl.cleanHead = [];
-
-    for (var i = 0; i < tbl.tblhead.length; i++){
-        tbl.cleanHead.push(tbl.tblhead[i].toLowerCase().replace(/[^a-zA-Z0-9]+/g, ""));
-    }
 
     sortableTable.sortableTables.push(this);
 
@@ -230,16 +305,16 @@ function SortableTable(
     this.reRender = function() {
     	this.rowIndex = 1;
     	// Local variable that contains html code for main table and local variable that contains magic headings table
-    	str = "<table style='border-collapse: collapse;' id='"+tableid+"_tbl' class='list list--nomargin'>";
-    	mhstr = "<table style='table-layout:fixed;border-collapse: collapse;position:fixed;top:0px;left:0px;z-index:2000;margin-top:50px;border-bottom:none;' class='list' id='"+tableid+"_tbl_mh'>";
-    	mhvstr = "<table style='table-layout:fixed;border-collapse: collapse;position:fixed;left:0px;z-index:1000;' id='"+tableid+"_tbl_mhv'>";
-    	mhfstr = "<table style='table-layout:fixed;border-collapse: collapse;position:fixed;left:0px;top:0px;z-index:3000;' id='"+tableid+"_tbl_mhf'>";
+    	str = "<table style='border-collapse: collapse;' id='"+this.tableid+"_tbl' class='list list--nomargin'>";
+    	mhstr = "<table style='table-layout:fixed;border-collapse: collapse;position:fixed;top:0px;left:0px;z-index:2000;margin-top:50px;border-bottom:none;' class='list' id='"+this.tableid+"_tbl_mh'>";
+    	mhvstr = "<table style='table-layout:fixed;border-collapse: collapse;position:fixed;left:0px;z-index:1000;' id='"+this.tableid+"_tbl_mhv'>";
+    	mhfstr = "<table style='table-layout:fixed;border-collapse: collapse;position:fixed;left:0px;top:0px;z-index:3000;' id='"+this.tableid+"_tbl_mhf'>";
 
     	// Assign currently active table
     	sortableTable.currentTable = this;
 
     	// Private array that contains names of filtered columns
-    	columnfilter = JSON.parse(localStorage.getItem(tableid+"_filtercolnames"));
+    	columnfilter = JSON.parse(localStorage.getItem(this.tableid+"_filtercolnames"));
 
     	// Local variable that contains summing array
     	var sumContent = [];
@@ -271,17 +346,17 @@ function SortableTable(
     	str += "<caption>"+caption+"</caption>";
 
     	// Make headings Clean Contains headings using only A-Z a-z 0-9 ... move to function removes lines of code and removes redundant code/data!?
-      str += "<thead class='listHeading' id='"+tableid+"_tblhead'><tr>";
-      mhstr += "<thead class='listHeading' id='"+tableid+"_tblhead_mh'><tr>";
-      mhvstr += "<thead class='listHeading' id='"+tableid+"_tblhead_mhv'><tr>";
-      mhfstr += "<thead class='listHeading' id='"+tableid+"_tblhead_mhf'><tr>";
+      str += "<thead class='listHeading' id='"+this.tableid+"_tblhead'><tr>";
+      mhstr += "<thead class='listHeading' id='"+this.tableid+"_tblhead_mh'><tr>";
+      mhvstr += "<thead class='listHeading' id='"+this.tableid+"_tblhead_mhv'><tr>";
+      mhfstr += "<thead class='listHeading' id='"+this.tableid+"_tblhead_mhf'><tr>";
 
     	//var freezePaneIndex = tbl.tblhead.indexOf(freezePane);
 
     	// Add Column for counter if the sortabletable should have a counter column.
     	if(this.hasCounter) {
-          str += "<th id='counter_"+tableid+"_tbl' class='"+tableid+"'></th>";
-          mhstr += "<th id='counter_"+tableid+"_tbl_mh' class='"+tableid+"'></th>";
+          str += "<th id='counter_"+this.tableid+"_tbl' class='"+this.tableid+"'></th>";
+          mhstr += "<th id='counter_"+this.tableid+"_tbl_mh' class='"+this.tableid+"'></th>";
       }
 
     	for(var colname in tbl.tblhead) {
@@ -299,11 +374,11 @@ function SortableTable(
           				// 	}
           				// }
           				if (col == sortcolumn) {
-            					str += "<th id='"+colname+"_"+tableid+"_tbl' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
-            					mhstr += "<th id='"+colname+"_"+tableid+"_tbl_mh' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
+            					str += "<th id='"+colname+"_"+this.tableid+"_tbl' class='"+this.tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
+            					mhstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
           				} else {
-            					str += "<th id='"+colname+"_"+tableid+"_tbl' class='"+tableid+"'>"+renderSortOptions(col,-1)+"</th>";
-            					mhstr += "<th id='"+colname+"_"+tableid+"_tbl_mh' class='"+tableid+"'>"+renderSortOptions(col,-1)+"</th>";
+            					str += "<th id='"+colname+"_"+this.tableid+"_tbl' class='"+this.tableid+"'>"+renderSortOptions(col,-1)+"</th>";
+            					mhstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+"'>"+renderSortOptions(col,-1)+"</th>";
           				}
         			} else {
           				// if (colname <= freezePaneIndex) {
@@ -316,8 +391,8 @@ function SortableTable(
           				// 	}
           				// }
           				if (colname != "move") {
-          					str += "<th id='"+colname+"_"+tableid+"_tbl' class='"+tableid+"'>"+col+"</th>";
-          					mhstr += "<th id='"+colname+"_"+tableid+"_tbl_mh' class='"+tableid+"'>"+col+"</th>";
+          					str += "<th id='"+colname+"_"+this.tableid+"_tbl' class='"+this.tableid+"'>"+col+"</th>";
+          					mhstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+"'>"+col+"</th>";
           				}
         			}
           }
@@ -325,11 +400,11 @@ function SortableTable(
 
     	if (rowsumList.length > 0) {
       		if (rowsumHeading == sortcolumn) {
-        			str += "<th id='"+rowsumHeading+"_"+tableid+"_tbl' class='"+tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,sortkind)+"</th>";
-        			mhstr += "<th id='"+rowsumHeading+"_"+tableid+"_tbl_mh' class='"+tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,sortkind)+"</th>";
+        			str += "<th id='"+rowsumHeading+"_"+this.tableid+"_tbl' class='"+tthis.ableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,sortkind)+"</th>";
+        			mhstr += "<th id='"+rowsumHeading+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,sortkind)+"</th>";
       		} else {
-        			str += "<th id='"+rowsumHeading+"_"+tableid+"_tbl' class='"+tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,-1)+"</th>";
-        			mhstr += "<th id='"+rowsumHeading+"_"+tableid+"_tbl_mh' class='"+tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,-1)+"</th>";
+        			str += "<th id='"+rowsumHeading+"_"+this.tableid+"_tbl' class='"+this.tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,-1)+"</th>";
+        			mhstr += "<th id='"+rowsumHeading+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,-1)+"</th>";
       		}
     	}
 
@@ -338,19 +413,19 @@ function SortableTable(
     	mhfstr += "</tr></thead></table>";
 
     	// Render table body
-    	str += "<tbody id='"+tableid+"_body'>";
-    	mhvstr += "<tbody id='"+tableid+"_mhvbody'>";
+    	str += "<tbody id='"+this.tableid+"_body'>";
+    	mhvstr += "<tbody id='"+this.tableid+"_mhvbody'>";
     	for (var i = 0; i < tbl.tblbody.length; i++) {
       		var row = tbl.tblbody[i];
       		if (rowFilter(row)) {
         			// Keep row sum total here
         			var rowsum = 0;
-        			str += "<tr id='"+tableid+"_"+i+"' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box'>";
-        			mhvstr += "<tr id='"+tableid+"_"+i+"_mvh' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box'>";
+        			str += "<tr id='"+this.tableid+"_"+i+"' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box'>";
+        			mhvstr += "<tr id='"+this.tableid+"_"+i+"_mvh' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box'>";
 
         			// Add Counter cell to the row. The class <tableid>_counter can be used to style the counterText
         			if(this.hasCounter) {
-                          str += "<td onclick='clickedInternal(event,this);' class='" + tableid + "_counter'><span>"+ this.rowIndex++ +"</span></td>";
+                          str += "<td onclick='clickedInternal(event,this);' class='" + this.tableid + "_counter'><span>"+ this.rowIndex++ +"</span></td>";
                       }
         			result++;
 
@@ -369,8 +444,8 @@ function SortableTable(
           						rowsum += sumFunc(colnamez,col);
           					}
 
-          					var cellid = "r"+i+"_"+tableid+"_"+colnamez;
-          					str += "<td id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+tableid+"-"+colnamez+"'>"+renderCell(colnamez,tbl.tblbody[i][colnamez],cellid)+"</td>";
+          					var cellid = "r"+i+"_"+this.tableid+"_"+colnamez;
+          					str += "<td id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+this.tableid+"-"+colnamez+"'>"+renderCell(colnamez,tbl.tblbody[i][colnamez],cellid)+"</td>";
 
           					// if (colnamez <= freezePaneIndex) {
           					// 	mhvstr+="<td id='"+cellid+"' >"+renderCell(col,colnamez,cellid)+"</td>";
@@ -470,26 +545,26 @@ function SortableTable(
     this.magicHeader = function() {
     	// Assign table and magic headings table(s)
     	if (this.hasMagicHeadings) {
-    		document.getElementById(tableid).innerHTML = str+mhstr+mhvstr+mhfstr;
-    		document.getElementById(tableid+"_tbl_mh").style.width=document.getElementById(tableid+"_tbl").getBoundingClientRect().width+"px";
-    		document.getElementById(tableid+"_tbl_mh").style.boxSizing = "border-box";
-    		children=document.getElementById(tableid+"_tbl").getElementsByTagName('TH');
+    		document.getElementById(this.tableid).innerHTML = str+mhstr+mhvstr+mhfstr;
+    		document.getElementById(this.tableid+"_tbl_mh").style.width=document.getElementById(this.tableid+"_tbl").getBoundingClientRect().width+"px";
+    		document.getElementById(this.tableid+"_tbl_mh").style.boxSizing = "border-box";
+    		children=document.getElementById(this.tableid+"_tbl").getElementsByTagName('TH');
 
     		for (i = 0; i < children.length; i++) {
     			document.getElementById(children[i].id+"_mh").style.width = children[i].getBoundingClientRect().width+"px";
     			document.getElementById(children[i].id+"_mh").style.boxSizing = "border-box";
     		}
 
-    		document.getElementById(tableid+"_tbl_mhf").style.width = Math.round(document.getElementById(tableid+"_tbl_mhv").getBoundingClientRect().width)+"px";
-    		document.getElementById(tableid+"_tbl_mhf").style.boxSizing = "border-box";
-    		children=document.getElementById(tableid+"_tbl_mhv").getElementsByTagName('TH');
+    		document.getElementById(this.tableid+"_tbl_mhf").style.width = Math.round(document.getElementById(this.tableid+"_tbl_mhv").getBoundingClientRect().width)+"px";
+    		document.getElementById(this.tableid+"_tbl_mhf").style.boxSizing = "border-box";
+    		children=document.getElementById(this.tableid+"_tbl_mhv").getElementsByTagName('TH');
 
     		for (i = 0; i < children.length; i++) {
     			document.getElementById(children[i].id.slice(0, -1)+"f").style.width = children[i].getBoundingClientRect().width+"px";
     			document.getElementById(children[i].id.slice(0, -1)+"f").style.boxSizing = "border-box";
     		}
     	} else {
-    		document.getElementById(tableid).innerHTML = str;
+    		document.getElementById(this.tableid).innerHTML = str;
     	}
 
     	if (tableSort != null) {
