@@ -240,11 +240,11 @@ function SortableTable(param)
     if(typeof param.columnOrder === "undefined"){
         param.columnOrder=[];
     }
-    var sumFunc = param.columnOrder;
+    var columnOrder = param.columnOrder;
     if(typeof param.freezeColumns === "undefined"){
         param.freezeColumns=[];
     }
-    var sumFunc = param.freezeColumns;
+    var freezeColumns = param.freezeColumns;
     if(typeof param.rowHighlightOnCallback === "undefined"){
         param.rowHighlightOnCallback=null;
     }
@@ -272,7 +272,7 @@ function SortableTable(param)
     
     //------------==========########### Private member variables ###########==========------------        
     var result = 0;
-    var columnfilter = null;
+    var columnfilter = [];
     var sortcolumn = "UNK";
     var sortkind = -1;
     
@@ -306,19 +306,17 @@ function SortableTable(param)
     	this.rowIndex = 1;
     	// Local variable that contains html code for main table and local variable that contains magic headings table
     	str = "<table style='border-collapse: collapse;' id='"+this.tableid+"_tbl' class='list list--nomargin'>";
-    	mhstr = "<table style='table-layout:fixed;border-collapse: collapse;position:fixed;top:0px;left:0px;z-index:2000;margin-top:50px;border-bottom:none;' class='list' id='"+this.tableid+"_tbl_mh'>";
+    	mhstr = "<table style='table-layout:fixed;border-collapse: collapse;position:fixed;top:0px;left:0px;z-index:2000;margin-top:0px;border-bottom:none;' class='list' id='"+this.tableid+"_tbl_mh'>";
     	mhvstr = "<table style='table-layout:fixed;border-collapse: collapse;position:fixed;left:0px;z-index:1000;' id='"+this.tableid+"_tbl_mhv'>";
     	mhfstr = "<table style='table-layout:fixed;border-collapse: collapse;position:fixed;left:0px;top:0px;z-index:3000;' id='"+this.tableid+"_tbl_mhf'>";
 
-    	// Assign currently active table
-    	sortableTable.currentTable = this;
-
-    	// Private array that contains names of filtered columns
-    	columnfilter = JSON.parse(localStorage.getItem(this.tableid+"_filtercolnames"));
-
-    	// Local variable that contains summing array
+      // Local variable that contains summing array
     	var sumContent = [];
 
+    	// Assign currently active table
+    	sortableTable.currentTable = this;
+            
+/*
     	var isFirstVisit = false;
     	if (columnfilter == null) {
       		isFirstVisit = true;
@@ -336,10 +334,38 @@ function SortableTable(param)
     	}
       
       if(isFirstVisit){
-          localStorage.setItem(tableid+"_filtercolnames",JSON.stringify(columnfilter));
+          localStorage.setItem(this.tableid+"_filtercolnames",JSON.stringify(columnfilter));
       }
 
     	if (renderColumnFilter != null) {
+    		  document.getElementById(filterid).innerHTML = filterstr;
+    	}
+*/
+      /*
+      
+      columnOrder ["pnr","foo","trumma"]
+      columnFilter [null,"foo",null]
+      
+      */
+      //console.log(columnOrder);
+      if (renderColumnFilter != null) {
+        	columnfilter = JSON.parse(localStorage.getItem(this.tableid+"_filtercolnames"));  
+          //console.log(columnfilter);        
+          var filterstr="";
+          for (var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
+              if(columnfilter[columnOrderIdx]==="undefined"||(columnfilter[columnOrderIdx]!==null&&columnfilter[columnOrderIdx]!==columnOrder[columnOrderIdx])||columnfilter.length!==columnOrder.length){
+                  alert("we must change");
+                  // We must redo columnfilter because column order has changed or columns have been added/removed
+                  columnfilter=[];
+                  for (var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
+                      columnfilter[columnOrderIdx]=columnOrder[columnOrderIdx];
+                      filterstr += renderColumnFilter(columnOrder[columnOrderIdx],columnfilter[columnOrderIdx]);
+                  }
+                  localStorage.setItem(this.tableid+"_filtercolnames",JSON.stringify(columnfilter));
+                  break;
+              }
+              filterstr += renderColumnFilter(columnOrder[columnOrderIdx],columnfilter[columnOrderIdx]);
+          }          
     		  document.getElementById(filterid).innerHTML = filterstr;
     	}
 
@@ -359,11 +385,13 @@ function SortableTable(param)
           mhstr += "<th id='counter_"+this.tableid+"_tbl_mh' class='"+this.tableid+"'></th>";
       }
 
-    	for(var colname in tbl.tblhead) {
-      		var col = tbl.tblhead[colname];
+//    for(var colname in tbl.tblhead) {
+      for(var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
+      		var colname=columnOrder[columnOrderIdx];
+          var col=tbl.tblhead[colname];
 
-      		if (columnfilter[colname] != null) {
-        			if (renderSortOptions != null) {
+      		if (columnfilter[columnOrderIdx] !== null) {
+        			if (renderSortOptions !== null) {
           				// if (colname <= freezePaneIndex) {
           				// 	if (col == sortcolumn){
           				// 		mhfstr += "<th id='"+colname+"_"+tableid+"_tbl_mhf' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
@@ -425,15 +453,14 @@ function SortableTable(param)
 
         			// Add Counter cell to the row. The class <tableid>_counter can be used to style the counterText
         			if(this.hasCounter) {
-                          str += "<td onclick='clickedInternal(event,this);' class='" + this.tableid + "_counter'><span>"+ this.rowIndex++ +"</span></td>";
-                      }
+                  str += "<td onclick='clickedInternal(event,this);' class='" + this.tableid + "_counter'><span>"+ this.rowIndex++ +"</span></td>";
+              }
         			result++;
-
-        			for (var colnamez in row) {
-
+              /*
+              for (var colnamez in row) {
         				//Counter for freeze here
         				// If we show this column...
-        				if (columnfilter[colnamez] != null) {
+        				if (columnfilter[colnamez] !== null) {
           					// This condition is true if column is in summing list and in that case perform the sum like a BOSS
           					if (colsumList.indexOf(colnamez) >- 1) {
           						if (typeof(sumContent[colnamez]) == "undefined") sumContent[colnamez] = 0;
@@ -451,6 +478,28 @@ function SortableTable(param)
           					// 	mhvstr+="<td id='"+cellid+"' >"+renderCell(col,colnamez,cellid)+"</td>";
           					// }
         				}
+                */
+                for(var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
+          				//Counter for freeze here
+          				// If we show this column...
+          				if (columnfilter[columnOrderIdx] !== null) {
+            					// This condition is true if column is in summing list and in that case perform the sum like a BOSS
+            					if (colsumList.indexOf(columnOrder[columnOrderIdx]) >- 1) {
+            						if (typeof(sumContent[columnOrder[columnOrderIdx]]) == "undefined") sumContent[columnOrder[columnOrderIdx]] = 0;
+            						sumContent[columnOrder[columnOrderIdx]] += sumFunc(columnOrder[columnOrderIdx],col);
+            					}
+  
+            					if (rowsumList.indexOf(columnOrder[columnOrderIdx]) >- 1) {
+            						rowsum += sumFunc(columnOrder[columnOrderIdx],col);
+            					}
+  
+            					var cellid = "r"+i+"_"+this.tableid+"_"+columnOrder[columnOrderIdx];
+            					str += "<td id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+this.tableid+"-"+columnOrder[columnOrderIdx]+"'>"+renderCell(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],cellid)+"</td>";
+  
+            					// if (colnamez <= freezePaneIndex) {
+            					// 	mhvstr+="<td id='"+cellid+"' >"+renderCell(col,colnamez,cellid)+"</td>";
+            					// }
+          				}
       			}
 
       			if (rowsumList.length > 0) {
@@ -498,14 +547,24 @@ function SortableTable(param)
     this.toggleColumn = function(colname,col) {
     	// Assign currently active table
     	sortableTable.currentTable = this;
-
+      /*
     	if (columnfilter[colname] == null) {
     		columnfilter[colname] = tbl.tblhead[colname];
     	} else {
     		columnfilter[colname] = null;
     	}
-
-    	localStorage.setItem(tableid+"_filtercolnames", JSON.stringify(columnfilter));
+      */
+      for(var idx=0;idx<columnOrder.length;idx++){
+          if(columnOrder[idx]===colname){
+              if(columnfilter[idx]){
+                  columnfilter[idx]=null;
+              }else{
+                  columnfilter[idx]=columnOrder[idx];
+              }
+          }
+      }
+      //console.log(columnfilter);
+    	localStorage.setItem(this.tableid+"_filtercolnames", JSON.stringify(columnfilter));
 
     	this.reRender();
     }

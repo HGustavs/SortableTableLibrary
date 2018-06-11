@@ -76,6 +76,7 @@
     //--------------------------------------------------------------------------
 
     function setup() {
+      /*
         myTable = new SortableTable(
     		tabledata,
     	    "thetable",
@@ -96,7 +97,17 @@
             null,
             true
     	);
-    	
+    	*/
+      myTable = new SortableTable({
+          data:tabledata,
+          tableElementId:"thetable",
+          filterElementId:"columnfilter",
+          tableCaption:"Booyah!",
+          columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
+          renderCellCallback:renderCell,
+          renderSortOptionsCallback:renderSortOptions,
+          hasMagicHeadings:true,
+      });
     	myTable.renderTable();
       
     }
@@ -214,7 +225,7 @@
             let left = (isNaN(a)) ? tmp : +a; 
             let right = (isNaN(b)) ? tmp : +b; 
             
-            return right - left;     
+            return left - right;     
         }
     }
     </script>
@@ -222,11 +233,9 @@
 <body onload="setup();" onkeypress='keypressHandler(event)'>
     <h2>Example Table 1</h2>
 	
-	<!-- Column filter div -->
-	<div id="columnfilter"></div>
+  	<!-- Column filter div -->
+  	<div id="columnfilter"></div>
       
     <!-- Table placeholder -->
     <div id="thetable"></div>
-    <br>
-    <br>
 </body>

@@ -40,7 +40,7 @@
             width:100%;
         }
 			
-     </style>
+    </style>
  		<script src="sortableTable.js"></script> 
 		<script>
 
@@ -117,6 +117,7 @@ var myTable,myTable2;
 //--------------------------------------------------------------------------
 
 function setup(){
+  /*
   myTable = new SortableTable(
 		  tabledata,
 		  "thetable",
@@ -137,7 +138,17 @@ function setup(){
       null,
 		  true
 	);
-	
+	*/
+  myTable = new SortableTable({
+      data:tabledata,
+      tableElementId:"thetable",
+      filterElementId:"columnfilter",
+      columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
+      tableCaption:"Booyah!",
+      renderCellCallback:renderCell,
+      renderColumnFilterCallback:renderColumnFilter,
+      hasMagicHeadings:true
+  });
 	myTable.renderTable();
   
 }
@@ -178,15 +189,11 @@ function renderColumnFilter(col,status){
 		</script>
 </head>
 <body onload="setup();" onkeypress='keypressHandler(event)'>
-  <h2>Example Table 1</h2>
-	
-	<!-- Column filter div -->
-	<div id="columnfilter"></div>
-  
-  <!-- Table placeholder -->
-  <div id="thetable"></div>
-  <br>
-  <br>
-
-	
+    <h2>Example Table 1</h2>
+  	
+  	<!-- Column filter div -->
+  	<div id="columnfilter"></div>
+    
+    <!-- Table placeholder -->
+    <div id="thetable"></div>
 </body>
