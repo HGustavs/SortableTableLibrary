@@ -74,6 +74,7 @@
 		// Changed last parameter (hasMagicHeadings) to true
 		//--------------------------------------------------------------------------
 		function setup() {
+      /*
 		    myTable = new SortableTable(
 				tabledata,
 				"thetable",
@@ -94,7 +95,16 @@
 		        null,
 				true
 			);
-			
+			*/
+      myTable = new SortableTable({
+          data:tabledata,
+          tableElementId:"thetable",
+          tableCaption:"Booyah!",
+          renderCellCallback:renderCell,
+          columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
+          rowFilterCallback:rowFilter,
+          hasMagicHeadings:true
+      });
 			myTable.renderTable();
 		}
 
@@ -119,11 +129,17 @@
 		//--------------------------------------------------------------------------
 		var searchterm = "";
 		function rowFilter(row) {
-			for (i = 0; i < row.length; i++) {
-				if (row[i].indexOf != null) {
-					if (row[i].indexOf(searchterm) != -1) return true;
-				}
-			}
+      if(searchterm == ""){
+          return true;
+      }else{
+          for (var property in row) {
+              if (row.hasOwnProperty(property)) {
+                  if (row[property].indexOf != null) {
+                    if (row[property].indexOf(searchterm) != -1) return true;
+                  }
+              }
+          }   
+      }
 			return false;
 		}
 					
@@ -132,7 +148,7 @@
 <body onload="setup();" onkeypress='keypressHandler(event)'>
     <h2>Example Table 1</h2>
 	
-	<span>Search:</span><input type="text" id="lookingGlass" value="write your query" onkeyup="searchterm=document.getElementById('lookingGlass').value;myTable.renderTable();" /><br>
+	<span>Search:</span><input type="text" id="lookingGlass" placeholder="write your query" onkeyup="searchterm=document.getElementById('lookingGlass').value;myTable.renderTable();" /><br>
 	
 	<!-- Column filter div -->
 	<div id="columnfilter"></div>

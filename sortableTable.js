@@ -143,51 +143,8 @@ function rowDeHighlightInternal(event,row) {
 		}
     }
 }
-/*
-{
-    data:"tabledata",
-    tableElementId:"thetable",
-    filterElementId:"columnfilter",
-    tableCaption:"Booyah!",
-    renderCellCallback:renderCell,
-    renderSortOptionsCallback:renderSortOptions,
-    renderColumnFilterCallback:renderColumnFilter,
-    rowFilterCallback:null,
-    columnSum:["Pnr","Num","Trumma"],
-    rowSum:[["Pnr+Num", "Pnr","Num"]],				
-    columnSumCallback:makeSum,
-    columnOrder:[],
-    freezeColumns:["Pnr"],
-    rowHighlightOnCallback:rowHighlightOn,
-    rowHighlightOffCallback:rowHighlightOff,
-    displayCellEditCallback:displayCellEdit,
-    updateCellCallback:updateCellCallback,
-    hasMagicHeadings:true,
-    hasCounterColumn:true
-}
-*/
+
 function SortableTable(param)
-/*
-    tbl,
-    tableid,
-    filterid,
-    caption,
-    renderCell,
-    renderSortOptions,
-    renderColumnFilter,
-    rowFilter,
-    colsumList,
-    rowsumList,
-    rowsumHeading,
-    sumFunc,
-    freezePane,
-    highlightRow,
-    deHighlightRow,
-    showEditCell,
-    updateCell,
-    hasmagic, 
-    counter
-  )*/ 
 {
 		//------------==========########### Fenced paramters ###########==========------------    
     if(typeof param.data === "undefined"){
