@@ -347,25 +347,24 @@ function SortableTable(param)
       columnFilter [null,"foo",null]
       
       */
-      //console.log(columnOrder);
+    	columnfilter = JSON.parse(localStorage.getItem(this.tableid+"_filtercolnames"));  
+      //console.log(columnfilter);        
+      var filterstr="";
+      var columnOrderIdx;
+      for (columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
+          if(!(columnfilter[columnOrderIdx]===null||columnfilter[columnOrderIdx]===columnOrder[columnOrderIdx])){
+              break;
+          }
+          filterstr += renderColumnFilter(columnOrder[columnOrderIdx],columnfilter[columnOrderIdx]);
+      }          
+          
+      for (;columnOrderIdx<columnOrder.length;columnOrderIdx++){
+          columnfilter[columnOrderIdx]=columnOrder[columnOrderIdx];
+          filterstr += renderColumnFilter(columnOrder[columnOrderIdx],columnfilter[columnOrderIdx]);
+      }
+      localStorage.setItem(this.tableid+"_filtercolnames",JSON.stringify(columnfilter));
+  
       if (renderColumnFilter != null) {
-        	columnfilter = JSON.parse(localStorage.getItem(this.tableid+"_filtercolnames"));  
-          //console.log(columnfilter);        
-          var filterstr="";
-          for (var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
-              if(columnfilter[columnOrderIdx]==="undefined"||(columnfilter[columnOrderIdx]!==null&&columnfilter[columnOrderIdx]!==columnOrder[columnOrderIdx])||columnfilter.length!==columnOrder.length){
-                  alert("we must change");
-                  // We must redo columnfilter because column order has changed or columns have been added/removed
-                  columnfilter=[];
-                  for (var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
-                      columnfilter[columnOrderIdx]=columnOrder[columnOrderIdx];
-                      filterstr += renderColumnFilter(columnOrder[columnOrderIdx],columnfilter[columnOrderIdx]);
-                  }
-                  localStorage.setItem(this.tableid+"_filtercolnames",JSON.stringify(columnfilter));
-                  break;
-              }
-              filterstr += renderColumnFilter(columnOrder[columnOrderIdx],columnfilter[columnOrderIdx]);
-          }          
     		  document.getElementById(filterid).innerHTML = filterstr;
     	}
 
@@ -480,8 +479,6 @@ function SortableTable(param)
         				}
                 */
                 for(var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
-          				//Counter for freeze here
-          				// If we show this column...
           				if (columnfilter[columnOrderIdx] !== null) {
             					// This condition is true if column is in summing list and in that case perform the sum like a BOSS
             					if (colsumList.indexOf(columnOrder[columnOrderIdx]) >- 1) {
@@ -496,9 +493,6 @@ function SortableTable(param)
             					var cellid = "r"+i+"_"+this.tableid+"_"+columnOrder[columnOrderIdx];
             					str += "<td id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+this.tableid+"-"+columnOrder[columnOrderIdx]+"'>"+renderCell(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],cellid)+"</td>";
   
-            					// if (colnamez <= freezePaneIndex) {
-            					// 	mhvstr+="<td id='"+cellid+"' >"+renderCell(col,colnamez,cellid)+"</td>";
-            					// }
           				}
       			}
 
