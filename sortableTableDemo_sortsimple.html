@@ -76,6 +76,7 @@
 		//--------------------------------------------------------------------------
 
 		function setup() {
+      /*
 			myTable = new SortableTable(
           tabledata,
           "thetable",
@@ -96,6 +97,17 @@
           null,
           true
 			);
+      */
+      myTable = new SortableTable({
+          data:tabledata,
+          tableElementId:"thetable",
+          filterElementId:"columnfilter",
+          tableCaption:"Booyah!",
+          columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
+          renderCellCallback:renderCell,
+          renderSortOptionsCallback:renderSortOptions,
+          hasMagicHeadings:true,
+      });
 			myTable.renderTable();
 		}
 
@@ -139,20 +151,16 @@
 		//  Callback function with different compare alternatives for the column sort
 		//--------------------------------------------------------------------------
 		function compare(a,b) {
-			return a > b;
+			return a < b;
 		}		
 	</script>
 </head>
 <body onload="setup();"  onkeypress='keypressHandler(event)'>
-	<h2>Example Table 1</h2>
+  	<h2>Example Table 1</h2>
 
-	<span>Search:</span><input type="text" id="lookingGlass" placeholder="write your query" onkeyup="searchterm = document.getElementById('lookingGlass').value;myTable.renderTable();"/><br>
-	
-	<!-- Column filter div -->
-	<div id="columnfilter"></div>
+  	<!-- Column filter div -->
+  	<div id="columnfilter"></div>
   
   	<!-- Table placeholder -->
   	<div id="thetable"></div>
-  	<br>
-  	<br>
 </body>

@@ -116,6 +116,7 @@ var myTable,myTable2;
 //--------------------------------------------------------------------------
 
 function setup(){
+  /*
   myTable = new SortableTable(
 		  tabledata,
 		  "thetable",
@@ -136,7 +137,16 @@ function setup(){
       updateCellCallback,
 		  false
 	);
-	
+	*/
+  myTable = new SortableTable({
+      data:tabledata,
+      tableElementId:"thetable",
+      tableCaption:"Booyah!",
+      renderCellCallback:renderCell,
+      columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
+      displayCellEditCallback:displayCellEdit,
+      updateCellCallback:updateCellCallback
+  });
 	myTable.renderTable();
   
 }

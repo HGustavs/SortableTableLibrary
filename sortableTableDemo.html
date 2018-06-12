@@ -89,27 +89,28 @@
 		//--------------------------------------------------------------------------
 
 		function setup() {
-			myTable = new SortableTable(
-				tabledata,
-				"thetable",
-				"columnfilter",
-				"Booyah!",
-				renderCell,
-				renderSortOptions,
-				renderColumnFilter,
-				null,
-				["Pnr","Num","Trumma"],
-				["Pnr","Num"],				
-				"Pnr+Num",
-				makeSum,
-				"Pnr",
-				rowHighlightOn,
-				rowHighlightOff,
-				displayCellEdit,
-				updateCellCallback,
-        true
-			);
-
+			myTable = new SortableTable({
+  				data:tabledata,
+  				tableElementId:"thetable",
+  				filterElementId:"columnfilter",
+  				tableCaption:"Booyah!",
+  				renderCellCallback:renderCell,
+  				renderSortOptionsCallback:renderSortOptions,
+  				renderColumnFilterCallback:renderColumnFilter,
+  				columnSum:["Pnr","Num","Trumma"],
+  				rowSum:[["Pnr+Num", "Pnr","Num"]],				
+  				columnSumCallback:makeSum,
+          columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
+  				freezePaneIndex:3,
+  				rowHighlightOnCallback:rowHighlightOn,
+  				rowHighlightOffCallback:rowHighlightOff,
+  				displayCellEditCallback:displayCellEdit,
+  				updateCellCallback:updateCellCallback,
+          hasMagicHeadings:true,
+          hasCounterColumn:true
+      });
+      myTable.renderTable();
+/*
 			myTable2 = new SortableTable(
 				tabledata,
 				"thetable2",
@@ -130,8 +131,8 @@
 				updateCellCallback,
         true
 				);
-			myTable.renderTable();
 			myTable2.renderTable();
+      */
 		}
 					
 		//--------------------------------------------------------------------------

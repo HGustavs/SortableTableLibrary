@@ -2,8 +2,8 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="style.css">
- 	<script src="sortableTable.js"></script> 
-	<script>
+   	<script src="sortableTable.js"></script> 
+  	<script>
         // -------------------------------------------------------------------------------------------------------
         // -----------------=============######## Sortable Table Demo Code ########=============-----------------
         // -------------------------------------------------------------------------------------------------------
@@ -76,6 +76,7 @@
         //--------------------------------------------------------------------------
 
         function setup() {
+            /*
             myTable = new SortableTable(
         		tabledata,
         		"thetable",
@@ -96,6 +97,15 @@
                 null,
         		true
         	);
+          */
+          myTable = new SortableTable({
+              data:tabledata,
+              tableElementId:"thetable",
+              tableCaption:"Booyah!",
+              columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
+              renderCellCallback:renderCell,
+              hasMagicHeadings:true
+          });
         	
         	myTable.renderTable();
         }
