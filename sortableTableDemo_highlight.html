@@ -116,6 +116,7 @@ var myTable,myTable2;
 //--------------------------------------------------------------------------
 
 function setup(){
+  /*
   myTable = new SortableTable(
 		  tabledata,
 		  "thetable",
@@ -136,7 +137,15 @@ function setup(){
       null,
 		  false
 	);
-	
+  */
+  myTable = new SortableTable({
+      data:tabledata,
+      tableElementId:"thetable",
+      tableCaption:"Table Title!",
+      renderCellCallback:renderCell,
+      rowHighlightOnCallback:rowHighlightOn,
+      rowHighlightOffCallback:rowHighlightOff
+  });
 	myTable.renderTable();
   
 }

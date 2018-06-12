@@ -241,10 +241,10 @@ function SortableTable(param)
         param.columnOrder=[];
     }
     var columnOrder = param.columnOrder;
-    if(typeof param.freezeColumns === "undefined"){
-        param.freezeColumns=[];
+    if(typeof param.freezePaneIndex === "undefined"){
+        param.freezePaneIndex=-1;
     }
-    var freezeColumns = param.freezeColumns;
+    var freezePaneIndex = param.freezePaneIndex;
     if(typeof param.rowHighlightOnCallback === "undefined"){
         param.rowHighlightOnCallback=null;
     }
@@ -316,37 +316,6 @@ function SortableTable(param)
     	// Assign currently active table
     	sortableTable.currentTable = this;
             
-/*
-    	var isFirstVisit = false;
-    	if (columnfilter == null) {
-      		isFirstVisit = true;
-      		columnfilter = {};
-    	}
-    	var filterstr = "";
-    	for (var colname in tbl.tblhead) {   
-    			var col = tbl.tblhead[colname];
-    			if (isFirstVisit || typeof columnfilter[colname] == "undefined") {
-              columnfilter[colname] = tbl.tblhead[colname];
-    			}
-    			if (renderColumnFilter != null) {
-              filterstr += renderColumnFilter(colname,columnfilter[colname]);
-    			}
-    	}
-      
-      if(isFirstVisit){
-          localStorage.setItem(this.tableid+"_filtercolnames",JSON.stringify(columnfilter));
-      }
-
-    	if (renderColumnFilter != null) {
-    		  document.getElementById(filterid).innerHTML = filterstr;
-    	}
-*/
-      /*
-      
-      columnOrder ["pnr","foo","trumma"]
-      columnFilter [null,"foo",null]
-      
-      */
     	columnfilter = JSON.parse(localStorage.getItem(this.tableid+"_filtercolnames"));  
       //console.log(columnfilter);        
       var filterstr="";
@@ -355,12 +324,12 @@ function SortableTable(param)
           if(!(columnfilter[columnOrderIdx]===null||columnfilter[columnOrderIdx]===columnOrder[columnOrderIdx])){
               break;
           }
-          filterstr += renderColumnFilter(columnOrder[columnOrderIdx],columnfilter[columnOrderIdx]);
+          if (renderColumnFilter != null) filterstr += renderColumnFilter(columnOrder[columnOrderIdx],columnfilter[columnOrderIdx]);
       }          
           
       for (;columnOrderIdx<columnOrder.length;columnOrderIdx++){
           columnfilter[columnOrderIdx]=columnOrder[columnOrderIdx];
-          filterstr += renderColumnFilter(columnOrder[columnOrderIdx],columnfilter[columnOrderIdx]);
+          if (renderColumnFilter != null) filterstr += renderColumnFilter(columnOrder[columnOrderIdx],columnfilter[columnOrderIdx]);
       }
       localStorage.setItem(this.tableid+"_filtercolnames",JSON.stringify(columnfilter));
   
@@ -391,15 +360,15 @@ function SortableTable(param)
 
       		if (columnfilter[columnOrderIdx] !== null) {
         			if (renderSortOptions !== null) {
-          				// if (colname <= freezePaneIndex) {
-          				// 	if (col == sortcolumn){
-          				// 		mhfstr += "<th id='"+colname+"_"+tableid+"_tbl_mhf' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
-          				// 		mhvstr += "<th id='"+colname+"_"+tableid+"_tbl_mhv' class='"+tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
-          				// 	} else {
-          				// 		mhfstr += "<th id='"+colname+"_"+tableid+"_tbl_mhf' class='"+tableid+"'>"+renderSortOptions(col,-1)+"</th>";
-          				// 		mhvstr += "<th id='"+colname+"_"+tableid+"_tbl_mhv' class='"+tableid+"'>"+renderSortOptions(col,-1)+"</th>";
-          				// 	}
-          				// }
+          				if (columnOrderIdx <= freezePaneIndex) {
+            					if (col == sortcolumn){
+              				 		mhfstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhf' class='"+this.tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
+              				 		mhvstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhv' class='"+this.tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
+            				 	} else {
+              				 		mhfstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhf' class='"+this.tableid+"'>"+renderSortOptions(col,-1)+"</th>";
+              				 		mhvstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhv' class='"+this.tableid+"'>"+renderSortOptions(col,-1)+"</th>";
+            				 	}
+          				}
           				if (col == sortcolumn) {
             					str += "<th id='"+colname+"_"+this.tableid+"_tbl' class='"+this.tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
             					mhstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
@@ -408,15 +377,15 @@ function SortableTable(param)
             					mhstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+"'>"+renderSortOptions(col,-1)+"</th>";
           				}
         			} else {
-          				// if (colname <= freezePaneIndex) {
-          				// 	if (col == sortcolumn){
-          				// 		mhfstr += "<th id='"+cleancol+"_"+tableid+"_tbl_mhf' class='"+tableid+"'>"+col+"</th>";
-          				// 		mhvstr += "<th id='"+cleancol+"_"+tableid+"_tbl_mhv' class='"+tableid+"'>"+col+"</th>";
-          				// 	} else {
-          				// 		mhfstr += "<th id='"+cleancol+"_"+tableid+"_tbl_mhf' class='"+tableid+"'>"+col+"</th>";
-          				// 		mhvstr += "<th id='"+cleancol+"_"+tableid+"_tbl_mhv' class='"+tableid+"'>"+col+"</th>";
-          				// 	}
-          				// }
+          				if (columnOrderIdx <= freezePaneIndex) {
+          				 	if (col == sortcolumn){
+          				 		mhfstr += "<th id='"+cleancol+"_"+this.tableid+"_tbl_mhf' class='"+this.tableid+"'>"+col+"</th>";
+          				 		mhvstr += "<th id='"+cleancol+"_"+this.tableid+"_tbl_mhv' class='"+this.tableid+"'>"+col+"</th>";
+          				 	} else {
+          				 		mhfstr += "<th id='"+cleancol+"_"+this.tableid+"_tbl_mhf' class='"+this.tableid+"'>"+col+"</th>";
+          				 		mhvstr += "<th id='"+cleancol+"_"+this.tableid+"_tbl_mhv' class='"+this.tableid+"'>"+col+"</th>";
+          				 	}
+          				}
           				if (colname != "move") {
           					str += "<th id='"+colname+"_"+this.tableid+"_tbl' class='"+this.tableid+"'>"+col+"</th>";
           					mhstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+"'>"+col+"</th>";
@@ -596,40 +565,37 @@ function SortableTable(param)
       }
 
     this.magicHeader = function() {
+      console.log(this);
     	// Assign table and magic headings table(s)
     	if (this.hasMagicHeadings) {
-    		document.getElementById(this.tableid).innerHTML = str+mhstr+mhvstr+mhfstr;
-    		document.getElementById(this.tableid+"_tbl_mh").style.width=document.getElementById(this.tableid+"_tbl").getBoundingClientRect().width+"px";
-    		document.getElementById(this.tableid+"_tbl_mh").style.boxSizing = "border-box";
-    		children=document.getElementById(this.tableid+"_tbl").getElementsByTagName('TH');
+      		document.getElementById(this.tableid).innerHTML = str+mhstr+mhvstr+mhfstr;
+      		document.getElementById(this.tableid+"_tbl_mh").style.width=document.getElementById(this.tableid+"_tbl").getBoundingClientRect().width+"px";
+      		document.getElementById(this.tableid+"_tbl_mh").style.boxSizing = "border-box";
+      		children=document.getElementById(this.tableid+"_tbl").getElementsByTagName('TH');
 
-    		for (i = 0; i < children.length; i++) {
-    			document.getElementById(children[i].id+"_mh").style.width = children[i].getBoundingClientRect().width+"px";
-    			document.getElementById(children[i].id+"_mh").style.boxSizing = "border-box";
-    		}
+      		for (i = 0; i < children.length; i++) {
+        			document.getElementById(children[i].id+"_mh").style.width = children[i].getBoundingClientRect().width+"px";
+        			document.getElementById(children[i].id+"_mh").style.boxSizing = "border-box";
+      		}
 
-    		document.getElementById(this.tableid+"_tbl_mhf").style.width = Math.round(document.getElementById(this.tableid+"_tbl_mhv").getBoundingClientRect().width)+"px";
-    		document.getElementById(this.tableid+"_tbl_mhf").style.boxSizing = "border-box";
-    		children=document.getElementById(this.tableid+"_tbl_mhv").getElementsByTagName('TH');
+      		document.getElementById(this.tableid+"_tbl_mhf").style.width = Math.round(document.getElementById(this.tableid+"_tbl_mhv").getBoundingClientRect().width)+"px";
+      		document.getElementById(this.tableid+"_tbl_mhf").style.boxSizing = "border-box";
+      		children=document.getElementById(this.tableid+"_tbl_mhv").getElementsByTagName('TH');
 
-    		for (i = 0; i < children.length; i++) {
-    			document.getElementById(children[i].id.slice(0, -1)+"f").style.width = children[i].getBoundingClientRect().width+"px";
-    			document.getElementById(children[i].id.slice(0, -1)+"f").style.boxSizing = "border-box";
-    		}
+      		for (i = 0; i < children.length; i++) {
+        			document.getElementById(children[i].id.slice(0, -1)+"f").style.width = children[i].getBoundingClientRect().width+"px";
+        			document.getElementById(children[i].id.slice(0, -1)+"f").style.boxSizing = "border-box";
+      		}
     	} else {
-    		document.getElementById(this.tableid).innerHTML = str;
+    		  document.getElementById(this.tableid).innerHTML = str;
     	}
 
     	if (tableSort != null) {
-    		sortTable(tableSort, colSort, reverseSort);
+    		  sortTable(tableSort, colSort, reverseSort);
     	}
     }
 
-    // Simpler magic heading v. III
-      //setInterval(freezePaneHandler,30);
-      window.onscroll = function() {
-          freezePaneHandler();
-      }
+    setInterval(freezePaneHandler,30);
     function freezePaneHandler() {
     	// Hide magic headings and find minimum overdraft
     	for (var i = 0; i < sortableTable.sortableTables.length; i++) {
