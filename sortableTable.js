@@ -94,7 +94,7 @@ function clickedInternal(event,clickdobj) {
 		var tableid = barr[0];
     */
     var rowelement = event.target.closest("tr");
-    let match=cellelement.id.match(/^r([1-9]+)_([a-zA-Z]+)_(.*)/);
+    let match=cellelement.id.match(/^r([0-9]+)_([a-zA-Z0-9]+)_(.*)/);
     var rowno = match[1];
     var columnno = null; // Not used anymore
     var tableid = match[2];
