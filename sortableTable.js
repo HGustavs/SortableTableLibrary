@@ -50,9 +50,11 @@ function sortableInternalSort(a,b) {
 
 function clearUpdateCellInternal() {
     sortableTable.edit_rowno =- 1;
+    sortableTable.edit_rowid =null;
     sortableTable.edit_columnno =- 1;
     sortableTable.edit_columnname = null;
     sortableTable.edit_tableid = null;
+    sortableTable.edit_celldata = null;
     document.getElementById('editpopover').style.display = "none";
 }
 
@@ -76,9 +78,11 @@ function clickedInternal(event,clickdobj) {
       }
   }
   sortableTable.currentTable=active;
+  //console.log(sortableTable.currentTable);
   
 	if (sortableTable.currentTable.showEditCell != null) {
 		var cellelement = event.target.closest("td");
+    /*
 		var arr = cellelement.id.split("_");
 		var rowelement = event.target.closest("tr");
 		var barr = rowelement.id.split("_");
@@ -88,6 +92,14 @@ function clickedInternal(event,clickdobj) {
 
 		var rowno = parseInt(barr[1]);
 		var tableid = barr[0];
+    */
+    var rowelement = event.target.closest("tr");
+    let match=cellelement.id.match(/^r([1-9]+)_([a-zA-Z]+)_(.*)/);
+    var rowno = match[1];
+    var columnno = null; // Not used anymore
+    var tableid = match[2];
+    var columnname=match[3]
+
 		var str = "";
     var rowdata = sortableTable.currentTable.getRow(rowno);
 		var coldata = rowdata[columnname];
@@ -97,6 +109,7 @@ function clickedInternal(event,clickdobj) {
 		sortableTable.edit_columnno = columnno;
 		sortableTable.edit_columnname = columnname;
 		sortableTable.edit_tableid = tableid;
+    sortableTable.edit_celldata = coldata;
 
 		str += "<div id='input-container' style='flex-grow:1'>";
 		str += sortableTable.currentTable.showEditCell(coldata,rowno,rowelement,cellelement,columnname,columnno,rowdata,coldata,tableid);
@@ -522,7 +535,6 @@ function SortableTable(param)
       }
 
     this.magicHeader = function() {
-      console.log(this);
     	// Assign table and magic headings table(s)
     	if (this.hasMagicHeadings) {
       		document.getElementById(this.tableid).innerHTML = str+mhstr+mhvstr+mhfstr;
@@ -592,8 +604,9 @@ function SortableTable(param)
     }
 
       this.updateCell = function() {
+        //rowno,colno,column,tableid,oldvalue
           console.log(sortableTable.edit_rowid,sortableTable.edit_columnname,sortableTable.edit_tableid);
-          tbl.tblbody[sortableTable.edit_rowno][sortableTable.edit_columnname] = updateCellCallback(sortableTable.edit_rowid,sortableTable.edit_columnname,sortableTable.edit_tableid);
+          tbl.tblbody[sortableTable.edit_rowno][sortableTable.edit_columnname] = updateCellCallback(sortableTable.edit_rowno,null,sortableTable.edit_columnname,sortableTable.edit_tableid,null,sortableTable.edit_rowid);
           this.renderTable();
       }
     }
