@@ -74,38 +74,16 @@
         //--------------------------------------------------------------------------
 
         function setup() {
-            /*
-            myTable = new SortableTable(
-        		tabledata,
-        		"thetable",
-        		null,
-        		"Table Title!",
-                renderCell,
-                null,
-                null,
-                null,
-                [],
-                [],				
-                "",
-                null,
-                null,
-        		null,
-        		null,
-        		null,
-                null,
-        		false
-        	);
-          */
-          myTable = new SortableTable({
-              data:tabledata,
-              tableElementId:"thetable",
-              tableCaption:"Booyah!",
-              columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
-              rowSum:[[{"name":"Pnr+Num+Trumma.xk","id":"pnrid"}, "pnr","num","trumma.xk"]],
-              renderCellCallback:renderCell
-          });
-        	
-        	myTable.renderTable();
+            myTable = new SortableTable({
+                data:tabledata,
+                tableElementId:"thetable",
+                tableCaption:"Booyah!",
+                columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
+                rowSum:[[{"name":"Pnr+Num+Trumma.xk","id":"pnrid"}, "pnr","num","trumma.xk"]],
+                renderCellCallback:renderCell
+            });
+          	
+          	myTable.renderTable();
         }
 
         //--------------------------------------------------------------------------
