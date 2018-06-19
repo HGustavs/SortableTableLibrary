@@ -99,7 +99,7 @@
   				renderColumnFilterCallback:renderColumnFilter,
           rowFilterCallback:rowFilter1,
   				columnSum:["pnr","num","trumma"],
-  				rowSum:[[{"name":"Pnr+Num","id":"pnrid"}, "pnr","num"]],			
+  				rowSum:[[{"name":"Pnr+Num+Trumma.xk","id":"pnrid"}, "pnr","num","trumma.xk"]],			
   				columnSumCallback:makeSum,
           columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
   				freezePaneIndex:3,
@@ -463,12 +463,14 @@
 		//	makeSum col,value  
 		//  row is optional
 		//--------------------------------------------------------------------------
-
 		function makeSum(col,value,row){
-			if (col == "Trumma") {
+      //console.log(col,row);
+			if (col == "trumma") {
 				return value.xk;
-			} else if (col == "RowSum") {
-				return value.xk;
+			} else if (col == "pnrid") {
+				return row['pnr']+row['num'];
+			}else if (col == "pnr") {
+				return parseFloat(value);
 			} else {
 				if (value == "UNK") {
 					return 0;

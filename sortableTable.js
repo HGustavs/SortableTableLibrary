@@ -10,6 +10,28 @@ var sortableTable = {
     edit_tableid:null,
 }
 
+// Help function to get property value from object based on string in dot-format
+//
+// var obj = {trumma:{xk:30,yk:25.0}}
+// var str = "trumma.xk"
+// 
+// consol.log(byString(obj,str))
+// will print '30' to console
+function byString(o, s) {
+    s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+    s = s.replace(/^.*\./, '');         // strip leading propterty and dot
+    var a = s.split('.');
+    for (var i = 0, n = a.length; i < n; ++i) {
+        var k = a[i];
+        if (k in o) {
+            o = o[k];
+        } else {
+            return;
+        }
+    }
+    return o;
+}
+
 function searchKeyUp(e) {
 	// look for window.event in case event isn't passed in
     e = e || window.event;
@@ -209,14 +231,8 @@ function SortableTable(param)
     }
     var rowsumList = param.rowSum;
     for(let i=0;i<rowsumList.length;i++){
-      /*
-        rowsumList[i]['id'];
-        rowsumList[i]['name']
-        */
-        
         tbl.tblhead[rowsumList[i][0]['id']]=rowsumList[i][0]['name'];
         columnOrder.push(rowsumList[i][0]['id']);
-        console.log(tbl.tblhead);
     }
       
     if(typeof param.columnSumCallback === "undefined"){
@@ -398,8 +414,6 @@ function SortableTable(param)
     	for (var i = 0; i < tbl.tblbody.length; i++) {
       		var row = tbl.tblbody[i];
       		if (rowFilter(row)) {
-        			// Keep row sum total here
-        			var rowsum = 0;
         			str += "<tr id='"+this.tableid+"_"+i+"' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box'>";
         			mhvstr += "<tr id='"+this.tableid+"_"+i+"_mvh' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box'>";
 
@@ -412,29 +426,47 @@ function SortableTable(param)
           				if (columnfilter[columnOrderIdx] !== null) {
             					// This condition is true if column is in summing list and in that case perform the sum like a BOSS
             					if (colsumList.indexOf(columnOrder[columnOrderIdx]) >- 1) {
-            						if (typeof(sumContent[columnOrder[columnOrderIdx]]) == "undefined") sumContent[columnOrder[columnOrderIdx]] = 0;
-            						sumContent[columnOrder[columnOrderIdx]] += sumFunc(columnOrder[columnOrderIdx],col);
+              						if (typeof(sumContent[columnOrder[columnOrderIdx]]) == "undefined") sumContent[columnOrder[columnOrderIdx]] = 0;
+              						sumContent[columnOrder[columnOrderIdx]] += sumFunc(columnOrder[columnOrderIdx],col,row);
             					}
-  
-            					if (rowsumList.indexOf(columnOrder[columnOrderIdx]) >- 1) {
-            						rowsum += sumFunc(columnOrder[columnOrderIdx],col);
-            					}
+                      
+                      // check if this is a row-sum column
+                      for (let j=0;j<rowsumList.length;j++){
+                					if (columnOrder[columnOrderIdx].indexOf(rowsumList[j][0]['id']) >- 1) {
+                              tbl.tblbody[i][columnOrder[columnOrderIdx]]=0;
+                              for(let k=1;k<rowsumList[j].length;k++){
+                                  if (typeof(tbl.tblbody[i][rowsumList[j][k].substring(0,rowsumList[j][k].indexOf('.'))])==='object'){
+                                      tbl.tblbody[i][columnOrder[columnOrderIdx]]+=parseFloat(byString(tbl.tblbody[i][rowsumList[j][k].substring(0,rowsumList[j][k].indexOf('.'))],rowsumList[j][k]));
+                                  }else{
+                                      tbl.tblbody[i][columnOrder[columnOrderIdx]]+=parseFloat(tbl.tblbody[i][rowsumList[j][k]]);
+                                  } 
+                                  
+                              }                  						
+                					}
+                      }
   
             					var cellid = "r"+i+"_"+this.tableid+"_"+columnOrder[columnOrderIdx];
             					str += "<td id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+this.tableid+"-"+columnOrder[columnOrderIdx]+"'>"+renderCell(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],cellid)+"</td>";
   
           				}
       			}
-
+/*
       			if (rowsumList.length > 0) {
                 str += "<td>"+rowsum+"</td>";
       			}
+*/
 
       			str += "</tr>";
       			mhvstr += "</tr>";
           }
     	}
-
+      
+      for (let i=0;i<rowsumList.length;i++){
+          if(columnfilter.indexOf(rowsumList[i][0]['id']) >- 1){
+              //alert("update rowsum "+rowsums[i]);              
+          }
+      }
+      
     	str += "</tbody>";
     	mhvstr += "</tbody>";
 
