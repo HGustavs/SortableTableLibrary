@@ -99,7 +99,7 @@
   				renderColumnFilterCallback:renderColumnFilter,
           rowFilterCallback:rowFilter1,
   				columnSum:["pnr","num","trumma"],
-  				rowSum:[["Pnr+Num", "pnr","num"]],				
+  				rowSum:[[{"name":"Pnr+Num","id":"pnrid"}, "pnr","num"]],			
   				columnSumCallback:makeSum,
           columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
   				freezePaneIndex:3,
@@ -140,11 +140,11 @@
           filterElementId:"columnfilter2",
           tableCaption:"Booyah2!",
           renderCellCallback:renderCell,
-          renderSortOptionsCallback:renderSortOptions,
-          renderColumnFilterCallback:renderColumnFilter,
+          renderSortOptionsCallback:renderSortOptions2,
+          renderColumnFilterCallback:renderColumnFilter2,
           rowFilterCallback:rowFilter2,
           columnSum:["pnr","num","trumma"],
-          rowSum:[["Pnr+Num", "pnr","num"]],				
+          rowSum:[[{"name":"Pnr+Num","id":"pnrid"}, "pnr","num"]],				
           columnSumCallback:makeSum,
           columnOrder:["pnr","holk","firstlast","num","foo","trumma"],
           freezePaneIndex:1,
@@ -261,8 +261,8 @@
 			str = "";
 			if (status == -1) {
 				if (col == "firstlast") {
-					str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",1)'>First</span>/";		
-					str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",3)'>Last</span>";
+					str += "<span onclick='myTable.toggleSortStatus(\""+col+"\",1)'>First</span>/";		
+					str += "<span onclick='myTable.toggleSortStatus(\""+col+"\",3)'>Last</span>";
 				} else {
 					str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",1)'>" + colname + "</span>";	
 				}
@@ -271,17 +271,17 @@
 					// First up/down vs Last up/down
 					if (status == 0 || status == 1) {
 						if (status == 0) {
-							str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",1)'>First&#x25b2;</span>/";
+							str += "<span onclick='myTable.toggleSortStatus(\""+col+"\",1)'>First&#x25b2;</span>/";
 						} else {
-							str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",0)'>First&#x25bc;</span>/";
+							str += "<span onclick='myTable.toggleSortStatus(\""+col+"\",0)'>First&#x25bc;</span>/";
 						}
-						str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",2)'>Last</span>";				
+						str += "<span onclick='myTable.toggleSortStatus(\""+col+"\",2)'>Last</span>";				
 					} else if (status == 2 || status == 3) {
-						str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",1)'>First</span>/";				
+						str += "<span onclick='myTable.toggleSortStatus(\""+col+"\",1)'>First</span>/";				
 						if (status == 2) {
-							str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",3)'>Last&#x25b2;</span>";
+							str += "<span onclick='myTable.toggleSortStatus(\""+col+"\",3)'>Last&#x25b2;</span>";
 						} else {
-							str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",2)'>Last&#x25bc;</span>";
+							str += "<span onclick='myTable.toggleSortStatus(\""+col+"\",2)'>Last&#x25bc;</span>";
 						}
 					}		            
 				} else if (col == "trumma") {

@@ -194,23 +194,35 @@ function SortableTable(param)
         param.rowFilterCallbackz=defaultRowFilter;
     }
     var rowFilter = param.rowFilterCallback;
-    
-    if(typeof param.columnSum === "undefined"){
-        param.columnSum=[];
-    }
-    var colsumList = param.columnSum;
-    if(typeof param.rowSum === "undefined"){
-        param.rowSum=[];
-    }
-    var rowsumList = param.rowSum;
-    if(typeof param.columnSumCallback === "undefined"){
-        param.columnSumCallback=null;
-    }
-    var sumFunc = param.columnSumCallback;
     if(typeof param.columnOrder === "undefined"){
         param.columnOrder=[];
     }
     var columnOrder = param.columnOrder;
+    
+    if(typeof param.columnSum === "undefined"){
+        param.columnSum=[];        
+    }
+    var colsumList = param.columnSum;
+    
+    if(typeof param.rowSum === "undefined"){
+        param.rowSum=[];
+    }
+    var rowsumList = param.rowSum;
+    for(let i=0;i<rowsumList.length;i++){
+      /*
+        rowsumList[i]['id'];
+        rowsumList[i]['name']
+        */
+        
+        tbl.tblhead[rowsumList[i][0]['id']]=rowsumList[i][0]['name'];
+        columnOrder.push(rowsumList[i][0]['id']);
+        console.log(tbl.tblhead);
+    }
+      
+    if(typeof param.columnSumCallback === "undefined"){
+        param.columnSumCallback=null;
+    }
+    var sumFunc = param.columnSumCallback;
     if(typeof param.freezePaneIndex === "undefined"){
         param.freezePaneIndex=-1;
     }
@@ -239,7 +251,7 @@ function SortableTable(param)
         param.hasCounterColumn=false;
     }
     this.hasCounter = param.hasCounterColumn;
-    
+        
     //------------==========########### Private member variables ###########==========------------        
     var result = 0;
     var columnfilter = [];
@@ -249,8 +261,7 @@ function SortableTable(param)
     // Keeps track of the last picked sorting order
     var tableSort;
     var colSort;
-    var reverseSort;
-    var rowsumHeading = rowsumHeading;
+    var reverseSort;    
     var freezePane = freezePane;
     var freezePaneArr = [];
 
@@ -297,12 +308,12 @@ function SortableTable(param)
           if(!(columnfilter[columnOrderIdx]===null||columnfilter[columnOrderIdx]===columnOrder[columnOrderIdx])){
               break;
           }
-          if (renderColumnFilter != null) filterstr += renderColumnFilter(columnOrder[columnOrderIdx],columnfilter[columnOrderIdx]);
+          if (renderColumnFilter != null) filterstr += renderColumnFilter(columnOrder[columnOrderIdx],columnfilter[columnOrderIdx],tbl.tblhead[columnOrder[columnOrderIdx]]);
       }          
           
       for (;columnOrderIdx<columnOrder.length;columnOrderIdx++){
           columnfilter[columnOrderIdx]=columnOrder[columnOrderIdx];
-          if (renderColumnFilter != null) filterstr += renderColumnFilter(columnOrder[columnOrderIdx],columnfilter[columnOrderIdx]);
+          if (renderColumnFilter != null) filterstr += renderColumnFilter(columnOrder[columnOrderIdx],columnfilter[columnOrderIdx],tbl.tblhead[columnOrder[columnOrderIdx]]);
       }
       localStorage.setItem(this.tableid+"_filtercolnames",JSON.stringify(columnfilter));
   
@@ -366,17 +377,17 @@ function SortableTable(param)
         			}
           }
     	}
-
-    	if (rowsumList.length > 0) {
-      		if (rowsumHeading == sortcolumn) {
-        			str += "<th id='"+rowsumHeading+"_"+this.tableid+"_tbl' class='"+tthis.ableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,sortkind)+"</th>";
-        			mhstr += "<th id='"+rowsumHeading+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,sortkind)+"</th>";
+/*
+      for (let i=0;i<rowSum.length;i++){
+      		if (rowSum[i][0]['id'] == sortcolumn) {
+        			str += "<th id='"+rowSum[i][0]['id']+"_"+this.tableid+"_tbl' class='"+tthis.ableid+" freeze_vertical'>"+renderSortOptions(rowSum[i][0]['id'],sortkind,)+"</th>";
+        			mhstr += "<th id='"+rowSum[i][0]['id']+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+" freeze_vertical'>"+renderSortOptions(rowSum[i][0]['id'],sortkind,)+"</th>";
       		} else {
-        			str += "<th id='"+rowsumHeading+"_"+this.tableid+"_tbl' class='"+this.tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,-1)+"</th>";
-        			mhstr += "<th id='"+rowsumHeading+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+" freeze_vertical'>"+renderSortOptions(rowsumHeading,-1)+"</th>";
+        			str += "<th id='"+rowSum[i][0]['id']+"_"+this.tableid+"_tbl' class='"+this.tableid+" freeze_vertical'>"+renderSortOptions(rowSum[i][0]['id'],-1,)+"</th>";
+        			mhstr += "<th id='"+rowSum[i][0]['id']+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+" freeze_vertical'>"+renderSortOptions(rowSum[i][0]['id'],-1,)+"</th>";
       		}
-    	}
-
+      }
+*/
     	str += "</tr></thead>";
     	mhstr += "</tr></thead></table>";
     	mhfstr += "</tr></thead></table>";
