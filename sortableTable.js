@@ -213,9 +213,10 @@ function SortableTable(param)
     var renderColumnFilter = param.renderColumnFilterCallback;
 
     if(typeof param.rowFilterCallback === "undefined"){
-        param.rowFilterCallbackz=defaultRowFilter;
+        param.rowFilterCallback=defaultRowFilter;
     }
     var rowFilter = param.rowFilterCallback;
+
     if(typeof param.columnOrder === "undefined"){
         param.columnOrder=[];
     }
