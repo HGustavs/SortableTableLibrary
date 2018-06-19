@@ -427,8 +427,8 @@ function SortableTable(param)
           				if (columnfilter[columnOrderIdx] !== null) {
             					// This condition is true if column is in summing list and in that case perform the sum like a BOSS
             					if (colsumList.indexOf(columnOrder[columnOrderIdx]) >- 1) {
-              						if (typeof(sumContent[columnOrder[columnOrderIdx]]) == "undefined") sumContent[columnOrder[columnOrderIdx]] = 0;
-              						sumContent[columnOrder[columnOrderIdx]] += sumFunc(columnOrder[columnOrderIdx],col,row);
+              						if (typeof(sumContent[columnOrder[columnOrderIdx]]) == "undefined") sumContent[columnOrder[columnOrderIdx]]=0;
+              						sumContent[columnOrder[columnOrderIdx]]+=sumFunc(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],row);
             					}
                       
                       // check if this is a row-sum column
@@ -464,13 +464,13 @@ function SortableTable(param)
       
     	str += "</tbody>";
     	mhvstr += "</tbody>";
-
+      /*
     	if(tbl.tblfoot.length > 0) {
     		str += "<tfoot style='border-top:2px solid #000'>";
     		str += "<tr style='font-style:italic;'>";
 
     		for (var colnamez in tbl.tblfoot) {
-    			// If we show this column...
+    			console.log(colnamez)
     			if (columnfilter.indexOf(colnamez) >- 1) {
     				if (colsumList.indexOf(colnamez) >- 1) {
     					// If writing sum - just write it
@@ -487,6 +487,24 @@ function SortableTable(param)
 
     		str+= "</tr></tfoot>";
     	}
+*/
+        str += "<tfoot style='border-top:2px solid #000'>";
+        str += "<tr style='font-style:italic;'>";
+
+        if(this.hasCounter) {
+            str += "<td>&nbsp;</td>";
+        }
+
+        for(var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
+            if (typeof(sumContent[columnOrder[columnOrderIdx]])!=='undefined') {
+                str += "<td>"+sumContent[columnOrder[columnOrderIdx]]+"</td>";
+            }else{
+                str += "<td>&nbsp;</td>";
+            }          
+        }
+
+        str+= "</tr></tfoot>";
+
 
     	str += "</table>";
     	mhvstr+= "</table>";

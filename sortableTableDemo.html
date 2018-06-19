@@ -466,17 +466,13 @@
 		function makeSum(col,value,row){
       //console.log(col,row);
 			if (col == "trumma") {
-				return value.xk;
-			} else if (col == "pnrid") {
-				return row['pnr']+row['num'];
-			}else if (col == "pnr") {
-				return parseFloat(value);
-			} else {
-				if (value == "UNK") {
-					return 0;
-				} else {
-					return parseFloat(value);
-				}
+  				return value.xk;
+			}else{
+  				if (value == "UNK") {
+  					return 0;
+  				} else {
+  					return parseFloat(value);
+  				}
 			}
 			return 0;
 		}
