@@ -462,12 +462,6 @@ function SortableTable(param)
           }
     	}
       
-      for (let i=0;i<rowsumList.length;i++){
-          if(columnfilter.indexOf(rowsumList[i][0]['id']) >- 1){
-              //alert("update rowsum "+rowsums[i]);              
-          }
-      }
-      
     	str += "</tbody>";
     	mhvstr += "</tbody>";
 
