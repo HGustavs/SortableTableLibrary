@@ -97,8 +97,9 @@
   				renderCellCallback:renderCell,
   				renderSortOptionsCallback:renderSortOptions,
   				renderColumnFilterCallback:renderColumnFilter,
-  				columnSum:["Pnr","Num","Trumma"],
-  				rowSum:[["Pnr+Num", "Pnr","Num"]],				
+          rowFilterCallback:rowFilter1,
+  				columnSum:["pnr","num","trumma"],
+  				rowSum:[["Pnr+Num", "pnr","num"]],				
   				columnSumCallback:makeSum,
           columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
   				freezePaneIndex:3,
@@ -133,7 +134,29 @@
 				);
 			myTable2.renderTable();
       */
-		}
+      myTable2 = new SortableTable({
+          data:tabledata,
+          tableElementId:"thetable2",
+          filterElementId:"columnfilter2",
+          tableCaption:"Booyah2!",
+          renderCellCallback:renderCell,
+          renderSortOptionsCallback:renderSortOptions,
+          renderColumnFilterCallback:renderColumnFilter,
+          rowFilterCallback:rowFilter2,
+          columnSum:["pnr","num","trumma"],
+          rowSum:[["Pnr+Num", "pnr","num"]],				
+          columnSumCallback:makeSum,
+          columnOrder:["pnr","holk","firstlast","num","foo","trumma"],
+          freezePaneIndex:1,
+          rowHighlightOnCallback:rowHighlightOn,
+          rowHighlightOffCallback:rowHighlightOff,
+          displayCellEditCallback:displayCellEdit,
+          updateCellCallback:updateCellCallback,
+          hasMagicHeadings:true,
+          hasCounterColumn:true
+      });
+      myTable2.renderTable();
+	}
 					
 		//--------------------------------------------------------------------------
 		// editCell
@@ -141,7 +164,6 @@
 		//  Callback function for showing a cell editing interface
 		//--------------------------------------------------------------------------
 		function displayCellEdit(celldata,rowno,rowelement,cellelement,column,colno,rowdata,coldata,tableid) {
-        console.log(celldata);
 		    let str = "";
 		    if (column == "trumma") {
 		        str += "<div style='display:flex;flex-direction:column;flex-grow:1;'>";
@@ -162,7 +184,6 @@
 		//--------------------------------------------------------------------------
 		function updateCellCallback(rowno,colno,column,tableid) {
 		    // Make AJAX call and return 
-		    console.log(rowno,colno,column,tableid);
 		    if (column == "pnr") {        
 		        var newcelldata = parseFloat(document.getElementById("popoveredit0").value);
 		        if (isNaN(newcelldata)) {
@@ -208,23 +229,23 @@
 		//  Callback function that renders the col filter div
 		//--------------------------------------------------------------------------
 				
-		function renderColumnFilter(col,status) {
+		function renderColumnFilter(col,status,colname) {
 			str = "";
 			if (status) {
-				str = "<label>" + col + "</label>:<input type='checkbox' checked onclick='myTable.toggleColumn(\"" + col + "\")'>";
+				str = "<label>" + colname + "</label>:<input type='checkbox' checked onclick='myTable.toggleColumn(\"" + col + "\")'>";
 			} else {
-				str = "<label>" + col + "</label>:<input type='checkbox' onclick='myTable.toggleColumn(\"" + col + "\")'>";
+				str = "<label>" + colname + "</label>:<input type='checkbox' onclick='myTable.toggleColumn(\"" + col + "\")'>";
 			}
 
 			return str;
 		}
 
-		function renderColumnFilter2(col,status) {		
+		function renderColumnFilter2(col,status,colname) {		
 			str = "";
 			if (status) {
-				str = "<label>" + col + "</label>:<input type='checkbox' checked onclick='myTable2.toggleColumn(\"" + col + "\")'>";
+				str = "<label>" + colname + "</label>:<input type='checkbox' checked onclick='myTable2.toggleColumn(\"" + col + "\")'>";
 			} else {
-				str = "<label>" + col + "</label>:<input type='checkbox' onclick='myTable2.toggleColumn(\"" + col + "\")'>";
+				str = "<label>" + colname + "</label>:<input type='checkbox' onclick='myTable2.toggleColumn(\"" + col + "\")'>";
 			}
 
 			return str;
@@ -236,17 +257,17 @@
 		//  Callback function that renders the col filter div
 		//--------------------------------------------------------------------------
 				
-		function renderSortOptions(col,status) {
+		function renderSortOptions(col,status,colname) {
 			str = "";
 			if (status == -1) {
-				if (col == "First/Last") {
+				if (col == "firstlast") {
 					str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",1)'>First</span>/";		
 					str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",3)'>Last</span>";
 				} else {
-					str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",1)'>" + col + "</span>";	
+					str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",1)'>" + colname + "</span>";	
 				}
 			} else {
-				if (col == "First/Last") {
+				if (col == "firstlast") {
 					// First up/down vs Last up/down
 					if (status == 0 || status == 1) {
 						if (status == 0) {
@@ -263,9 +284,9 @@
 							str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",2)'>Last&#x25bc;</span>";
 						}
 					}		            
-				} else if (col == "Trumma") {
+				} else if (col == "trumma") {
 					// Special sort for Trumma (JSON structure)
-		            str += "<span>" + col + "</span>";
+		            str += "<span>" + colname + "</span>";
 		            str += "<select onchange='myTable.toggleSortStatus(\"" + col + "\",this.value)'>";
 		            str += "<option hidden disabled selected value>Select Sort</option>"
 		            str += "<option value='0'>x&#x25b2;/y</option>";
@@ -275,9 +296,9 @@
 		            str += "</select>";
 				} else {
 					if (status) {
-						str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",0)'>" + col + "&#x25bc;</span>";
+						str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",0)'>" + colname + "&#x25bc;</span>";
 					} else {
-						str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",1)'>" + col + "&#x25b2;</span>";
+						str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",1)'>" + colname + "&#x25b2;</span>";
 					}
 				}
 			}
@@ -285,17 +306,17 @@
 			return str;
 		}
 
-		function renderSortOptions2(col,status) {
+		function renderSortOptions2(col,status,colname) {
 			str = "";
 			if (status == -1) {
-				if (col == "First/Last") {
+				if (col == "firstlast") {
 					str += "<span onclick='myTable2.toggleSortStatus(\"First/Last\",1)'>First</span>/";
 					str += "<span onclick='myTable2.toggleSortStatus(\"First/Last\",3)'>Last</span>";				
 				} else {
-					str += "<span onclick='myTable2.toggleSortStatus(\"" + col + "\",1)'>" + col + "</span>";	
+					str += "<span onclick='myTable2.toggleSortStatus(\"" + col + "\",1)'>" + colname + "</span>";	
 				}
 			} else {
-				if (col == "First/Last") {
+				if (col == "firstlast") {
 					// First up/down vs Last up/down
 					if (status == 0 || status == 1) {
 						if (status == 0) {
@@ -312,9 +333,9 @@
 							str += "<span onclick='myTable2.toggleSortStatus(\"First/Last\",2)'>Last&#x25bc;</span>";
 						}
 					}		            
-				} else if (col == "Trumma") {
+				} else if (col == "trumma") {
 					// Special sort for Trumma (JSON structure)
-		            str += "<span>" + col + "</span>";
+		            str += "<span>" + colname + "</span>";
 		            str += "<select onchange='myTable2.toggleSortStatus(\"" + col + "\",this.value)'>";
 		            str += "<option hidden disabled selected value>Select Sort</option>"
 		            str += "<option value='0'>x&#x25b2;/y</option>";
@@ -324,9 +345,9 @@
 		            str += "</select>";
 				} else {
 					if (status) {
-						str += "<span onclick='myTable2.toggleSortStatus(\"" + col + "\",0)'>" + col + "&#x25bc;</span>";
+						str += "<span onclick='myTable2.toggleSortStatus(\"" + col + "\",0)'>" + colname + "&#x25bc;</span>";
 					} else {
-						str += "<span onclick='myTable2.toggleSortStatus(\"" + col + "\",1)'>" + col + "&#x25b2;</span>";
+						str += "<span onclick='myTable2.toggleSortStatus(\"" + col + "\",1)'>" + colname + "&#x25b2;</span>";
 					}
 				}
 			}
@@ -341,12 +362,12 @@
 		//--------------------------------------------------------------------------
 				
 		function renderCell(col,celldata){
-		    if (col == "trumma") {
-		        return "<div><span>" + celldata.xk + "</span>/<span>" + celldata.yk + "</span></div>";
-		    } else if (col == "Pnr") {
-		        return "<div>" + celldata + "</div>";
-		    }    
-			return celldata;
+  	    if (col == "trumma") {
+  	        return "<div><span>" + celldata.xk + "</span>/<span>" + celldata.yk + "</span></div>";
+  	    } else if (col == "pnr") {
+  	        return "<div>" + celldata + "</div>";
+  	    }    
+  			return celldata;
 		}
 
 		//--------------------------------------------------------------------------
@@ -355,8 +376,41 @@
 		//  Callback function that filters rows in the table
 		//--------------------------------------------------------------------------
 				
-		function rowFilter(row){
-			return true;
+    var searchterm = "";
+		function rowFilter1(row) {      
+      if(searchterm == ""){
+          return true;
+      }else{
+          for (var property in row) {
+              if (row.hasOwnProperty(property)) {
+                  if (row[property].indexOf != null) {
+                    if (row[property].indexOf(searchterm) != -1) return true;
+                  }
+              }
+          }   
+      }
+			return false;
+		}
+
+		//--------------------------------------------------------------------------
+		// rowFilter
+		// ---------------
+		//  Callback function that filters rows in the table
+		//--------------------------------------------------------------------------
+		var searchterm2 = "";
+		function rowFilter2(row) {
+      if(searchterm2 == ""){
+          return true;
+      }else{
+          for (var property in row) {
+              if (row.hasOwnProperty(property)) {
+                  if (row[property].indexOf != null) {
+                    if (row[property].indexOf(searchterm2) != -1) return true;
+                  }
+              }
+          }   
+      }
+			return false;
 		}
 
 		//--------------------------------------------------------------------------
@@ -425,26 +479,11 @@
 			return 0;
 		}
 
-		//--------------------------------------------------------------------------
-		// rowFilter
-		// ---------------
-		//  Callback function that filters rows in the table
-		//--------------------------------------------------------------------------
-		var searchterm = "";
-		function rowFilter(row) {
-			for (i = 0; i < row.length; i++) {
-				if (row[i].indexOf != null) {
-					if (row[i].indexOf(searchterm) != -1) return true;
-				}
-			}
-			return false;
-		}
 	</script>
 </head>
 <body onload="setup();" onkeypress='keypressHandler(event)'>
   	<h2>Example Table 1</h2>
-
-  	<span>Search:</span><input type="text" id="lookingGlass" placeholder="write your query" onkeyup="searchterm = document.getElementById('lookingGlass').value;myTable.renderTable();"/><br>
+  	<span>Search:</span><div><input type="text" id="lookingGlass" placeholder="write your query" onkeyup="searchterm=document.getElementById('lookingGlass').value;myTable.renderTable();"/></div>
 	
 	<div id='MHTEST'></div>
 
@@ -457,6 +496,7 @@
   
   <!-- You can have multiple tables on the same page -->
   <h2>Example Table 2</h2>
+  <span>Search:</span><div><input type="text" id="lookingGlass2" placeholder="write your query" onkeyup="searchterm2=document.getElementById('lookingGlass2').value;myTable2.renderTable();"/></div>
   <div id="columnfilter2"></div>
 
   <div id="thetable2"></div>

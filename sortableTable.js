@@ -35,9 +35,9 @@ function defaultRowFilter() {
 // Global sorting function global
 function sortableInternalSort(a,b) {
 	var ret = 0;
-    //var colname = currentTable.tbl.tblhead.indexOf(currentTable.sortcolumn);
-    var colname = sortableTable.currentTable.getKeyByValue();
-
+    //var colname = sortableTable.currentTable.getKeyByValue();
+    var colname = sortableTable.currentTable.getSortcolumn();
+    
 	if (sortableTable.currentTable.ascending) {
 		//alert("Compare: "+a+" "+b);
 		ret = compare(a[colname],b[colname]);
@@ -191,7 +191,7 @@ function SortableTable(param)
     var renderColumnFilter = param.renderColumnFilterCallback;
 
     if(typeof param.rowFilterCallback === "undefined"){
-        param.rowFilterCallback=defaultRowFilter;
+        param.rowFilterCallbackz=defaultRowFilter;
     }
     var rowFilter = param.rowFilterCallback;
     
@@ -285,8 +285,11 @@ function SortableTable(param)
 
     	// Assign currently active table
     	sortableTable.currentTable = this;
-            
-    	columnfilter = JSON.parse(localStorage.getItem(this.tableid+"_filtercolnames"));  
+      if(localStorage.getItem(this.tableid+"_filtercolnames")===null){
+          columnfilter=[];
+      }else{
+          columnfilter = JSON.parse(localStorage.getItem(this.tableid+"_filtercolnames"));
+      }    	
       //console.log(columnfilter);        
       var filterstr="";
       var columnOrderIdx;
@@ -331,32 +334,32 @@ function SortableTable(param)
       		if (columnfilter[columnOrderIdx] !== null) {
         			if (renderSortOptions !== null) {
           				if (columnOrderIdx <= freezePaneIndex) {
-            					if (col == sortcolumn){
-              				 		mhfstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhf' class='"+this.tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
-              				 		mhvstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhv' class='"+this.tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
+            					if (colname == sortcolumn){
+              				 		mhfstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhf' class='"+this.tableid+"'>"+renderSortOptions(colname,sortkind,col)+"</th>";
+              				 		mhvstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhv' class='"+this.tableid+"'>"+renderSortOptions(colname,sortkind,col)+"</th>";
             				 	} else {
-              				 		mhfstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhf' class='"+this.tableid+"'>"+renderSortOptions(col,-1)+"</th>";
-              				 		mhvstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhv' class='"+this.tableid+"'>"+renderSortOptions(col,-1)+"</th>";
+              				 		mhfstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhf' class='"+this.tableid+"'>"+renderSortOptions(colname,-1,col)+"</th>";
+              				 		mhvstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhv' class='"+this.tableid+"'>"+renderSortOptions(colname,-1,col)+"</th>";
             				 	}
           				}
-          				if (col == sortcolumn) {
-            					str += "<th id='"+colname+"_"+this.tableid+"_tbl' class='"+this.tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
-            					mhstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+"'>"+renderSortOptions(col,sortkind)+"</th>";
+          				if (colname == sortcolumn) {
+            					str += "<th id='"+colname+"_"+this.tableid+"_tbl' class='"+this.tableid+"'>"+renderSortOptions(colname,sortkind,col)+"</th>";
+            					mhstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+"'>"+renderSortOptions(colname,sortkind,col)+"</th>";
           				} else {
-            					str += "<th id='"+colname+"_"+this.tableid+"_tbl' class='"+this.tableid+"'>"+renderSortOptions(col,-1)+"</th>";
-            					mhstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+"'>"+renderSortOptions(col,-1)+"</th>";
+            					str += "<th id='"+colname+"_"+this.tableid+"_tbl' class='"+this.tableid+"'>"+renderSortOptions(colname,-1,col)+"</th>";
+            					mhstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+"'>"+renderSortOptions(colname,-1,col)+"</th>";
           				}
         			} else {
           				if (columnOrderIdx <= freezePaneIndex) {
-          				 	if (col == sortcolumn){
-          				 		mhfstr += "<th id='"+cleancol+"_"+this.tableid+"_tbl_mhf' class='"+this.tableid+"'>"+col+"</th>";
-          				 		mhvstr += "<th id='"+cleancol+"_"+this.tableid+"_tbl_mhv' class='"+this.tableid+"'>"+col+"</th>";
+          				 	if (colname == sortcolumn){
+          				 		mhfstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhf' class='"+this.tableid+"'>"+col+"</th>";
+          				 		mhvstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhv' class='"+this.tableid+"'>"+col+"</th>";
           				 	} else {
-          				 		mhfstr += "<th id='"+cleancol+"_"+this.tableid+"_tbl_mhf' class='"+this.tableid+"'>"+col+"</th>";
-          				 		mhvstr += "<th id='"+cleancol+"_"+this.tableid+"_tbl_mhv' class='"+this.tableid+"'>"+col+"</th>";
+          				 		mhfstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhf' class='"+this.tableid+"'>"+col+"</th>";
+          				 		mhvstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhv' class='"+this.tableid+"'>"+col+"</th>";
           				 	}
           				}
-          				if (colname != "move") {
+          				if (col != "move") {
           					str += "<th id='"+colname+"_"+this.tableid+"_tbl' class='"+this.tableid+"'>"+col+"</th>";
           					mhstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+"'>"+col+"</th>";
           				}
@@ -394,29 +397,6 @@ function SortableTable(param)
                   str += "<td onclick='clickedInternal(event,this);' class='" + this.tableid + "_counter'><span>"+ this.rowIndex++ +"</span></td>";
               }
         			result++;
-              /*
-              for (var colnamez in row) {
-        				//Counter for freeze here
-        				// If we show this column...
-        				if (columnfilter[colnamez] !== null) {
-          					// This condition is true if column is in summing list and in that case perform the sum like a BOSS
-          					if (colsumList.indexOf(colnamez) >- 1) {
-          						if (typeof(sumContent[colnamez]) == "undefined") sumContent[colnamez] = 0;
-          						sumContent[colnamez] += sumFunc(colnamez,col);
-          					}
-
-          					if (rowsumList.indexOf(colnamez) >- 1) {
-          						rowsum += sumFunc(colnamez,col);
-          					}
-
-          					var cellid = "r"+i+"_"+this.tableid+"_"+colnamez;
-          					str += "<td id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+this.tableid+"-"+colnamez+"'>"+renderCell(colnamez,tbl.tblbody[i][colnamez],cellid)+"</td>";
-
-          					// if (colnamez <= freezePaneIndex) {
-          					// 	mhvstr+="<td id='"+cellid+"' >"+renderCell(col,colnamez,cellid)+"</td>";
-          					// }
-        				}
-                */
                 for(var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
           				if (columnfilter[columnOrderIdx] !== null) {
             					// This condition is true if column is in summing list and in that case perform the sum like a BOSS
