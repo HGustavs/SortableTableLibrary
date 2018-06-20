@@ -17,18 +17,23 @@ var sortableTable = {
 // 
 // consol.log(byString(obj,str))
 // will print '30' to console
+// if property is NaN the function returns 0
 function byString(o, s) {
     s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-    s = s.replace(/^.*\./, '');         // strip leading propterty and dot
     var a = s.split('.');
-    for (var i = 0, n = a.length; i < n; ++i) {
+    for (var i = 1, n = a.length; i < n; ++i) {
         var k = a[i];
-        if (k in o) {
-            o = o[k];
-        } else {
-            return;
+        if (typeof(o)==='object'){
+            if (k in o) {              
+                o = o[k];
+            } else {
+                return 0;
+            }          
+        }else{
+            return 0;
         }
     }
+    if(typeof(o)!=='number')o=0;
     return o;
 }
 
@@ -100,21 +105,9 @@ function clickedInternal(event,clickdobj) {
       }
   }
   sortableTable.currentTable=active;
-  //console.log(sortableTable.currentTable);
   
 	if (sortableTable.currentTable.showEditCell != null) {
 		var cellelement = event.target.closest("td");
-    /*
-		var arr = cellelement.id.split("_");
-		var rowelement = event.target.closest("tr");
-		var barr = rowelement.id.split("_");
-    arr[0] = arr[0].split("r")[1];
-		var columnname = arr[2];
-		var columnno = arr[0];
-
-		var rowno = parseInt(barr[1]);
-		var tableid = barr[0];
-    */
     var rowelement = event.target.closest("tr");
     let match=cellelement.id.match(/^r([0-9]+)_([a-zA-Z0-9]+)_(.*)/);
     var rowno = match[1];
@@ -139,7 +132,6 @@ function clickedInternal(event,clickdobj) {
 		str += "<img id='popovertick' class='icon' src='Icon_Tick.svg' onclick='updateCellInternal();'>";
 		str += "<img id='popovercross' class='icon' src='Icon_Cross.svg' onclick='clearUpdateCellInternal();'>";
 		var lmnt = cellelement.getBoundingClientRect();
-		//console.log(lmnt.top, lmnt.right, lmnt.bottom, lmnt.left, lmnt.height, lmnt.width);
 		var popoverelement = document.getElementById("editpopover");
 
 		popoverelement.innerHTML = str;
@@ -318,7 +310,6 @@ function SortableTable(param)
       }else{
           columnfilter = JSON.parse(localStorage.getItem(this.tableid+"_filtercolnames"));
       }    	
-      //console.log(columnfilter);        
       var filterstr="";
       var columnOrderIdx;
       for (columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
@@ -414,10 +405,10 @@ function SortableTable(param)
               for(var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
         				if (columnfilter[columnOrderIdx] !== null) {
                     // check if this column is a row-sum column
-                    for (let j=0;j<rowsumList.length;j++){
-                        if (columnOrder[columnOrderIdx].indexOf(rowsumList[j][0]['id']) >- 1) {
+                    for (let j=0;j<rowsumList.length;j++){                      
+                        if (columnOrder[columnOrderIdx].indexOf(rowsumList[j][0]['id'])>-1) {
                             tbl.tblbody[i][columnOrder[columnOrderIdx]]=0;
-                            for(let k=1;k<rowsumList[j].length;k++){
+                            for(let k=1;k<rowsumList[j].length;k++){                                
                                 if (typeof(tbl.tblbody[i][rowsumList[j][k].substring(0,rowsumList[j][k].indexOf('.'))])==='object'){
                                     tbl.tblbody[i][columnOrder[columnOrderIdx]]+=parseFloat(byString(tbl.tblbody[i][rowsumList[j][k].substring(0,rowsumList[j][k].indexOf('.'))],rowsumList[j][k]));
                                 }else{
@@ -442,7 +433,6 @@ function SortableTable(param)
       			mhvstr += "</tr>";
           }
     	}
-    
     	str += "</tbody>";
     	mhvstr += "</tbody>";
       str += "<tfoot style='border-top:2px solid #000'>";
