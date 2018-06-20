@@ -464,48 +464,24 @@ function SortableTable(param)
       
     	str += "</tbody>";
     	mhvstr += "</tbody>";
-      /*
-    	if(tbl.tblfoot.length > 0) {
-    		str += "<tfoot style='border-top:2px solid #000'>";
-    		str += "<tr style='font-style:italic;'>";
+      str += "<tfoot style='border-top:2px solid #000'>";
+      str += "<tr style='font-style:italic;'>";
 
-    		for (var colnamez in tbl.tblfoot) {
-    			console.log(colnamez)
-    			if (columnfilter.indexOf(colnamez) >- 1) {
-    				if (colsumList.indexOf(colnamez) >- 1) {
-    					// If writing sum - just write it
-    					str += "<td>"+sumContent[colnamez]+"</td>";
-    				} else {
-    					if (tbl.tblfoot[col] != "UNK") {
-    						str += "<td>"+colnamez+"</td>";
-    					} else {
-    						str += "<td>&nbsp;</td>";
-    					}
-    				}
-    			}
-    		}
+      if(this.hasCounter) {
+          str += "<td>&nbsp;</td>";
+      }
 
-    		str+= "</tr></tfoot>";
-    	}
-*/
-        str += "<tfoot style='border-top:2px solid #000'>";
-        str += "<tr style='font-style:italic;'>";
+      for(var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
+          if (columnfilter[columnOrderIdx] !== null) {
+              if (typeof(sumContent[columnOrder[columnOrderIdx]])!=='undefined') {
+                  str += "<td>"+sumContent[columnOrder[columnOrderIdx]]+"</td>";
+              }else{
+                  str += "<td>&nbsp;</td>";
+              }          
+          }
+      }
 
-        if(this.hasCounter) {
-            str += "<td>&nbsp;</td>";
-        }
-
-        for(var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
-            if (typeof(sumContent[columnOrder[columnOrderIdx]])!=='undefined') {
-                str += "<td>"+sumContent[columnOrder[columnOrderIdx]]+"</td>";
-            }else{
-                str += "<td>&nbsp;</td>";
-            }          
-        }
-
-        str+= "</tr></tfoot>";
-
-
+      str+= "</tr></tfoot>";
     	str += "</table>";
     	mhvstr+= "</table>";
 
