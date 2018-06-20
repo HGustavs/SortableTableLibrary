@@ -591,36 +591,15 @@ function SortableTable(param)
         tbl.tblbody[sortableTable.edit_rowno][sortableTable.edit_columnname] = updateCellCallback(sortableTable.edit_rowno,null,sortableTable.edit_columnname,sortableTable.edit_tableid,null,sortableTable.edit_rowid);
         this.renderTable();
     }
-    
-    /*
-    function showVariant(param){
-      var variantId="#variantInfo" + param;
-      var duggaId="#dugga" + param;
-      var arrowId="#arrow" + param;
-      var index = variant.indexOf(param);
 
-
-      if (document.getElementById("variantInfo"+param) && document.getElementById("dugga"+param)) { // Check if dugga row and corresponding variant
-          if(!isInArray(variant, param)){
-               variant.push(param);
-          }
-
-          if($(duggaId).hasClass("selectedtr")){ // Add a class to dugga if it is not already set and hide/show variant based on class.
-              $(variantId).hide();
-              $(duggaId).removeClass("selectedtr");
-              $(arrowId).html("&#9658;");
-              if (index > -1) {
-                 variant.splice(index, 1);
-              }
-
-          } else {
-              $(duggaId).addClass("selectedtr");
-              $(variantId).slideDown();
-              $(arrowId).html("&#x25BC;");
-          }
-
-          $(variantId).css("border-bottom", "1px solid gray");
-      }
+    this.getColumnOrder=function(){
+        return columnOrder;
     }
-    */
+
+    this.reorderColumns=function(newOrderList){        
+        if(Array.isArray(newOrderList)){
+            columnOrder=newOrderList;
+            this.reRender();          
+        }
+    }
 }
