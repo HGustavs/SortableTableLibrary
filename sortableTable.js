@@ -425,15 +425,9 @@ function SortableTable(param)
         			result++;
                 for(var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
           				if (columnfilter[columnOrderIdx] !== null) {
-            					// This condition is true if column is in summing list and in that case perform the sum like a BOSS
-            					if (colsumList.indexOf(columnOrder[columnOrderIdx]) >- 1) {
-              						if (typeof(sumContent[columnOrder[columnOrderIdx]]) == "undefined") sumContent[columnOrder[columnOrderIdx]]=0;
-              						sumContent[columnOrder[columnOrderIdx]]+=sumFunc(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],row);
-            					}
-                      
-                      // check if this is a row-sum column
+                      // check if this column is a row-sum column
                       for (let j=0;j<rowsumList.length;j++){
-                					if (columnOrder[columnOrderIdx].indexOf(rowsumList[j][0]['id']) >- 1) {
+                          if (columnOrder[columnOrderIdx].indexOf(rowsumList[j][0]['id']) >- 1) {
                               tbl.tblbody[i][columnOrder[columnOrderIdx]]=0;
                               for(let k=1;k<rowsumList[j].length;k++){
                                   if (typeof(tbl.tblbody[i][rowsumList[j][k].substring(0,rowsumList[j][k].indexOf('.'))])==='object'){
@@ -443,25 +437,25 @@ function SortableTable(param)
                                   } 
                                   
                               }                  						
-                					}
+                          }
                       }
-  
+                    
+            					// This condition is true if column is in summing list and in that case perform the sum like a BOSS
+            					if (colsumList.indexOf(columnOrder[columnOrderIdx]) >- 1) {
+              						if (typeof(sumContent[columnOrder[columnOrderIdx]]) == "undefined") sumContent[columnOrder[columnOrderIdx]]=0;
+              						sumContent[columnOrder[columnOrderIdx]]+=sumFunc(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],row);
+            					}
+                        
             					var cellid = "r"+i+"_"+this.tableid+"_"+columnOrder[columnOrderIdx];
             					str += "<td id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+this.tableid+"-"+columnOrder[columnOrderIdx]+"'>"+renderCell(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],cellid)+"</td>";
   
           				}
       			}
-/*
-      			if (rowsumList.length > 0) {
-                str += "<td>"+rowsum+"</td>";
-      			}
-*/
-
       			str += "</tr>";
       			mhvstr += "</tr>";
           }
     	}
-      
+    
     	str += "</tbody>";
     	mhvstr += "</tbody>";
       str += "<tfoot style='border-top:2px solid #000'>";
@@ -470,9 +464,13 @@ function SortableTable(param)
       if(this.hasCounter) {
           str += "<td>&nbsp;</td>";
       }
-
+      //console.log(sumContent)
+      //console.log(columnfilter)
+      //console.log(columnOrder)
       for(var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
           if (columnfilter[columnOrderIdx] !== null) {
+              //console.log(columnfilter[columnOrderIdx])
+              //console.log(sumContent[columnOrder[columnOrderIdx]])
               if (typeof(sumContent[columnOrder[columnOrderIdx]])!=='undefined') {
                   str += "<td>"+sumContent[columnOrder[columnOrderIdx]]+"</td>";
               }else{

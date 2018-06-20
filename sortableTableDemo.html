@@ -29,7 +29,8 @@
       tblfoot:{
         pnr:"Pnr",
         num:"Num",
-        trumma:"Trumma"
+        trumma:"Trumma",
+        pnrid:"Pnr+Num+Trumma.xk"
       }
     }
     
@@ -57,9 +58,9 @@
 			for (j = 0; j < wordcnt; j++) {
 				var charcnt = Math.round(Math.random() * 10);
 				for (var k = 0; k < charcnt; k++) {
-					str += possible.charAt(Math.floor(Math.random() * possible.length));
-            		str2 += possible.charAt(Math.floor(Math.random() * possible.length));
-            		str3 += possible.charAt(Math.floor(Math.random() * possible.length));
+    				str += possible.charAt(Math.floor(Math.random() * possible.length));
+        		str2 += possible.charAt(Math.floor(Math.random() * possible.length));
+        		str3 += possible.charAt(Math.floor(Math.random() * possible.length));
 				}
         		str += " ";
        			str2 += " ";
@@ -98,7 +99,7 @@
   				renderSortOptionsCallback:renderSortOptions,
   				renderColumnFilterCallback:renderColumnFilter,
           rowFilterCallback:rowFilter1,
-  				columnSum:["pnr","num","trumma"],
+  				columnSum:["pnr","num","trumma","pnrid"],
   				rowSum:[[{"name":"Pnr+Num+Trumma.xk","id":"pnrid"}, "pnr","num","trumma.xk"]],			
   				columnSumCallback:makeSum,
           columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
@@ -111,29 +112,7 @@
           hasCounterColumn:true
       });
       myTable.renderTable();
-/*
-			myTable2 = new SortableTable(
-				tabledata,
-				"thetable2",
-				"columnfilter2",
-				"Booyah!",
-				function(celldata,col,cellid){return renderCell(celldata,col,cellid)},
-				function(col, kind){return renderSortOptions2(col,kind)},
-				function(col, status){return renderColumnFilter2(col,status)},
-				null,
-				["Pnr","Num","Trumma"],
-				["Pnr","Num"],				
-				"RowSum",
-				function(col, val, row){return makeSum(col,val,row);},
-				"First/Last",
-				rowHighlightOn,
-				rowHighlightOff,
-				displayCellEdit,
-				updateCellCallback,
-        true
-				);
-			myTable2.renderTable();
-      */
+
       myTable2 = new SortableTable({
           data:tabledata,
           tableElementId:"thetable2",
@@ -156,6 +135,7 @@
           hasCounterColumn:true
       });
       myTable2.renderTable();
+      
 	}
 					
 		//--------------------------------------------------------------------------
@@ -258,6 +238,7 @@
 		//--------------------------------------------------------------------------
 				
 		function renderSortOptions(col,status,colname) {
+      console.log(col,status,colname);
 			str = "";
 			if (status == -1) {
 				if (col == "firstlast") {
