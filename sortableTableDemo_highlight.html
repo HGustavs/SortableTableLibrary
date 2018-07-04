@@ -116,33 +116,13 @@ var myTable,myTable2;
 //--------------------------------------------------------------------------
 
 function setup(){
-  /*
-  myTable = new SortableTable(
-		  tabledata,
-		  "thetable",
-		  null,
-			"Table Title!",
-      renderCell,
-      null,
-      null,
-      null,
-      [],
-      [],				
-      "",
-      null,
-      null,
-			rowHighlightOn,
-			rowHighlightOff,
-			null,
-      null,
-		  false
-	);
-  */
+
   myTable = new SortableTable({
       data:tabledata,
       tableElementId:"thetable",
       tableCaption:"Table Title!",
       renderCellCallback:renderCell,
+      columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
       rowHighlightOnCallback:rowHighlightOn,
       rowHighlightOffCallback:rowHighlightOff
   });
@@ -172,33 +152,28 @@ function renderCell(col,celldata){
 //--------------------------------------------------------------------------
 			
 function rowHighlightOn(rowid,rowno,colclass,centerel){
-    document.getElementById(rowid).style.border="2px solid rgba(255,0,0,1)";
-		if(document.getElementById(rowid+"_mvh")!=null){
-				document.getElementById(rowid+"_mvh").style.borderLeft="2px solid rgba(255,0,0,1)";
-				document.getElementById(rowid+"_mvh").style.borderTop="2px solid rgba(255,0,0,1)";
-				document.getElementById(rowid+"_mvh").style.borderBottom="2px solid rgba(255,0,0,1)";
-		}
-		var collist = document.getElementsByClassName(colclass);
-		for(let i=0;i<collist.length;i++){
-			collist[i].style.borderLeft="2px solid rgba(255,0,0,1)";
-			collist[i].style.borderRight="2px solid rgba(255,0,0,1)";
-		}   		
+    let table=document.getElementById(centerel.id).closest("TR").id.substring(0,document.getElementById(centerel.id).closest("TR").id.indexOf("_"));
+    let column=centerel.id.substring(centerel.id.lastIndexOf("_")+1);
+    let rowPos=document.getElementById(centerel.id).closest("TR").getBoundingClientRect();
+    let colPos=document.getElementById(column+"_"+table+"_tbl").getBoundingClientRect(); 
+    document.getElementById("rowHighlight").style.width=rowPos.width;
+    document.getElementById("rowHighlight").style.height=rowPos.height;
+    document.getElementById("rowHighlight").style.left=rowPos.x+window.pageXOffset;
+    document.getElementById("rowHighlight").style.top=rowPos.y+window.pageYOffset;
+    
+    document.getElementById("columnHighlight").style.width=colPos.width;
+    document.getElementById("columnHighlight").style.height=document.getElementById(table+"_body").getBoundingClientRect().height+colPos.height;
+    document.getElementById("columnHighlight").style.left=colPos.x+window.pageXOffset;
+    document.getElementById("columnHighlight").style.top=colPos.y+window.pageYOffset;
+    document.getElementById("columnHighlight").style.display="block";
+    document.getElementById("rowHighlight").style.display="block";
 		centerel.style.backgroundImage="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2))";
 }
 
 function rowHighlightOff(rowid,rowno,colclass,centerel){
-    document.getElementById(rowid).style.border="";
-		if(document.getElementById(rowid+"_mvh")!=null){
-				document.getElementById(rowid+"_mvh").style.borderLeft="";
-				document.getElementById(rowid+"_mvh").style.borderTop="";
-				document.getElementById(rowid+"_mvh").style.borderBottom="";
-		}
-		var collist = document.getElementsByClassName(colclass);
-		for(let i=0;i<collist.length;i++){
-			collist[i].style.borderLeft="";
-			collist[i].style.borderRight="";
-		}   		
 		centerel.style.backgroundImage="none";
+    document.getElementById("columnHighlight").style.display="none";
+    document.getElementById("rowHighlight").style.display="none";
 }
 						
 
@@ -214,8 +189,8 @@ function rowHighlightOff(rowid,rowno,colclass,centerel){
   
   <!-- Table placeholder -->
   <div id="thetable"></div>
-  <br>
-  <br>
+  <div id="rowHighlight" style="border:2px solid red;position:absolute;z-index:1100;pointer-events: none"></div>
+  <div id="columnHighlight" style="border:2px solid red;position:absolute;z-index:1100;pointer-events: none"></div>
 
 	
 </body>
