@@ -18,6 +18,7 @@ table {
 
 th, td {
   padding: 0;
+  white-space: nowrap
 }
 
 h1 {
@@ -80,15 +81,14 @@ p {
   padding:10px;
 }
 
-#thetable table {
-  width:100%;
+table {
   padding:1px;
   border-left:2px solid #dbd0d8;
   border-bottom:2px solid #dbd0d8;
   font-size: 16px;
 }
 
-#thetable table td {
+table td {
   border-right:2px solid #dbd0d8;
   line-height:28px;
   padding-left:10px;
@@ -96,7 +96,7 @@ p {
   margin:0 5px;
 }
 
-#thetable table th {
+table th {
   background:#614875;
   color:#fff;
   line-height:28px;
@@ -105,12 +105,12 @@ p {
   height:40px;
 }
 
-#thetable--nomargin {
-  margin: 0!important;
+tbody tr:nth-child(odd) {
+    background-color: #ccc;
 }
 
-#thetable tbody tr:nth-child(odd) {
-    background-color: #ccc;
+tbody tr:nth-child(even) {
+    background-color: #fff;
 }
 
 .gradient {

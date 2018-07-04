@@ -76,34 +76,13 @@
         //--------------------------------------------------------------------------
 
         function setup() {
-            /*
-            myTable = new SortableTable(
-        		tabledata,
-        		"thetable",
-        		null,
-        		"Table Title!",
-                renderCell,
-                null,
-                null,
-                null,
-                [],
-                [],				
-                "",
-                null,
-                null,
-        		null,
-        		null,
-        		null,
-                null,
-        		true
-        	);
-          */
           myTable = new SortableTable({
               data:tabledata,
               tableElementId:"thetable",
               tableCaption:"Booyah!",
               columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
               renderCellCallback:renderCell,
+              freezePaneIndex:1,
               hasMagicHeadings:true
           });
         	

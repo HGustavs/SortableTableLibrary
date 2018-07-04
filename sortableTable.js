@@ -351,7 +351,7 @@ function SortableTable(param)
 
       		if (columnfilter[columnOrderIdx] !== null) {
         			if (renderSortOptions !== null) {
-          				if (columnOrderIdx <= freezePaneIndex) {
+          				if (columnOrderIdx < freezePaneIndex) {
             					if (colname == sortcolumn){
               				 		mhfstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhf' class='"+this.tableid+"'>"+renderSortOptions(colname,sortkind,col)+"</th>";
               				 		mhvstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhv' class='"+this.tableid+"'>"+renderSortOptions(colname,sortkind,col)+"</th>";
@@ -368,7 +368,7 @@ function SortableTable(param)
             					mhstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mh' class='"+this.tableid+"'>"+renderSortOptions(colname,-1,col)+"</th>";
           				}
         			} else {
-          				if (columnOrderIdx <= freezePaneIndex) {
+          				if (columnOrderIdx < freezePaneIndex) {                    
           				 	if (colname == sortcolumn){
           				 		mhfstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhf' class='"+this.tableid+"'>"+col+"</th>";
           				 		mhvstr += "<th id='"+colname+"_"+this.tableid+"_tbl_mhv' class='"+this.tableid+"'>"+col+"</th>";
@@ -400,6 +400,7 @@ function SortableTable(param)
         			// Add Counter cell to the row. The class <tableid>_counter can be used to style the counterText
         			if(this.hasCounter) {
                   str += "<td onclick='clickedInternal(event,this);' class='" + this.tableid + "_counter'><span>"+ this.rowIndex++ +"</span></td>";
+                  mhvstr += "<td onclick='clickedInternal(event,this);' class='" + this.tableid + "_counter'><span>"+ this.rowIndex++ +"</span></td>";
               }
         			result++;
               for(var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
@@ -427,6 +428,9 @@ function SortableTable(param)
                       
           					var cellid = "r"+i+"_"+this.tableid+"_"+columnOrder[columnOrderIdx];
           					str += "<td id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+this.tableid+"-"+columnOrder[columnOrderIdx]+"'>"+renderCell(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],cellid)+"</td>";  
+                    if(columnOrderIdx<freezePaneIndex){
+                        mhvstr+="<td id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+this.tableid+"-"+columnOrder[columnOrderIdx]+"'>"+renderCell(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],cellid)+"</td>";  
+                    }
         				}
       			}
       			str += "</tr>";
@@ -511,6 +515,7 @@ function SortableTable(param)
     this.magicHeader = function() {
     	// Assign table and magic headings table(s)
     	if (this.hasMagicHeadings) {
+          console.log(mhvstr)
       		document.getElementById(this.tableid).innerHTML = str+mhstr+mhvstr+mhfstr;
       		document.getElementById(this.tableid+"_tbl_mh").style.width=document.getElementById(this.tableid+"_tbl").getBoundingClientRect().width+"px";
       		document.getElementById(this.tableid+"_tbl_mh").style.boxSizing = "border-box";
