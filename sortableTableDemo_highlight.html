@@ -150,21 +150,21 @@ function renderCell(col,celldata){
 // ---------------
 //  Callback function that highlights the currently hovered row
 //--------------------------------------------------------------------------
-			
-function rowHighlightOn(rowid,rowno,colclass,centerel){
+function rowHighlightOn(rowid,rowno,colclass,centerel){  
     let table=document.getElementById(centerel.id).closest("TR").id.substring(0,document.getElementById(centerel.id).closest("TR").id.indexOf("_"));
     let column=centerel.id.substring(centerel.id.lastIndexOf("_")+1);
     let rowPos=document.getElementById(centerel.id).closest("TR").getBoundingClientRect();
     let colPos=document.getElementById(column+"_"+table+"_tbl").getBoundingClientRect(); 
-    document.getElementById("rowHighlight").style.width=rowPos.width;
-    document.getElementById("rowHighlight").style.height=rowPos.height;
-    document.getElementById("rowHighlight").style.left=rowPos.x+window.pageXOffset;
-    document.getElementById("rowHighlight").style.top=rowPos.y+window.pageYOffset;
+
+    document.getElementById("rowHighlight").style.width=rowPos.width+"px";
+    document.getElementById("rowHighlight").style.height=rowPos.height+"px";
+    document.getElementById("rowHighlight").style.left=(rowPos.x+window.pageXOffset)+"px";
+    document.getElementById("rowHighlight").style.top=(rowPos.y+window.pageYOffset)+"px";
+    document.getElementById("columnHighlight").style.width=colPos.width+"px";
+    document.getElementById("columnHighlight").style.height=(document.getElementById(table+"_body").getBoundingClientRect().height+colPos.height)+"px";
+    document.getElementById("columnHighlight").style.left=(colPos.x+window.pageXOffset)+"px";
+    document.getElementById("columnHighlight").style.top=(colPos.y+window.pageYOffset)+"px";
     
-    document.getElementById("columnHighlight").style.width=colPos.width;
-    document.getElementById("columnHighlight").style.height=document.getElementById(table+"_body").getBoundingClientRect().height+colPos.height;
-    document.getElementById("columnHighlight").style.left=colPos.x+window.pageXOffset;
-    document.getElementById("columnHighlight").style.top=colPos.y+window.pageYOffset;
     document.getElementById("columnHighlight").style.display="block";
     document.getElementById("rowHighlight").style.display="block";
 		centerel.style.backgroundImage="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2))";
