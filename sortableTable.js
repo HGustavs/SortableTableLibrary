@@ -329,7 +329,9 @@ function SortableTable(param)
     		  document.getElementById(filterid).innerHTML = filterstr;
     	}
 
-    	str += "<caption>"+caption+"</caption>";
+      if(caption!=="UNK"){
+          str += "<caption>"+caption+"</caption>";  
+      }    	
 
     	// Make headings Clean Contains headings using only A-Z a-z 0-9 ... move to function removes lines of code and removes redundant code/data!?
       str += "<thead class='listHeading' id='"+this.tableid+"_tblhead'><tr>";
@@ -343,6 +345,8 @@ function SortableTable(param)
     	if(this.hasCounter) {
           str += "<th id='counter_"+this.tableid+"_tbl' class='"+this.tableid+"'></th>";
           mhstr += "<th id='counter_"+this.tableid+"_tbl_mh' class='"+this.tableid+"'></th>";
+          mhvstr += "<th id='counter_"+this.tableid+"_tbl_mhv' class='"+this.tableid+"'></th>";
+          mhfstr += "<th id='counter_"+this.tableid+"_tbl_mhf' class='"+this.tableid+"'></th>";
       }
 
       for(var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
@@ -399,7 +403,7 @@ function SortableTable(param)
 
         			// Add Counter cell to the row. The class <tableid>_counter can be used to style the counterText
         			if(this.hasCounter) {
-                  str += "<td onclick='clickedInternal(event,this);' class='" + this.tableid + "_counter'><span>"+ this.rowIndex++ +"</span></td>";
+                  str += "<td onclick='clickedInternal(event,this);' class='" + this.tableid + "_counter'><span>"+ this.rowIndex +"</span></td>";
                   mhvstr += "<td onclick='clickedInternal(event,this);' class='" + this.tableid + "_counter'><span>"+ this.rowIndex++ +"</span></td>";
               }
         			result++;
@@ -515,7 +519,6 @@ function SortableTable(param)
     this.magicHeader = function() {
     	// Assign table and magic headings table(s)
     	if (this.hasMagicHeadings) {
-          console.log(mhvstr)
       		document.getElementById(this.tableid).innerHTML = str+mhstr+mhvstr+mhfstr;
       		document.getElementById(this.tableid+"_tbl_mh").style.width=document.getElementById(this.tableid+"_tbl").getBoundingClientRect().width+"px";
       		document.getElementById(this.tableid+"_tbl_mh").style.boxSizing = "border-box";
@@ -531,9 +534,13 @@ function SortableTable(param)
       		children=document.getElementById(this.tableid+"_tbl_mhv").getElementsByTagName('TH');
 
       		for (i = 0; i < children.length; i++) {
+              console.log(children[i])
         			document.getElementById(children[i].id.slice(0, -1)+"f").style.width = children[i].getBoundingClientRect().width+"px";
         			document.getElementById(children[i].id.slice(0, -1)+"f").style.boxSizing = "border-box";
       		}
+          document.getElementById(this.tableid+"_tblhead_mh").style.height = Math.round(document.getElementById(this.tableid+"_tblhead").getBoundingClientRect().height)+"px";
+          document.getElementById(this.tableid+"_tblhead_mhv").style.height = Math.round(document.getElementById(this.tableid+"_tblhead").getBoundingClientRect().height)+"px";
+          document.getElementById(this.tableid+"_tblhead_mhf").style.height = Math.round(document.getElementById(this.tableid+"_tblhead").getBoundingClientRect().height)+"px";
     	} else {
     		  document.getElementById(this.tableid).innerHTML = str;
     	}
