@@ -171,6 +171,43 @@ function rowDeHighlightInternal(event,row) {
     }
 }
 
+
+
+function defaultRowHighlightOn(rowid,rowno,colclass,centerel){  
+    let table=document.getElementById(centerel.id).closest("TR").id.substring(0,document.getElementById(centerel.id).closest("TR").id.indexOf("_"));
+    let column=centerel.id.substring(centerel.id.lastIndexOf("_")+1);
+    let rowPos=document.getElementById(centerel.id).closest("TR").getBoundingClientRect();
+    let colPos=document.getElementById(column+"_"+table+"_tbl").getBoundingClientRect(); 
+    if(document.getElementById("sortableTableRowHighlight")===null){
+        document.body.innerHTML+='<div id="sortableTableRowHighlight" style="border:2px solid red;position:absolute;z-index:1100;pointer-events: none"></div>';
+    }
+    if(document.getElementById("sortableTablecolumnHighlight")===null){
+        document.body.innerHTML+='<div id="sortableTablecolumnHighlight" style="border:2px solid red;position:absolute;z-index:1100;pointer-events: none"></div>';
+    }
+    let=xBorderOffset=getComputedStyle(document.getElementById('sortableTableRowHighlight'),null).getPropertyValue('border-left-width').replace("px","");
+    let=yBorderOffset=getComputedStyle(document.getElementById('sortableTableRowHighlight'),null).getPropertyValue('border-top-width').replace("px","")
+
+    document.getElementById("sortableTableRowHighlight").style.width=rowPos.width+"px";
+    document.getElementById("sortableTableRowHighlight").style.height=rowPos.height+"px";
+    document.getElementById("sortableTableRowHighlight").style.left=(rowPos.x+window.pageXOffset-xBorderOffset)+"px";
+    document.getElementById("sortableTableRowHighlight").style.top=(rowPos.y+window.pageYOffset-yBorderOffset)+"px";
+    document.getElementById("sortableTablecolumnHighlight").style.width=colPos.width+"px";
+    document.getElementById("sortableTablecolumnHighlight").style.height=(document.getElementById(table+"_body").getBoundingClientRect().height+colPos.height)+"px";
+    document.getElementById("sortableTablecolumnHighlight").style.left=(colPos.x+window.pageXOffset-xBorderOffset)+"px";
+    document.getElementById("sortableTablecolumnHighlight").style.top=(colPos.y+window.pageYOffset-yBorderOffset)+"px";
+    
+    document.getElementById("sortableTablecolumnHighlight").style.display="block";
+    document.getElementById("sortableTableRowHighlight").style.display="block";
+		centerel.style.backgroundImage="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2))";
+}
+
+function defaultRowHighlightOff(rowid,rowno,colclass,centerel){
+		centerel.style.backgroundImage="none";
+    document.getElementById("sortableTablecolumnHighlight").style.display="none";
+    document.getElementById("sortableTableRowHighlight").style.display="none";
+}
+
+
 function SortableTable(param)
 {
 		//------------==========########### Fenced paramters ###########==========------------    
@@ -236,12 +273,16 @@ function SortableTable(param)
         param.freezePaneIndex=-1;
     }
     var freezePaneIndex = param.freezePaneIndex;
+    if(typeof param.hasRowHighlight === "undefined"){
+        param.hasRowHighlight=false;
+    }
+    this.hasRowHighlight = param.hasRowHighlight;
     if(typeof param.rowHighlightOnCallback === "undefined"){
-        param.rowHighlightOnCallback=null;
+        param.rowHighlightOnCallback=defaultRowHighlightOn;
     }
     this.highlightRow = param.rowHighlightOnCallback;
     if(typeof param.rowHighlightOffCallback === "undefined"){
-        param.rowHighlightOffCallback=null;
+        param.rowHighlightOffCallback=defaultRowHighlightOff;
     }
     this.deHighlightRow = param.rowHighlightOffCallback;
     if(typeof param.displayCellEditCallback === "undefined"){
@@ -398,7 +439,9 @@ function SortableTable(param)
     	for (var i = 0; i < tbl.tblbody.length; i++) {
       		var row = tbl.tblbody[i];
       		if (rowFilter(row)) {
-        			str += "<tr id='"+this.tableid+"_"+i+"' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box'>";
+        			str += "<tr id='"+this.tableid+"_"+i+"'"
+              if (this.hasRowHighlight)str+=" onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)'";
+              str+=" style='box-sizing:border-box'>";
         			mhvstr += "<tr id='"+this.tableid+"_"+i+"_mvh' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box'>";
 
         			// Add Counter cell to the row. The class <tableid>_counter can be used to style the counterText

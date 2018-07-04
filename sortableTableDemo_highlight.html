@@ -123,8 +123,7 @@ function setup(){
       tableCaption:"Table Title!",
       renderCellCallback:renderCell,
       columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
-      rowHighlightOnCallback:rowHighlightOn,
-      rowHighlightOffCallback:rowHighlightOff
+      hasRowHighlight:true
   });
 	myTable.renderTable();
   
@@ -150,6 +149,7 @@ function renderCell(col,celldata){
 // ---------------
 //  Callback function that highlights the currently hovered row
 //--------------------------------------------------------------------------
+/*
 function rowHighlightOn(rowid,rowno,colclass,centerel){  
     let table=document.getElementById(centerel.id).closest("TR").id.substring(0,document.getElementById(centerel.id).closest("TR").id.indexOf("_"));
     let column=centerel.id.substring(centerel.id.lastIndexOf("_")+1);
@@ -176,7 +176,7 @@ function rowHighlightOff(rowid,rowno,colclass,centerel){
     document.getElementById("rowHighlight").style.display="none";
 }
 						
-
+*/
 		</script>
 </head>
 <body onload="setup();" onkeypress='keypressHandler(event)'>
@@ -189,8 +189,4 @@ function rowHighlightOff(rowid,rowno,colclass,centerel){
   
   <!-- Table placeholder -->
   <div id="thetable"></div>
-  <div id="rowHighlight" style="border:2px solid red;position:absolute;z-index:1100;pointer-events: none"></div>
-  <div id="columnHighlight" style="border:2px solid red;position:absolute;z-index:1100;pointer-events: none"></div>
-
-	
 </body>
