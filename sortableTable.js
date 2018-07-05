@@ -579,7 +579,6 @@ function SortableTable(param)
       		children=document.getElementById(this.tableid+"_tbl_mhv").getElementsByTagName('TH');
 
       		for (i = 0; i < children.length; i++) {
-              console.log(children[i])
         			document.getElementById(children[i].id.slice(0, -1)+"f").style.width = children[i].getBoundingClientRect().width+"px";
         			document.getElementById(children[i].id.slice(0, -1)+"f").style.boxSizing = "border-box";
       		}
