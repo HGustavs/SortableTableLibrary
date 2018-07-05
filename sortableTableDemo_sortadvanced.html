@@ -137,31 +137,31 @@
 		str = "";
 		
 		if (status ==- 1) {
-			if (col == "First/Last") {
-				str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",1)'>First</span>/";				
-				str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",3)'>Last</span>";				
+			if (col == "firstlast") {
+				str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",1)'>First</span>/";				
+				str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",3)'>Last</span>";				
 			} else {
 				str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",1)'>" + col + "</span>";
             }
 		} else {
-			if(col=="First/Last") {
+			if(col=="firstlast") {
 				// First up/down vs Last up/down
 				if (status == 0 || status == 1) {
 					if (status == 0) {
-						str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",1)'>First&#x25b2;</span>/";
+						str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",1)'>First&#x25b2;</span>/";
                     } else {
-						str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",0)'>First&#x25bc;</span>/";
+						str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",0)'>First&#x25bc;</span>/";
                     }
-					str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",2)'>Last</span>";			
+					str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",2)'>Last</span>";			
                 } else if (status == 2 || status == 3) {
-					str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",1)'>First</span>/";			
+					str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",1)'>First</span>/";			
 					if (status == 2) {
-						str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",3)'>Last&#x25b2;</span>";								
+						str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",3)'>Last&#x25b2;</span>";								
 					} else {
-						str += "<span onclick='myTable.toggleSortStatus(\"First/Last\",2)'>Last&#x25bc;</span>";								
+						str += "<span onclick='myTable.toggleSortStatus(\"" + col + "\",2)'>Last&#x25bc;</span>";								
 					}
 				}		            
-            } else if (col == "Trumma") {
+      } else if (col == "trumma") {
 				// Special sort for Trumma (JSON structure)
                 str += "<span>" + col + "</span>";
                 str += "<select onchange='myTable.toggleSortStatus(\"" + col + "\",this.value)'>";
@@ -193,13 +193,13 @@
         let col = sortableTable.currentTable.getSortcolumn();
         let kind = sortableTable.currentTable.getSortkind();
         
-        if (col == "Trumma") {
+        if (col == "trumma") {
             if (kind == 0 || kind == 1) { 
               return a.xk - b.xk; 
           } else if (kind == 2 || kind == 3) { 
               return a.yk - b.yk; 
           } 
-        } else if (col == "First/Last") {
+        } else if (col == "firstlast") {
             // Sort Fname / Lname 
             if(kind == 0 || kind == 1) { 
                 let afname = a.substr(0,a.indexOf(' '));
@@ -214,7 +214,7 @@
                 if ( alname > blname ) return 1; 
                 return 0; 
             }
-        } else if (col == "Foo" || col == "Holk") {
+        } else if (col == "foo" || col == "holk") {
             if ( a < b ) return -1; 
             if ( a > b ) return 1; 
             return 0; 

@@ -92,7 +92,7 @@
 		function setup() {
 			myTable = new SortableTable({
   				data:tabledata,
-  				tableElementId:"thetable",
+  				tableElementId:"the_table",
   				filterElementId:"columnfilter",
   				tableCaption:"Booyah!",
   				renderCellCallback:renderCell,
@@ -115,7 +115,7 @@
 
       myTable2 = new SortableTable({
           data:tabledata,
-          tableElementId:"thetable2",
+          tableElementId:"the_table2",
           filterElementId:"columnfilter2",
           tableCaption:"Booyah2!",
           renderCellCallback:renderCell,
@@ -238,7 +238,6 @@
 		//--------------------------------------------------------------------------
 				
 		function renderSortOptions(col,status,colname) {
-      console.log(col,status,colname);
 			str = "";
 			if (status == -1) {
 				if (col == "firstlast") {
@@ -470,7 +469,7 @@
 	<div id="columnfilter"></div>
   
 	<!-- Table placeholder -->
-	<div id="thetable"></div>
+	<div id="the_table"></div>
 	<br>
   
   <!-- You can have multiple tables on the same page -->
@@ -478,7 +477,7 @@
   <span>Search:</span><div><input type="text" id="lookingGlass2" placeholder="write your query" onkeyup="searchterm2=document.getElementById('lookingGlass2').value;myTable2.renderTable();"/></div>
   <div id="columnfilter2"></div>
 
-  <div id="thetable2"></div>
+  <div id="the_table2"></div>
   <br>
 
 	<div id="editpopover" style="display:none;"></div>
