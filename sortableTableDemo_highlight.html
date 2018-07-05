@@ -58,7 +58,7 @@
 
 var tabledata = {
   tblhead:{
-    firstlast:"First/Last",
+    first_last:"First/Last",
     pnr:"Pnr",
     num:"Num",
     foo:"Foo",
@@ -90,7 +90,7 @@ for(i=0;i<200;i++){
 		}
 		
     tabledata.tblbody.push(
-      { firstlast:str,
+      { first_last:str,
         pnr:Math.random()*5000,
         num:Math.round(Math.random()*20),
         foo:str2,
@@ -122,7 +122,7 @@ function setup(){
       tableElementId:"thetable",
       tableCaption:"Table Title!",
       renderCellCallback:renderCell,
-      columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
+      columnOrder:["first_last","pnr","num","foo","holk","trumma"],
       hasRowHighlight:true
   });
 	myTable.renderTable();
