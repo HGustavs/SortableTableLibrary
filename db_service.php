@@ -156,7 +156,8 @@
               if($updatecol=="trumma"){
                   $stmt->bindParam(':trumma', $updatevalue);                  
               }else{
-                  $stmt->bindParam(':trumma', json_encode($trumma));
+                  $trumma=json_encode($trumma);
+                  $stmt->bindParam(':trumma', $trumma);
               }
               $stmt->execute();
           } else {

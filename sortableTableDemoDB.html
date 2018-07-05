@@ -81,10 +81,9 @@
                         columnSumCallback:makeSum,
                         columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
                         freezePaneIndex:3,
-                        rowHighlightOnCallback:rowHighlightOn,
-                        rowHighlightOffCallback:rowHighlightOff,
                         displayCellEditCallback:displayCellEdit,
                         updateCellCallback:updateCellCallback,
+                        hasRowHighlight:true,
                         hasMagicHeadings:true,
                         hasCounterColumn:true
                     });
@@ -102,10 +101,9 @@
                           columnSumCallback:makeSum,
                           columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
                           freezeColumns:["pnr"],
-                          rowHighlightOnCallback:rowHighlightOn,
-                          rowHighlightOffCallback:rowHighlightOff,
                           displayCellEditCallback:displayCellEdit,
                           updateCellCallback:updateCellCallback,
+                          hasRowHighlight:true,
                           hasMagicHeadings:true,
                           hasCounterColumn:true
                       });
@@ -156,7 +154,6 @@
         //  Callback function for showing a cell editing interface
         //--------------------------------------------------------------------------
         function displayCellEdit(celldata,rowno,rowelement,cellelement,column,colno,rowdata,coldata,tableid){
-            console.log(celldata,rowno,rowelement,cellelement,column,colno,rowdata,coldata,tableid);
             sortableTable.edit_rowid=rowdata.id;
             let str = "";
             if (column == "trumma") {
@@ -176,9 +173,8 @@
         // ---------------
         //  Callback function for updating a cell value after editing a cell
         //--------------------------------------------------------------------------
-        function updateCellCallback(rowid,column,tableid) {
+        function updateCellCallback(rowno,colno,column,tableid,oldvalue,rowid) {
             // Make AJAX call and return 
-            console.log(rowid,column,tableid);
             if (column == "pnr") {        
                 var newcelldata = parseFloat(document.getElementById("popoveredit0").value);
                 if (isNaN(newcelldata)) {
@@ -213,8 +209,7 @@
         //--------------------------------------------------------------------------
         function updateDB(tableid,id,col,val){
             var xhttp = new XMLHttpRequest();
-            var updateStr="db_service.php?command=update&updateid=" + id + "&updatecol=" + col + "&updatevalue=" + val + "&updatetable=" + tableid + "&dbarr=" + JSON.stringify(tables);
-            console.log(updateStr);
+            var updateStr="db_service.php?command=update&updateid=" + id + "&updatecol=" + col + "&updatevalue=" + encodeURIComponent(val) + "&updatetable=" + tableid + "&dbarr=" + JSON.stringify(tables);
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     //alert("Cell updated on server side.");
