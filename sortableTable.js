@@ -20,9 +20,9 @@ var DELIMITER="___";
 function byString(inpobj,paramstr){
 		if(paramstr.indexOf(".")>-1){
 				params=paramstr.split(".");
-				return JSON.parse(inpobj[params[0]])[params[1]];
+				return parseFloat(JSON.parse(inpobj[params[0]])[params[1]]);
 		}else{
-			return inpobj[paramstr];
+			return parseFloat(inpobj[paramstr]);
 		}
 }
 
