@@ -12,6 +12,21 @@ var sortableTable = {
 
 var DELIMITER="___";
 
+// Returns property or value of json data in property
+// var obj={"olle":"6",trumma:'{"x":100,"y":100}'};
+// alert(LeFunc(obj,"trumma.y"));
+// alert(LeFunc(obj,"olle"));					
+
+function byString(inpobj,paramstr){
+		if(paramstr.indexOf(".")>-1){
+				params=paramstr.split(".");
+				return JSON.parse(inpobj[params[0]])[params[1]];
+		}else{
+			return inpobj[paramstr];
+		}
+}
+
+/*
 // Help function to get property value from object based on string in dot-format
 //
 // var obj = {trumma:{xk:30,yk:25.0}}
@@ -20,6 +35,7 @@ var DELIMITER="___";
 // consol.log(byString(obj,str))
 // will print '30' to console
 // if property is NaN the function returns 0
+
 function byString(o, s)
 {
     s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
@@ -39,6 +55,7 @@ function byString(o, s)
     if(typeof(o)!=='number')o=0;
     return o;
 }
+*/
 
 function searchKeyUp(e)
 {
