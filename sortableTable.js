@@ -20,7 +20,8 @@ var DELIMITER="___";
 // consol.log(byString(obj,str))
 // will print '30' to console
 // if property is NaN the function returns 0
-function byString(o, s) {
+function byString(o, s)
+{
     s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
     var a = s.split('.');
     for (var i = 1, n = a.length; i < n; ++i) {
@@ -39,7 +40,8 @@ function byString(o, s) {
     return o;
 }
 
-function searchKeyUp(e) {
+function searchKeyUp(e)
+{
 	// look for window.event in case event isn't passed in
     e = e || window.event;
     if (e.keyCode == 13) {
@@ -49,7 +51,8 @@ function searchKeyUp(e) {
     return true;
 }
 
-function keypressHandler(event) {
+function keypressHandler(event)
+{
     if (event.keyCode == 13) {
         updateCellInternal();
     } else if(event.keyCode == 27) {
@@ -57,12 +60,14 @@ function keypressHandler(event) {
     }
 }
 
-function defaultRowFilter() {
+function defaultRowFilter()
+{
 	return true;
 }
 
 // Global sorting function global
-function sortableInternalSort(a,b) {
+function sortableInternalSort(a,b)
+{
 	var ret = 0;
     //var colname = sortableTable.currentTable.getKeyByValue();
     var colname = sortableTable.currentTable.getSortcolumn();
@@ -77,7 +82,8 @@ function sortableInternalSort(a,b) {
 	return ret;
 }
 
-function clearUpdateCellInternal() {
+function clearUpdateCellInternal()
+{
     sortableTable.edit_rowno =- 1;
     sortableTable.edit_rowid =null;
     sortableTable.edit_columnno =- 1;
@@ -87,7 +93,8 @@ function clearUpdateCellInternal() {
     document.getElementById('editpopover').style.display = "none";
 }
 
-function updateCellInternal() {
+function updateCellInternal()
+{
     for (var i = 0; i < sortableTable.sortableTables.length; i++) {
         if (sortableTable.sortableTables[i].tableid == sortableTable.edit_tableid) {
             sortableTable.sortableTables[i].updateCell();
@@ -97,7 +104,8 @@ function updateCellInternal() {
 }
 
 // clickedInternal
-function clickedInternal(event,clickdobj) {
+function clickedInternal(event,clickdobj)
+{
   let clickedTbl=event.target.closest("table").id.substring(0,event.target.closest("table").id.indexOf(DELIMITER+"tbl"));
   let active=null;
   for (let i=0;i<sortableTable.sortableTables.length;i++){
@@ -151,7 +159,8 @@ function clickedInternal(event,clickdobj) {
 }
 
 // We call all highlights in order to allow hover of non-active tables
-function rowHighlightInternal(event,row) {
+function rowHighlightInternal(event,row)
+{
     var arr = row.id.split(DELIMITER);
     var rowno = parseInt(arr[1]);
     var centerel = event.target.closest("td");
@@ -163,7 +172,8 @@ function rowHighlightInternal(event,row) {
 }
 
 // We call all deHighlights in order to allow hover of non-active tables
-function rowDeHighlightInternal(event,row) {
+function rowDeHighlightInternal(event,row)
+{
     var arr = row.id.split(DELIMITER);
   	var rowno = parseInt(arr[1]);
   	var centerel = event.target.closest("td");
@@ -174,9 +184,8 @@ function rowDeHighlightInternal(event,row) {
     }
 }
 
-
-
-function defaultRowHighlightOn(rowid,rowno,colclass,centerel){  
+function defaultRowHighlightOn(rowid,rowno,colclass,centerel)
+{  
     let table=document.getElementById(centerel.id).closest("TR").id.substring(0,document.getElementById(centerel.id).closest("TR").id.indexOf(DELIMITER));
     let column=centerel.id.substring(centerel.id.lastIndexOf(DELIMITER)+DELIMITER.length);
     let rowPos=document.getElementById(centerel.id).closest("TR").getBoundingClientRect();
@@ -204,106 +213,52 @@ function defaultRowHighlightOn(rowid,rowno,colclass,centerel){
 		centerel.style.backgroundImage="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2))";
 }
 
-function defaultRowHighlightOff(rowid,rowno,colclass,centerel){
+function defaultRowHighlightOff(rowid,rowno,colclass,centerel)
+{
 		centerel.style.backgroundImage="none";
     document.getElementById("sortableTablecolumnHighlight").style.display="none";
     document.getElementById("sortableTableRowHighlight").style.display="none";
 }
 
+// Checks if parameter has been defined and returns default if not
+function getparam(param,def)
+{
+    if(typeof param === "undefined"){
+				return def;
+		}
+		return param;
+}
 
 function SortableTable(param)
 {
 		//------------==========########### Fenced paramters ###########==========------------    
-    if(typeof param.data === "undefined"){
-        param.data={tblhead:{},tblbody:[],tblfoot:{}};
-    }
-    var tbl = param.data;
-    if(typeof param.tableElementId === "undefined"){
-        param.tableElementId="UNK";
-    }
-    this.tableid = param.tableElementId;
-    if(typeof param.filterElementId === "undefined"){
-        param.filterElementId="UNK";
-    }
-    var filterid = param.filterElementId;
-    if(typeof param.tableCaption === "undefined"){
-        param.tableCaption="UNK";
-    }   
-    var caption = param.tableCaption;
-     
-    if(typeof param.renderCellCallback === "undefined"){
-        param.renderCellCallback=null;
-    }
-    var renderCell = param.renderCellCallback;
-    if(typeof param.renderSortOptionsCallback === "undefined"){
-        param.renderSortOptionsCallback=null;
-    }
-    var renderSortOptions = param.renderSortOptionsCallback;
-    if(typeof param.renderColumnFilterCallback === "undefined"){
-        param.renderColumnFilterCallback=null;
-    }
-    var renderColumnFilter = param.renderColumnFilterCallback;
+		
+    var tbl = getparam(param.data,{tblhead:{},tblbody:[],tblfoot:{}});
+    this.tableid = getparam(param.tableElementId,"UNK");
+    var filterid = getparam(param.filterElementId,"UNK");	
+    var caption = getparam(param.tableCaption,"UNK");
+    var renderCell = getparam(param.renderCellCallback,null);
+    var renderSortOptions = getparam(param.renderSortOptionsCallback,null);
+    var renderColumnFilter = getparam(param.renderColumnFilterCallback,null);
+    var rowFilter = getparam(param.rowFilterCallback,defaultRowFilter);
+    var columnOrder = getparam(param.columnOrder,[]);
+    var colsumList = getparam(param.columnSum,[]);
+    var rowsumList = getparam(param.rowSum,[]);
+  	var sumFunc = getparam(param.columnSumCallback,null);
+    var freezePaneIndex = getparam(param.freezePaneIndex,-1);
+    this.hasRowHighlight = getparam(param.hasRowHighlight,false);
+    this.highlightRow = getparam(param.rowHighlightOnCallback,defaultRowHighlightOn);
+    this.deHighlightRow = getparam(param.rowHighlightOffCallback,defaultRowHighlightOff);
+		this.showEditCell = getparam(param.displayCellEditCallback,null);
+    this.updateCell = getparam(param.updateCellCallback,null);
+		this.hasMagicHeadings = getparam(param.hasMagicHeadings,false);
+    this.hasCounter = getparam(param.hasCounterColumn,false);
 
-    if(typeof param.rowFilterCallback === "undefined"){
-        param.rowFilterCallback=defaultRowFilter;
-    }
-    var rowFilter = param.rowFilterCallback;
-
-    if(typeof param.columnOrder === "undefined"){
-        param.columnOrder=[];
-    }
-    var columnOrder = param.columnOrder;
-    
-    if(typeof param.columnSum === "undefined"){
-        param.columnSum=[];        
-    }
-    var colsumList = param.columnSum;
-    
-    if(typeof param.rowSum === "undefined"){
-        param.rowSum=[];
-    }
-    var rowsumList = param.rowSum;
-    for(let i=0;i<rowsumList.length;i++){
+		// Prepare head and order with columns from rowsum list
+		for(let i=0;i<rowsumList.length;i++){
         tbl.tblhead[rowsumList[i][0]['id']]=rowsumList[i][0]['name'];
         columnOrder.push(rowsumList[i][0]['id']);
     }
-      
-    if(typeof param.columnSumCallback === "undefined"){
-        param.columnSumCallback=null;
-    }
-    var sumFunc = param.columnSumCallback;
-    if(typeof param.freezePaneIndex === "undefined"){
-        param.freezePaneIndex=-1;
-    }
-    var freezePaneIndex = param.freezePaneIndex;
-    if(typeof param.hasRowHighlight === "undefined"){
-        param.hasRowHighlight=false;
-    }
-    this.hasRowHighlight = param.hasRowHighlight;
-    if(typeof param.rowHighlightOnCallback === "undefined"){
-        param.rowHighlightOnCallback=defaultRowHighlightOn;
-    }
-    this.highlightRow = param.rowHighlightOnCallback;
-    if(typeof param.rowHighlightOffCallback === "undefined"){
-        param.rowHighlightOffCallback=defaultRowHighlightOff;
-    }
-    this.deHighlightRow = param.rowHighlightOffCallback;
-    if(typeof param.displayCellEditCallback === "undefined"){
-        param.displayCellEditCallback=null;
-    }
-    this.showEditCell = param.displayCellEditCallback;
-    if(typeof param.updateCellCallback === "undefined"){
-        param.updateCellCallback=null;
-    }
-    this.updateCell = param.updateCellCallback;
-    if(typeof param.hasMagicHeadings === "undefined"){
-        param.hasMagicHeadings=false;
-    }
-    this.hasMagicHeadings = param.hasMagicHeadings;
-    if(typeof param.hasCounterColumn === "undefined"){
-        param.hasCounterColumn=false;
-    }
-    this.hasCounter = param.hasCounterColumn;
         
     //------------==========########### Private member variables ###########==========------------        
     var result = 0;
