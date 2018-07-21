@@ -18,44 +18,9 @@ var DELIMITER="___";
 // alert(LeFunc(obj,"olle"));					
 
 function byString(inpobj,paramstr){
-		if(paramstr.indexOf(".")>-1){
-				params=paramstr.split(".");
-				return parseFloat(JSON.parse(inpobj[params[0]])[params[1]]);
-		}else{
-			return parseFloat(inpobj[paramstr]);
-		}
+		params=paramstr.split(".");
+		return inpobj[params[1]];
 }
-
-/*
-// Help function to get property value from object based on string in dot-format
-//
-// var obj = {trumma:{xk:30,yk:25.0}}
-// var str = "trumma.xk"
-// 
-// consol.log(byString(obj,str))
-// will print '30' to console
-// if property is NaN the function returns 0
-
-function byString(o, s)
-{
-    s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-    var a = s.split('.');
-    for (var i = 1, n = a.length; i < n; ++i) {
-        var k = a[i];
-        if (typeof(o)==='object'){
-            if (k in o) {              
-                o = o[k];
-            } else {
-                return 0;
-            }          
-        }else{
-            return 0;
-        }
-    }
-    if(typeof(o)!=='number')o=0;
-    return o;
-}
-*/
 
 function searchKeyUp(e)
 {
