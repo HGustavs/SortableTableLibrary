@@ -172,14 +172,14 @@ function defaultRowHighlightOn(rowid,rowno,colclass,centerel)
 {
 		rowElement=document.getElementById(rowid);
 		// rowElement.style.backgroundImage="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2))";
-		rowElement.style.backgroundImage="linear-gradient(to top,RGBA(0,0,0,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(0,0,0,1) calc(100% - 3px))"
+		rowElement.style.backgroundImage="linear-gradient(to top,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 3px))"
 		
 		colElements=document.getElementsByClassName(colclass);
 		for (var i=0; i<colElements.length; i++) {
-    		colElements[i].style.backgroundImage = "linear-gradient(to right,RGBA(0,0,0,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(0,0,0,1) calc(100% - 2px))";
+    		colElements[i].style.backgroundImage = "linear-gradient(to right,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 2px))";
 		}
 	
-		centerel.style.background="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2)),linear-gradient(to top,RGBA(0,0,0,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(0,0,0,1) calc(100% - 3px)), linear-gradient(to right,RGBA(0,0,0,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(0,0,0,1) calc(100% - 2px))";
+		centerel.style.background="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2)),linear-gradient(to top,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 3px)), linear-gradient(to right,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 2px))";
 }
 
 function defaultRowHighlightOff(rowid,rowno,colclass,centerel)
