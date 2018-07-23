@@ -2,6 +2,8 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="style.css">
+	<style>
+	</style>
 	<script src="sortableTable.js"></script> 
 	<script>
 		// -------------------------------------------------------------------------------------------------------
@@ -185,22 +187,6 @@
 		    } else {
 		        return document.getElementById("popoveredit0").value;
 		    }    
-		}
-					
-
-		//--------------------------------------------------------------------------
-		// rowHighlight
-		// ---------------
-		//  Callback function that highlights the currently hovered row
-		//--------------------------------------------------------------------------			
-		function rowHighlightOn(rowid,rowno,colclass,centerel) {
-		    document.getElementById(rowid).style.border = "2px solid rgba(97,72,117,1)";
-			centerel.style.backgroundImage = "radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2))";
-		}
-
-		function rowHighlightOff(rowid,rowno,colclass,centerel) {
-		    document.getElementById(rowid).style.border = "";
-			centerel.style.backgroundImage = "none";
 		}
 					
 		//--------------------------------------------------------------------------

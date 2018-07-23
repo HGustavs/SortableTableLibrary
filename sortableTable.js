@@ -166,40 +166,32 @@ function rowDeHighlightInternal(event,row)
     }
 }
 
-function defaultRowHighlightOn(rowid,rowno,colclass,centerel)
-{  
-    let table=document.getElementById(centerel.id).closest("TR").id.substring(0,document.getElementById(centerel.id).closest("TR").id.indexOf(DELIMITER));
-    let column=centerel.id.substring(centerel.id.lastIndexOf(DELIMITER)+DELIMITER.length);
-    let rowPos=document.getElementById(centerel.id).closest("TR").getBoundingClientRect();
-    let colPos=document.getElementById(column+DELIMITER+table+DELIMITER+"tbl").getBoundingClientRect(); 
-    if(document.getElementById("sortableTableRowHighlight")===null){
-        document.body.innerHTML+='<div id="sortableTableRowHighlight" style="border:2px solid red;position:absolute;z-index:1100;pointer-events: none"></div>';
-    }
-    if(document.getElementById("sortableTablecolumnHighlight")===null){
-        document.body.innerHTML+='<div id="sortableTablecolumnHighlight" style="border:2px solid red;position:absolute;z-index:1100;pointer-events: none"></div>';
-    }
-    let=xBorderOffset=getComputedStyle(document.getElementById('sortableTableRowHighlight'),null).getPropertyValue('border-left-width').replace("px","");
-    let=yBorderOffset=getComputedStyle(document.getElementById('sortableTableRowHighlight'),null).getPropertyValue('border-top-width').replace("px","")
+// https://stackoverflow.com/questions/13708590/css-gradient-colour-stops-from-end-in-pixels
 
-    document.getElementById("sortableTableRowHighlight").style.width=rowPos.width+"px";
-    document.getElementById("sortableTableRowHighlight").style.height=rowPos.height+"px";
-    document.getElementById("sortableTableRowHighlight").style.left=(rowPos.x+window.pageXOffset-xBorderOffset)+"px";
-    document.getElementById("sortableTableRowHighlight").style.top=(rowPos.y+window.pageYOffset-yBorderOffset)+"px";
-    document.getElementById("sortableTablecolumnHighlight").style.width=colPos.width+"px";
-    document.getElementById("sortableTablecolumnHighlight").style.height=(document.getElementById(table+DELIMITER+"body").getBoundingClientRect().height+colPos.height)+"px";
-    document.getElementById("sortableTablecolumnHighlight").style.left=(colPos.x+window.pageXOffset-xBorderOffset)+"px";
-    document.getElementById("sortableTablecolumnHighlight").style.top=(colPos.y+window.pageYOffset-yBorderOffset)+"px";
-    
-    document.getElementById("sortableTablecolumnHighlight").style.display="block";
-    document.getElementById("sortableTableRowHighlight").style.display="block";
-		centerel.style.backgroundImage="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2))";
+function defaultRowHighlightOn(rowid,rowno,colclass,centerel)
+{
+		rowElement=document.getElementById(rowid);
+		// rowElement.style.backgroundImage="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2))";
+		rowElement.style.backgroundImage="linear-gradient(to top,RGBA(0,0,0,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(0,0,0,1) calc(100% - 3px))"
+		
+		colElements=document.getElementsByClassName(colclass);
+		for (var i=0; i<colElements.length; i++) {
+    		colElements[i].style.backgroundImage = "linear-gradient(to right,RGBA(0,0,0,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(0,0,0,1) calc(100% - 2px))";
+		}
+	
+		centerel.style.background="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2)),linear-gradient(to top,RGBA(0,0,0,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(0,0,0,1) calc(100% - 3px)), linear-gradient(to right,RGBA(0,0,0,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(0,0,0,1) calc(100% - 2px))";
 }
 
 function defaultRowHighlightOff(rowid,rowno,colclass,centerel)
 {
-		centerel.style.backgroundImage="none";
-    document.getElementById("sortableTablecolumnHighlight").style.display="none";
-    document.getElementById("sortableTableRowHighlight").style.display="none";
+		rowElement=document.getElementById(rowid);
+		rowElement.style.backgroundImage="none";
+
+		colElements=document.getElementsByClassName(colclass);
+		for (var i=0; i<colElements.length; i++) {
+    		colElements[i].style.backgroundImage = "none";
+		} 
+
 }
 
 // Checks if parameter has been defined and returns default if not

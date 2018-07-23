@@ -106,11 +106,11 @@ table th {
 }
 
 tbody tr:nth-child(odd) {
-    background-color: #ccc;
+    background-color: #cc0;
 }
 
 tbody tr:nth-child(even) {
-    background-color: #fff;
+    background-color: #ff0;
 }
 
 .gradient {
