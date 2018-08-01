@@ -239,6 +239,7 @@ function SortableTable(param)
     var columnfilter = [];
     var sortcolumn = "UNK";
     var sortkind = -1;
+    var windowWidth=-1;
     
     // Keeps track of the last picked sorting order
     var tableSort;
@@ -246,7 +247,7 @@ function SortableTable(param)
     var reverseSort;    
     var freezePane = freezePane;
     var freezePaneArr = [];
-
+        
     this.ascending = false;
 
     // Local variable that contains html code for main table and local variable that contains magic headings table
@@ -494,7 +495,7 @@ function SortableTable(param)
     this.magicHeader = function() {
     	// Assign table and magic headings table(s)
     	if (this.hasMagicHeadings) {
-      		document.getElementById(this.tableid).innerHTML = str+mhstr+mhvstr+mhfstr;
+      		document.getElementById(this.tableid).innerHTML = str+mhstr+mhvstr+mhfstr;          
       		document.getElementById(this.tableid+DELIMITER+"tbl"+DELIMITER+"mh").style.width=document.getElementById(this.tableid+DELIMITER+"tbl").getBoundingClientRect().width+"px";
       		document.getElementById(this.tableid+DELIMITER+"tbl"+DELIMITER+"mh").style.boxSizing = "border-box";
       		children=document.getElementById(this.tableid+DELIMITER+"tbl").getElementsByTagName('TH');
@@ -529,12 +530,13 @@ function SortableTable(param)
       	for (var i = 0; i < sortableTable.sortableTables.length; i++) {
         		var table = sortableTable.sortableTables[i];
         		if (table.hasMagicHeadings) {
+                if (window.innerWidth != windowWidth){windowWidth=window.innerWidth;table.renderTable()}
           			if (document.getElementById(table.tableid+DELIMITER+"tbl") != null) {
             				var thetab = document.getElementById(table.tableid+DELIMITER+"tbl").getBoundingClientRect();
             				var thetabhead = document.getElementById(table.tableid+DELIMITER+"tblhead").getBoundingClientRect();
             				// If top is negative and top+height is positive draw mh otherwise hide
             				// Vertical
-            				if (thetabhead.top < 50 && thetab.bottom > 0) {
+            				if (thetabhead.top < 0 && thetab.bottom > 0) {
               					document.getElementById(table.tableid+DELIMITER+"tbl"+DELIMITER+"mh").style.left = thetab.left+"px";
               					document.getElementById(table.tableid+DELIMITER+"tbl"+DELIMITER+"mh").style.display = "table";
             				}
