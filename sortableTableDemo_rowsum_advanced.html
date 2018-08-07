@@ -72,7 +72,7 @@
 		
         function renderCell(col,celldata) {
             if (col == "col_d"){
-                celldata="<div><span>" + celldata.xk + "</span>/<span>" + celldata.yk + "</span></div>";
+                celldata="<div>{<span>col:" + celldata.col + "</span>,<span>xk:" + celldata.xk + "</span>,<span>yk:" + celldata.yk + "</span>}</div>";
             } 
             return celldata;
         }
