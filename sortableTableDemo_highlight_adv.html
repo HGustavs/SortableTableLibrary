@@ -148,32 +148,40 @@
     // ---------------
     //  Callback function that highlights the currently hovered row
     //--------------------------------------------------------------------------
-    function rowHighlightOn(rowid,rowno,colclass,centerel){  
-        let table=document.getElementById(centerel.id).closest("TR").id.substring(0,document.getElementById(centerel.id).closest("TR").id.indexOf("_"));
-        let column=centerel.id.substring(centerel.id.lastIndexOf("_")+1);
-        let rowPos=document.getElementById(centerel.id).closest("TR").getBoundingClientRect();
-        let colPos=document.getElementById(column+"_"+table+"_tbl").getBoundingClientRect();       
-        let=xBorderOffset=getComputedStyle(document.getElementById('rowHighlight'),null).getPropertyValue('border-left-width').replace("px","");
-        let=yBorderOffset=getComputedStyle(document.getElementById('rowHighlight'),null).getPropertyValue('border-top-width').replace("px","")
-        
-        document.getElementById("rowHighlight").style.width=rowPos.width+"px";
-        document.getElementById("rowHighlight").style.height=rowPos.height+"px";
-        document.getElementById("rowHighlight").style.left=(rowPos.x+window.pageXOffset-xBorderOffset)+"px";
-        document.getElementById("rowHighlight").style.top=(rowPos.y+window.pageYOffset-yBorderOffset)+"px";
-        document.getElementById("columnHighlight").style.width=colPos.width+"px";
-        document.getElementById("columnHighlight").style.height=(document.getElementById(table+"_body").getBoundingClientRect().height+colPos.height)+"px";
-        document.getElementById("columnHighlight").style.left=(colPos.x+window.pageXOffset-xBorderOffset)+"px";
-        document.getElementById("columnHighlight").style.top=(colPos.y+window.pageYOffset-yBorderOffset)+"px";
-        
-        document.getElementById("columnHighlight").style.display="block";
-        document.getElementById("rowHighlight").style.display="block";
-    		centerel.style.backgroundImage="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2))";
+    function rowHighlightOn(rowid,rowno,colclass,centerel)
+    {    
+        rowid=rowid.replace(DELIMITER+"mhv","");
+    		rowElement=document.getElementById(rowid);
+    		// rowElement.style.backgroundImage="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2))";
+        rowElement.style.backgroundImage="linear-gradient(to top,RGBA(255,80,220,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,80,220,1) calc(100% - 3px))"
+        if(this.hasMagicHeadings){
+            mhvRowElement=document.getElementById(rowid+DELIMITER+"mhv");
+            mhvRowElement.style.backgroundImage="linear-gradient(to top,RGBA(255,80,220,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,80,220,1) calc(100% - 3px))"      
+        }
+    		
+    		colElements=document.getElementsByClassName(colclass);
+    		for (var i=0; i<colElements.length; i++) {
+        		colElements[i].style.backgroundImage = "linear-gradient(to right,RGBA(255,80,220,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,80,220,1) calc(100% - 2px))";
+    		}
+    	
+    		centerel.style.background="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2)),linear-gradient(to top,RGBA(255,80,220,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,80,220,1) calc(100% - 3px)), linear-gradient(to right,RGBA(255,80,220,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,80,220,1) calc(100% - 2px))";
     }
 
-    function rowHighlightOff(rowid,rowno,colclass,centerel){
-    		centerel.style.backgroundImage="none";
-        document.getElementById("columnHighlight").style.display="none";
-        document.getElementById("rowHighlight").style.display="none";
+    function rowHighlightOff(rowid,rowno,colclass,centerel)
+    {
+        rowid=rowid.replace(DELIMITER+"mhv","");
+    		rowElement=document.getElementById(rowid);
+    		rowElement.style.backgroundImage="none";
+        if(this.hasMagicHeadings){
+            mhvRowElement=document.getElementById(rowid+DELIMITER+"mhv");
+            mhvRowElement.style.backgroundImage="none";      
+        }
+    
+    		colElements=document.getElementsByClassName(colclass);
+    		for (var i=0; i<colElements.length; i++) {
+        		colElements[i].style.backgroundImage = "none";
+    		} 
+    
     }
 		</script>
 </head>
