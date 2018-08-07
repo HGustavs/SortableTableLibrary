@@ -169,13 +169,15 @@ function rowDeHighlightInternal(event,row)
 // https://stackoverflow.com/questions/13708590/css-gradient-colour-stops-from-end-in-pixels
 
 function defaultRowHighlightOn(rowid,rowno,colclass,centerel)
-{
+{    
     rowid=rowid.replace(DELIMITER+"mhv","");
 		rowElement=document.getElementById(rowid);
-    mhvRowElement=document.getElementById(rowid+DELIMITER+"mhv");
 		// rowElement.style.backgroundImage="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2))";
     rowElement.style.backgroundImage="linear-gradient(to top,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 3px))"
-    mhvRowElement.style.backgroundImage="linear-gradient(to top,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 3px))"
+    if(this.hasMagicHeadings){
+        mhvRowElement=document.getElementById(rowid+DELIMITER+"mhv");
+        mhvRowElement.style.backgroundImage="linear-gradient(to top,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 3px))"      
+    }
 		
 		colElements=document.getElementsByClassName(colclass);
 		for (var i=0; i<colElements.length; i++) {
@@ -189,9 +191,11 @@ function defaultRowHighlightOff(rowid,rowno,colclass,centerel)
 {
     rowid=rowid.replace(DELIMITER+"mhv","");
 		rowElement=document.getElementById(rowid);
-    mhvRowElement=document.getElementById(rowid+DELIMITER+"mhv");
 		rowElement.style.backgroundImage="none";
-    mhvRowElement.style.backgroundImage="none";
+    if(this.hasMagicHeadings){
+        mhvRowElement=document.getElementById(rowid+DELIMITER+"mhv");
+        mhvRowElement.style.backgroundImage="none";      
+    }
 
 		colElements=document.getElementsByClassName(colclass);
 		for (var i=0; i<colElements.length; i++) {
