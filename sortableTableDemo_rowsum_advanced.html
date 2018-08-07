@@ -17,45 +17,23 @@
 
         var tabledata = {
         	tblhead:{
-            firstlast:"First/Last",
-            pnr:"Pnr",
-            num:"Num",
-            foo:"Foo",
-            holk:"Holk",
-            trumma:"Trumma"
+              col_a:"Col A",
+              col_b:"Col B",
+              col_c:"Col C",
+              col_d:"Col D"
         	},
         	tblbody:[],
         	tblfoot:{}
         }
 
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		
-        for (i = 0; i < 200; i++) {
-    		var wordcnt=Math.round(Math.random() * 5 + 1);
-    		var str = "";
-    		var str2 = "";
-    		var str3 = "";
-    		for (j = 0; j < wordcnt; j++) {
-				var charcnt = Math.round(Math.random() * 10);
-				for (var k = 0; k < charcnt; k++) {
-					str += possible.charAt(Math.floor(Math.random() * possible.length));
-                    str2 += possible.charAt(Math.floor(Math.random() * possible.length));
-                    str3 += possible.charAt(Math.floor(Math.random() * possible.length));
-				}
-                str += " ";
-                str2 += " ";
-                str3 += " ";
-    		}
-        		
-        tabledata.tblbody.push(
-          { firstlast:str,
-            pnr:Math.random()*5000,
-            num:Math.round(Math.random()*20),
-            foo:str2,
-            holk:str3,
-            trumma:{xk:Math.round(Math.random()*2000+1000),yk:Math.round(Math.random()*500),col:"Free Shevacadoo"}
-          }
-        );
+        for (i = 0; i < 20; i++) {
+            tabledata.tblbody.push(
+                { col_a:Math.floor(Math.random()*20)+1,
+                  col_b:Math.floor(Math.random()*20)+1,
+                  col_c:Math.floor(Math.random()*20)+1,
+                  col_d:{xk:Math.round(Math.random()*2000+1000),yk:Math.round(Math.random()*500),col:"Free Shevacadoo"}
+                }
+            );
         }
 
         var myTable,myTable2;
@@ -77,9 +55,9 @@
             myTable = new SortableTable({
                 data:tabledata,
                 tableElementId:"thetable",
-                tableCaption:"Booyah!",
-                columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
-                rowSum:[[{"name":"Pnr+Num+Trumma.xk","id":"pnrid"}, "pnr","num","trumma.xk"]],
+                tableCaption:"Multiple row sum example",
+                columnOrder:["col_a","col_b","col_c","col_d"],
+                rowSum:[[{"name":"Col A + Col D.xk","id":"aplusdxk"}, "col_a","col_d.xk"]],
                 renderCellCallback:renderCell
             });
           	
@@ -93,12 +71,10 @@
         //--------------------------------------------------------------------------
 		
         function renderCell(col,celldata) {
-            if (col == "trumma"){
-                return "<div><span>" + celldata.xk + "</span>/<span>" + celldata.yk + "</span></div>";
-            } else if (col == "pnr") {
-                return "<div style='text-align:right'>" + celldata + "</div>";
-            }
-        	return celldata;
+            if (col == "col_d"){
+                celldata="<div><span>" + celldata.xk + "</span>/<span>" + celldata.yk + "</span></div>";
+            } 
+            return celldata;
         }
 
     </script>
