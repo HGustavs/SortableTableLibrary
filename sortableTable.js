@@ -170,9 +170,12 @@ function rowDeHighlightInternal(event,row)
 
 function defaultRowHighlightOn(rowid,rowno,colclass,centerel)
 {
+    rowid=rowid.replace(DELIMITER+"mhv","");
 		rowElement=document.getElementById(rowid);
+    mhvRowElement=document.getElementById(rowid+DELIMITER+"mhv");
 		// rowElement.style.backgroundImage="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2))";
-		rowElement.style.backgroundImage="linear-gradient(to top,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 3px))"
+    rowElement.style.backgroundImage="linear-gradient(to top,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 3px))"
+    mhvRowElement.style.backgroundImage="linear-gradient(to top,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 3px))"
 		
 		colElements=document.getElementsByClassName(colclass);
 		for (var i=0; i<colElements.length; i++) {
@@ -184,8 +187,11 @@ function defaultRowHighlightOn(rowid,rowno,colclass,centerel)
 
 function defaultRowHighlightOff(rowid,rowno,colclass,centerel)
 {
+    rowid=rowid.replace(DELIMITER+"mhv","");
 		rowElement=document.getElementById(rowid);
+    mhvRowElement=document.getElementById(rowid+DELIMITER+"mhv");
 		rowElement.style.backgroundImage="none";
+    mhvRowElement.style.backgroundImage="none";
 
 		colElements=document.getElementsByClassName(colclass);
 		for (var i=0; i<colElements.length; i++) {
@@ -375,7 +381,7 @@ function SortableTable(param)
               str += "<tr id='"+this.tableid+DELIMITER+i+"'"
               if (this.hasRowHighlight)str+=" onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)'";
               str+=" style='box-sizing:border-box'>";
-              mhvstr += "<tr id='"+this.tableid+DELIMITER+i+DELIMITER+"mvh' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box'>";
+              mhvstr += "<tr id='"+this.tableid+DELIMITER+i+DELIMITER+"mhv' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box'>";
 
         			// Add Counter cell to the row. The class <tableid>_counter can be used to style the counterText
         			if(this.hasCounter) {
@@ -409,7 +415,7 @@ function SortableTable(param)
                     var cellid = "r"+i+DELIMITER+this.tableid+DELIMITER+columnOrder[columnOrderIdx];
           					str += "<td style='white-space:nowrap;' id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+this.tableid+"-"+columnOrder[columnOrderIdx]+"'>"+renderCell(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],cellid)+"</td>";  
                     if(columnOrderIdx<freezePaneIndex){
-                        mhvstr+="<td style='white-space:nowrap;' id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+this.tableid+"-"+columnOrder[columnOrderIdx]+"'>"+renderCell(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],cellid)+"</td>";  
+                        mhvstr+="<td style='white-space:nowrap;' id='"+cellid+DELIMITER+"mhv' onclick='clickedInternal(event,this);' class='"+this.tableid+"-"+columnOrder[columnOrderIdx]+"'>"+renderCell(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],cellid)+"</td>";  
                     }
         				}
       			}
