@@ -108,35 +108,37 @@ function clickedInternal(event,clickdobj)
     var tableid = match[2];
     var columnname=match[3]
 
-		var str = "";
-    var rowdata = sortableTable.currentTable.getRow(rowno);
-		var coldata = rowdata[columnname];
-
-		sortableTable.edit_rowno = rowno;
-    sortableTable.edit_row = rowdata;
-		sortableTable.edit_columnno = columnno;
-		sortableTable.edit_columnname = columnname;
-		sortableTable.edit_tableid = tableid;
-    sortableTable.edit_celldata = coldata;
-
-		str += "<div id='input-container' style='flex-grow:1'>";
-		str += sortableTable.currentTable.showEditCell(coldata,rowno,rowelement,cellelement,columnname,columnno,rowdata,coldata,tableid);
-		str += "</div>";
-		str += "<img id='popovertick' class='icon' src='Icon_Tick.svg' onclick='updateCellInternal();'>";
-		str += "<img id='popovercross' class='icon' src='Icon_Cross.svg' onclick='clearUpdateCellInternal();'>";
-		var lmnt = cellelement.getBoundingClientRect();
-		var popoverelement = document.getElementById("editpopover");
-
-		popoverelement.innerHTML = str;
-		var popoveredit = document.getElementById("popoveredit");
-		var xscroll = window.pageXOffset;
-		var yscroll = window.pageYOffset;
-
-		popoverelement.style.left = Math.round(lmnt.left+xscroll)+"px";
-		popoverelement.style.top = Math.round(lmnt.top+yscroll)+"px";
-		popoverelement.style.minHeight = (Math.round(lmnt.height)-5)+"px";
-		popoverelement.style.maxWidth = "fit-content";
-		popoverelement.style.display = "flex";
+    if(sortableTable.currentTable.readOnlyColumns.indexOf(columnname)==-1){
+      var str = "";
+      var rowdata = sortableTable.currentTable.getRow(rowno);
+      var coldata = rowdata[columnname];
+  
+      sortableTable.edit_rowno = rowno;
+      sortableTable.edit_row = rowdata;
+      sortableTable.edit_columnno = columnno;
+      sortableTable.edit_columnname = columnname;
+      sortableTable.edit_tableid = tableid;
+      sortableTable.edit_celldata = coldata;
+  
+      str += "<div id='input-container' style='flex-grow:1'>";
+      str += sortableTable.currentTable.showEditCell(coldata,rowno,rowelement,cellelement,columnname,columnno,rowdata,coldata,tableid);
+      str += "</div>";
+      str += "<img id='popovertick' class='icon' src='Icon_Tick.svg' onclick='updateCellInternal();'>";
+      str += "<img id='popovercross' class='icon' src='Icon_Cross.svg' onclick='clearUpdateCellInternal();'>";
+      var lmnt = cellelement.getBoundingClientRect();
+      var popoverelement = document.getElementById("editpopover");
+  
+      popoverelement.innerHTML = str;
+      var popoveredit = document.getElementById("popoveredit");
+      var xscroll = window.pageXOffset;
+      var yscroll = window.pageYOffset;
+  
+      popoverelement.style.left = Math.round(lmnt.left+xscroll)+"px";
+      popoverelement.style.top = Math.round(lmnt.top+yscroll)+"px";
+      popoverelement.style.minHeight = (Math.round(lmnt.height)-5)+"px";
+      popoverelement.style.maxWidth = "fit-content";
+      popoverelement.style.display = "flex";  
+    }
 	}
 }
 
@@ -237,6 +239,7 @@ function SortableTable(param)
     this.updateCell = getparam(param.updateCellCallback,null);
 		this.hasMagicHeadings = getparam(param.hasMagicHeadings,false);
     this.hasCounter = getparam(param.hasCounterColumn,false);
+    this.readOnlyColumns = getparam(param.readOnlyColumns,[]);
 
 		// Prepare head and order with columns from rowsum list
 		for(let i=0;i<rowsumList.length;i++){

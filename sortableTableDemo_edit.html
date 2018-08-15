@@ -116,39 +116,17 @@ var myTable,myTable2;
 //--------------------------------------------------------------------------
 
 function setup(){
-  /*
-  myTable = new SortableTable(
-		  tabledata,
-		  "thetable",
-		  null,
-			"Table Title!",
-      renderCell,
-      null,
-      null,
-      null,
-      [],
-      [],				
-      "",
-      null,
-      null,
-			null,
-			null,
-			displayCellEdit,
-      updateCellCallback,
-		  false
-	);
-	*/
-  myTable = new SortableTable({
-      data:tabledata,
-      tableElementId:"thetable",
-      tableCaption:"Booyah!",
-      renderCellCallback:renderCell,
-      columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
-      displayCellEditCallback:displayCellEdit,
-      updateCellCallback:updateCellCallback
-  });
-	myTable.renderTable();
-  
+    myTable = new SortableTable({
+        data:tabledata,
+        tableElementId:"thetable",
+        tableCaption:"Booyah!",
+        renderCellCallback:renderCell,
+        columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
+        displayCellEditCallback:displayCellEdit,
+        updateCellCallback:updateCellCallback,
+        readOnlyColumns:["foo"]
+    });
+	  myTable.renderTable();  
 }
 
 //--------------------------------------------------------------------------
