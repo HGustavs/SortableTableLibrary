@@ -124,7 +124,6 @@ function setup(){
         columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
         displayCellEditCallback:displayCellEdit,
         updateCellCallback:updateCellCallback,
-        readOnlyColumns:["foo"]
     });
 	  myTable.renderTable();  
 }
@@ -150,15 +149,15 @@ function renderCell(col,celldata){
 //  Callback function for showing a cell editing interface
 //--------------------------------------------------------------------------
 function displayCellEdit(celldata,rowno,rowelement,cellelement,column,colno,rowdata,coldata,tableid){
-    let str="";
+    let str=false;
     if(column=="trumma"){
-        str+="<div style='display:flex;flex-direction:column;flex-grow:1;'>";
+        str="<div style='display:flex;flex-direction:column;flex-grow:1;'>";
         str+="<input type='text' id='popoveredit_xk' class='popoveredit' style='flex-grow:1' value='"+celldata.xk+"' size="+celldata.xk.toString().length+"/>";
         str+="<input type='text' id='popoveredit_yk' class='popoveredit' style='flex-grow:1' value='"+celldata.yk+"' size="+celldata.yk.toString().length+"/>";
         str+="<input type='text' id='popoveredit_col' class='popoveredit' style='flex-grow:1' value='"+celldata.col+"' size="+celldata.col.toString().length+"/>";
         str+="</div>";
-    }else{
-        str+="<input type='text' id='popoveredit0' class='popoveredit' style='flex-grow:1' value='"+celldata+"' size='"+celldata.toString().length+"'/>";
+    }else if(column=="firstlast"||column=="pnr"||column=="num"||column=="holk"){
+        str="<input type='text' id='popoveredit0' class='popoveredit' style='flex-grow:1' value='"+celldata+"' size='"+celldata.toString().length+"'/>";
     }
     return str;          
 }

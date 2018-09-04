@@ -107,7 +107,10 @@ function clickedInternal(event,clickdobj)
     var columnno = null; // Not used anymore
     var tableid = match[2];
     var columnname=match[3]
-
+    var str = ""; 
+    var rowdata = sortableTable.currentTable.getRow(rowno); 
+    var coldata = rowdata[columnname]; 
+    
     sortableTable.edit_rowno = rowno;
     sortableTable.edit_row = rowdata;
     sortableTable.edit_columnno = columnno;
@@ -235,7 +238,6 @@ function SortableTable(param)
     this.updateCell = getparam(param.updateCellCallback,null);
 		this.hasMagicHeadings = getparam(param.hasMagicHeadings,false);
     this.hasCounter = getparam(param.hasCounterColumn,false);
-    this.readOnlyColumns = getparam(param.readOnlyColumns,[]);
 
 		// Prepare head and order with columns from rowsum list
 		for(let i=0;i<rowsumList.length;i++){
