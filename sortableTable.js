@@ -167,48 +167,43 @@ function rowDeHighlightInternal(event,row)
 function defaultRowHighlightOn(rowid,rowno,colclass,centerel)
 {    
     rowid=rowid.replace(DELIMITER+"mhv","");
-		rowElement=document.getElementById(rowid);
-    rowElement.style.backgroundImage="linear-gradient(to top,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 3px))"
+		document.getElementById(rowid).classList.add("highrowSortable");
     if(this.hasMagicHeadings){
-        mhvRowElement=document.getElementById(rowid+DELIMITER+"mhv");
-        mhvRowElement.style.backgroundImage="linear-gradient(to top,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 3px))"      
+        document.getElementById(rowid+DELIMITER+"mhv").classList.add("highrowSortable");
     }
 		
 		colElements=document.getElementsByClassName(colclass);
 		for (var i=0; i<colElements.length; i++) {
-    		colElements[i].style.backgroundImage = "linear-gradient(to right,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 2px))";
+    		colElements[i].classList.add("highcolSortable");
 		}
 
 		colElements=document.getElementsByClassName(colclass+"th");
 		for (var i=0; i<colElements.length; i++) {
-    		colElements[i].style.backgroundImage = "linear-gradient(to right,RGBA(97, 72, 117,1),RGBA(97, 72, 117,1))";
-    		colElements[i].style.color = "RGBA(255,255,255,1)";			
+				colElements[i].classList.add("highcolSortableHead");
 		}
 	
-		centerel.style.background="radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2)),linear-gradient(to top,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 3px)), linear-gradient(to right,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 2px))";
+		centerel.classList.add("highcellSortable");
 }
 
 function defaultRowHighlightOff(rowid,rowno,colclass,centerel)
 {
     rowid=rowid.replace(DELIMITER+"mhv","");
-		rowElement=document.getElementById(rowid);
-		rowElement.style.backgroundImage="none";
+		document.getElementById(rowid).classList.remove("highrowSortable");
     if(this.hasMagicHeadings){
-        mhvRowElement=document.getElementById(rowid+DELIMITER+"mhv");
-        mhvRowElement.style.backgroundImage="none";      
+        document.getElementById(rowid+DELIMITER+"mhv").classList.remove("highrowSortable");
     }
 
 		colElements=document.getElementsByClassName(colclass);
 		for (var i=0; i<colElements.length; i++) {
-    		colElements[i].style.backgroundImage = "none";
+    		colElements[i].classList.remove("highcolSortable");
 		} 
 	
 		colElements=document.getElementsByClassName(colclass+"th");
 		for (var i=0; i<colElements.length; i++) {
-    		colElements[i].style.backgroundImage = "none";
-    		colElements[i].style.color = "#000";			
+				colElements[i].classList.remove("highcolSortableHead");
 		}	
 
+		centerel.classList.remove("highcellSortable");
 }
 
 // Checks if parameter has been defined and returns default if not

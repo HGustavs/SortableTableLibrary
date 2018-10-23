@@ -16,8 +16,25 @@
 			}
 	
 		td {
-    border: none;
-}	
+    		border: none;
+		}	
+		
+		.highrowSortable {
+				background-image:linear-gradient(to top,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 3px));
+		}
+		
+		.highcolSortable {
+				background-image:linear-gradient(to right,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 2px));
+		}
+		
+		.highcolSortableHead {
+				background-image:linear-gradient(to right,RGBA(97, 72, 117,1),RGBA(97, 72, 117,1));
+				color: #fff;
+		}
+		
+		.highcellSortable {
+				background-image:radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2)),linear-gradient(to top,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 3px)), linear-gradient(to right,RGBA(255,220,80,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(255,220,80,1) calc(100% - 2px));
+		}
 		
 	</style>
 	<script src="sortableTable.js"></script> 
@@ -80,9 +97,9 @@
         		str2 += possible.charAt(Math.floor(Math.random() * possible.length));
         		str3 += possible.charAt(Math.floor(Math.random() * possible.length));
 				}
-        		str += " ";
-       			str2 += " ";
-        		str3 += " ";
+        		str += "<br>";
+       			str2 += "<br>";
+        		str3 += "<br>";
 			}
       tabledata.tblbody.push(
         { firstlast:str,
