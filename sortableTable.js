@@ -30,11 +30,8 @@ function searchKeyUp(e)
 
 function keypressHandler(event)
 {
-    if (event.keyCode == 13) {
-        updateCellInternal();
-    } else if(event.keyCode == 27) {
-        clearUpdateCellInternal();
-    }
+    if (event.keyCode == 13) updateCellInternal();
+    if (event.keyCode == 27) clearUpdateCellInternal();
 }
 
 function defaultRowFilter()
