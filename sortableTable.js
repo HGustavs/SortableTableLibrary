@@ -373,7 +373,7 @@ function SortableTable(param)
 									}
 									if (colname == sortcolumn) {
 												str += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,sortkind,col)+"</th>";
-												mhstr += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+col+"mh' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,sortkind,col)+"</th>";
+												mhstr += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mh' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,sortkind,col)+"</th>";
 									} else {
 												str += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,-1,col)+"</th>";
 												mhstr += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mh' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,-1,col)+"</th>";
@@ -536,13 +536,14 @@ function SortableTable(param)
 
     this.magicHeader = function() {
     	// Assign table and magic headings table(s)
-    	this.hasMagicHeadings=false;
+    	//this.hasMagicHeadings=false;
 			if (this.hasMagicHeadings) {
       		document.getElementById(this.tableid).innerHTML = str+mhstr+mhvstr+mhfstr;          
       		document.getElementById(this.tableid+DELIMITER+"tbl"+DELIMITER+"mh").style.width=document.getElementById(this.tableid+DELIMITER+"tbl").getBoundingClientRect().width+"px";
       		document.getElementById(this.tableid+DELIMITER+"tbl"+DELIMITER+"mh").style.boxSizing = "border-box";
       		children=document.getElementById(this.tableid+DELIMITER+"tbl").getElementsByTagName('TH');
       		for (i = 0; i < children.length; i++) {
+							console.log(children[i].id+DELIMITER+"mh");
         			document.getElementById(children[i].id+DELIMITER+"mh").style.width = children[i].getBoundingClientRect().width+"px";
         			document.getElementById(children[i].id+DELIMITER+"mh").style.boxSizing = "border-box";
       		}
