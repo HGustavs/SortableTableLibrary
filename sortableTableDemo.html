@@ -10,6 +10,15 @@
       tr:nth-child(even) {
           background-color: #ededed;
       }
+		
+			table {
+					border-collapse: collapse;
+			}
+	
+		td {
+    border: none;
+}	
+		
 	</style>
 	<script src="sortableTable.js"></script> 
 	<script>
@@ -334,11 +343,12 @@
 				
 		function renderCell(col,celldata){
   	    if (col == "trumma") {
-  	        return "<div><span>" + celldata.xk + "</span>/<span>" + celldata.yk + "</span></div>";
+  	        return "<div ><span>" + celldata.xk + "</span>/<span>" + celldata.yk + "</span></div>";
   	    } else if (col == "pnr") {
   	        return "<div>" + celldata + "</div>";
   	    }    
-  			return celldata;
+  			return "<div style='margin:2px;background:#def;'>"+celldata+"</div>";
+				//return celldata;
 		}
 
 		//--------------------------------------------------------------------------
