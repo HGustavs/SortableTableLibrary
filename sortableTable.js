@@ -522,10 +522,6 @@ function SortableTable(param)
         return sortcolumn;
     }
 
-    this.getSortcolumnNum = function() {
-        //return tbl.tblhead[sortcolumn];
-    }
-
     this.getSortkind = function() {
         return sortkind;
     }
