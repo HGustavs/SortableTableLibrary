@@ -359,33 +359,33 @@ function SortableTable(param)
         			if (renderSortOptions !== null) {
 									if (columnOrderIdx < freezePaneIndex) {
 												if (colname == sortcolumn){
-														mhfstr += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhf' class='"+this.tableid+"-"+colname+"thhighli'>"+renderSortOptions(colname,sortkind,col)+"</th>";
-														mhvstr += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhv' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,sortkind,col)+"</th>";
+														mhfstr += "<th title='Click to change sort order' style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhf' class='"+this.tableid+"-"+colname+"thhighli'>"+renderSortOptions(colname,sortkind,col)+"</th>";
+														mhvstr += "<th title='Click to change sort order' style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhv' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,sortkind,col)+"</th>";
 												} else {
-														mhfstr += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhf' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,-1,col)+"</th>";
-														mhvstr += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhv' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,-1,col)+"</th>";
+														mhfstr += "<th title='Click to change sort order' style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhf' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,-1,col)+"</th>";
+														mhvstr += "<th title='Click to change sort order' style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhv' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,-1,col)+"</th>";
 												}
 									}
 									if (colname == sortcolumn) {
-												str += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,sortkind,col)+"</th>";
-												mhstr += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mh' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,sortkind,col)+"</th>";
+												str += "<th title='Click to change sort order' style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,sortkind,col)+"</th>";
+												mhstr += "<th title='Click to change sort order' style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mh' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,sortkind,col)+"</th>";
 									} else {
-												str += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,-1,col)+"</th>";
-												mhstr += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mh' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,-1,col)+"</th>";
+												str += "<th title='Click to change sort order' style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,-1,col)+"</th>";
+												mhstr += "<th title='Click to change sort order' style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mh' class='"+this.tableid+"-"+colname+"th'>"+renderSortOptions(colname,-1,col)+"</th>";
 									}
         			} else {
           				if (columnOrderIdx < freezePaneIndex) {                    
           				 	if (colname == sortcolumn){
-          				 		mhfstr += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhf' class='"+this.tableid+"-"+colname+"th'>"+col+"</th>";
-          				 		mhvstr += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhv' class='"+this.tableid+"-"+colname+"th'>"+col+"</th>";
+          				 		mhfstr += "<th title='Click to change sort order' style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhf' class='"+this.tableid+"-"+colname+"th'>"+col+"</th>";
+          				 		mhvstr += "<th title='Click to change sort order' style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhv' class='"+this.tableid+"-"+colname+"th'>"+col+"</th>";
           				 	} else {
-          				 		mhfstr += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhf' class='"+this.tableid+"-"+colname+"th'>"+col+"</th>";
-          				 		mhvstr += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhv' class='"+this.tablid+"-"+colname+"th'>"+col+"</th>";
+          				 		mhfstr += "<th title='Click to change sort order' style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhf' class='"+this.tableid+"-"+colname+"th'>"+col+"</th>";
+          				 		mhvstr += "<th title='Click to change sort order' style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhv' class='"+this.tablid+"-"+colname+"th'>"+col+"</th>";
           				 	}
           				}
           				if (col != "move") {
-          					str += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl' class='"+this.tableid+"-"+colname+"th'>"+col+"</th>";
-          					mhstr += "<th style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mh' class='"+this.tableid+"-"+colname+"th'>"+col+"</th>";
+          					str += "<th title='Click to change sort order' style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl' class='"+this.tableid+"-"+colname+"th'>"+col+"</th>";
+          					mhstr += "<th title='Click to change sort order' style='white-space:nowrap;' id='"+colname+DELIMITER+this.tableid+DELIMITER+"tbl"+DELIMITER+"mh' class='"+this.tableid+"-"+colname+"th'>"+col+"</th>";
           				}
         			}
           }
