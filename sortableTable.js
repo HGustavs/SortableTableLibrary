@@ -260,17 +260,10 @@ function SortableTable(param)
     var freezePane = freezePane;
     var freezePaneArr = [];
         
-    // Local variable that contains html code for main table and local variable that contains magic headings table
-    var str = "";
-    var mhstr = "";
-    var mhvstr = "";
-    var mhfstr = "";
+    // Local variables that contain html code for main table and local variable that contains magic headings table
+    var str = "", mhstr = "", mhvstr = "",  mhfstr = "";
 
     sortableTable.sortableTables.push(this);
-
-    this.renderTable = function() {
-        this.reRender();
-    }
 
     this.getRow = function(rowno) {
         return tbl.tblbody[rowno];
@@ -403,9 +396,9 @@ function SortableTable(param)
       		var row = tbl.tblbody[i];
       		if (rowFilter(row)) {
               str += "<tr id='"+this.tableid+DELIMITER+i+"'"
-              if (this.hasRowHighlight)str+=" onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)'";
-              str+=" style='box-sizing:border-box'>";
-              mhvstr += "<tr id='"+this.tableid+DELIMITER+i+DELIMITER+"mhv' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box'>";
+              if (this.hasRowHighlight) str+=" onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)'";
+              str+=" style='box-sizing:border-box' >";
+              mhvstr += "<tr id='"+this.tableid+DELIMITER+i+DELIMITER+"mhv' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box' >";
 
         			// Add Counter cell to the row. The class <tableid>_counter can be used to style the counterText
         			if(this.hasCounter) {
@@ -567,7 +560,7 @@ function SortableTable(param)
       	for (var i = 0; i < sortableTable.sortableTables.length; i++) {
         		var table = sortableTable.sortableTables[i];
         		if (table.hasMagicHeadings) {
-                if (window.innerWidth != windowWidth){windowWidth=window.innerWidth;table.renderTable()}
+                if (window.innerWidth != windowWidth){windowWidth=window.innerWidth;table.reRender()}
           			if (document.getElementById(table.tableid+DELIMITER+"tbl") != null) {
             				var thetab = document.getElementById(table.tableid+DELIMITER+"tbl").getBoundingClientRect();
             				var thetabhead = document.getElementById(table.tableid+DELIMITER+"tblhead").getBoundingClientRect();
@@ -603,7 +596,7 @@ function SortableTable(param)
 
     this.updateCell = function() {
         tbl.tblbody[sortableTable.edit_rowno][sortableTable.edit_columnname] = updateCellCallback(sortableTable.edit_rowno,null,sortableTable.edit_columnname,sortableTable.edit_tableid,null,sortableTable.edit_rowid);
-        this.renderTable();
+        this.reRender();
     }
 
     this.getColumnOrder=function(){
