@@ -551,7 +551,7 @@ function SortableTable(param)
 			
     }
 
-    setInterval(freezePaneHandler,30);
+    setInterval(freezePaneHandler,1000);
     function freezePaneHandler() {
       	// Hide magic headings and find minimum overdraft
       	for (var i = 0; i < sortableTable.sortableTables.length; i++) {
@@ -586,11 +586,18 @@ function SortableTable(param)
             				else {
                         document.getElementById(table.tableid+DELIMITER+"tbl"+DELIMITER+"mhf").style.display = "none";
             				}
-          			}
+										var srctbl=document.getElementById(table.tableid+DELIMITER+"body").children;
+										var desttbl=document.getElementById(table.tableid+DELIMITER+"mhvbody").children;
+										for(let j=0;srctbl.length;j++){
+												desttbl[j].height=srctbl[j].getBoundingClientRect().height+"px";
+										}
+																											 
+								}
         		}
       	}
     }
-
+		
+	
     this.updateCell = function() {
         tbl.tblbody[sortableTable.edit_rowno][sortableTable.edit_columnname] = updateCellCallback(sortableTable.edit_rowno,null,sortableTable.edit_columnname,sortableTable.edit_tableid,null,sortableTable.edit_rowid);
         this.reRender();
