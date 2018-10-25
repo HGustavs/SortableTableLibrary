@@ -525,7 +525,6 @@ function SortableTable(param)
       		document.getElementById(this.tableid+DELIMITER+"tbl"+DELIMITER+"mh").style.boxSizing = "border-box";
       		children=document.getElementById(this.tableid+DELIMITER+"tbl").getElementsByTagName('TH');
       		for (i = 0; i < children.length; i++) {
-							console.log(children[i].id+DELIMITER+"mh");
         			document.getElementById(children[i].id+DELIMITER+"mh").style.width = children[i].getBoundingClientRect().width+"px";
         			document.getElementById(children[i].id+DELIMITER+"mh").style.boxSizing = "border-box";
       		}
@@ -551,7 +550,7 @@ function SortableTable(param)
 			
     }
 
-    setInterval(freezePaneHandler,1000);
+    setInterval(freezePaneHandler,30);
     function freezePaneHandler() {
       	// Hide magic headings and find minimum overdraft
       	for (var i = 0; i < sortableTable.sortableTables.length; i++) {
@@ -587,9 +586,9 @@ function SortableTable(param)
                         document.getElementById(table.tableid+DELIMITER+"tbl"+DELIMITER+"mhf").style.display = "none";
             				}
 										var srctbl=document.getElementById(table.tableid+DELIMITER+"body").children;
-										var desttbl=document.getElementById(table.tableid+DELIMITER+"mhvbody").children;
-										for(let j=0;srctbl.length;j++){
-												desttbl[j].height=srctbl[j].getBoundingClientRect().height+"px";
+                    var desttbl=document.getElementById(table.tableid+DELIMITER+"mhvbody").children;
+										for(let j=0;j<srctbl.length;j++){
+                        desttbl[j].style.height=srctbl[j].getBoundingClientRect().height+"px";
 										}
 																											 
 								}
