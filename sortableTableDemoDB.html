@@ -3,12 +3,42 @@
     <meta charset="utf-8">
     <!--<link rel="stylesheet" type="text/css" href="style.css">-->
     <style>
+        body{
+            font-family:arial narrow;
+            padding:3px;
+        }
+      
         tr:nth-child(odd) {
             background-color: #e5e5e5;
         }
         
         tr:nth-child(even) {
-            background-color: #ededed;
+            background-color: #f8f8f8;
+        }
+      
+        table {
+            border-collapse: collapse;
+        }
+    
+        td {
+            border: none;
+        }	
+        
+        .highrowSortable {
+            background-image:linear-gradient(to top,RGBA(97, 72, 117,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(97, 72, 117,1) calc(100% - 3px));
+        }
+        
+        .highcolSortable {
+            background-image:linear-gradient(to right,RGBA(97, 72, 117,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(97, 72, 117,1) calc(100% - 2px));
+        }
+        
+        .highcolSortableHead {
+            background-image:linear-gradient(to right,RGBA(97, 72, 117,1),RGBA(97, 72, 117,1));
+            color: #fff;
+        }
+        
+        .highcellSortable {
+            background-image:radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2)),linear-gradient(to top,RGBA(97, 72, 117,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(97, 72, 117,1) calc(100% - 3px)), linear-gradient(to right,RGBA(97, 72, 117,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(97, 72, 117,1) calc(100% - 2px));
         }
     </style>
   	<script src="sortableTable.js"></script> 
@@ -89,7 +119,7 @@
                         rowSum:[[{"name":"Pnr+Num+Trumma.xk","id":"pnrid"}, "pnr","num","trumma.xk"]],	
                         columnSumCallback:makeSum,
                         columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
-                        freezePaneIndex:3,
+                        freezePaneIndex:2,
                         displayCellEditCallback:displayCellEdit,
                         updateCellCallback:updateCellCallback,
                         hasRowHighlight:true,
@@ -109,15 +139,15 @@
                           rowSum:[[{"name":"Pnr+Num+Trumma.xk","id":"pnrid"}, "pnr","num","trumma.xk"]],	
                           columnSumCallback:makeSum,
                           columnOrder:["firstlast","pnr","num","foo","holk","trumma"],
-                          freezeColumns:["pnr"],
+                          freezePaneIndex:2,
                           displayCellEditCallback:displayCellEdit,
                           updateCellCallback:updateCellCallback,
                           hasRowHighlight:true,
                           hasMagicHeadings:true,
                           hasCounterColumn:true
                       });
-                      myTable.renderTable();
-                      myTable2.renderTable();
+                      myTable.rerenderTable();
+                      myTable2.rerenderTable();
                 }
             };
             xhttp.open("GET", "db_service.php?dbarr=" + JSON.stringify(tables), true);

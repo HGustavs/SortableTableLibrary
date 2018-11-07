@@ -254,8 +254,8 @@ function SortableTable(param)
     var tableSort;
     var colSort;
     var reverseSort;    
-    var freezePane = freezePane;
-    var freezePaneArr = [];
+    //var freezePane = freezePane;
+    //var freezePaneArr = [];
         
     // Local variables that contain html code for main table and local variable that contains magic headings table
     var str = "", mhstr = "", mhvstr = "",  mhfstr = "";
@@ -394,8 +394,8 @@ function SortableTable(param)
       		if (rowFilter(row)) {
               str += "<tr id='"+this.tableid+DELIMITER+i+"'"
               if (this.hasRowHighlight) str+=" onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)'";
-              str+=" style='box-sizing:border-box' >";
-              mhvstr += "<tr id='"+this.tableid+DELIMITER+i+DELIMITER+"mhv' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box' >";
+              str+=" style='box-sizing:border-box;'>";
+              mhvstr += "<tr id='"+this.tableid+DELIMITER+i+DELIMITER+"mhv' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box;' class='"+table.tableid+DELIMITER+"tbl"+DELIMITER+"mhvbodyrow' >";
 
         			// Add Counter cell to the row. The class <tableid>_counter can be used to style the counterText
         			if(this.hasCounter) {
@@ -559,7 +559,7 @@ function SortableTable(param)
                 if (window.innerWidth != windowWidth){windowWidth=window.innerWidth;table.reRender()}
           			if (document.getElementById(table.tableid+DELIMITER+"tbl") != null) {
             				var thetab = document.getElementById(table.tableid+DELIMITER+"tbl").getBoundingClientRect();
-            				var thetabhead = document.getElementById(table.tableid+DELIMITER+"tblhead").getBoundingClientRect();
+                    var thetabhead = document.getElementById(table.tableid+DELIMITER+"tblhead").getBoundingClientRect();
             				// If top is negative and top+height is positive draw mh otherwise hide
             				// Vertical
             				if (thetabhead.top < 0 && thetab.bottom > 0) {
