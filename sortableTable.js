@@ -93,12 +93,11 @@ function clickedInternal(event,clickdobj)
 	if (sortableTable.currentTable.showEditCell != null) {
 		var cellelement = event.target.closest("td");
     var rowelement = event.target.closest("tr");
-    let regex=new RegExp("^r([0-9]+)"+DELIMITER+"([a-zA-Z0-9]+)"+DELIMITER+"(.*)")
-    let match=cellelement.id.match(regex);
-    var rowno = match[1];
+		var match=cellelement.id.split(DELIMITER);
+    var rowno = match[0].substr(1);
     var columnno = null; // Not used anymore
-    var tableid = match[2];
-    var columnname=match[3]
+    var tableid = match[1];
+    var columnname=match[2]
     var str = ""; 
     var rowdata = sortableTable.currentTable.getRow(rowno); 
     var coldata = rowdata[columnname]; 
@@ -114,7 +113,9 @@ function clickedInternal(event,clickdobj)
       str += "<div id='input-container' style='flex-grow:1'>";
       str += estr;
       str += "</div>";
-      str += "<img id='popovertick' class='icon' src='Icon_Tick.svg' onclick='updateCellInternal();'>";
+			str += "<span id='popovertick' class='icon' onclick='updateCellInternal();'>";
+			str +="<svg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='79.5px' height='79.2px' viewBox='0 0 79.5 79.2' enable-background='new 0 0 79.5 79.2' xml:space='preserve'><path id='Tick' fill='#006838' d='M27.9,57C39.2,40.2,50,24.3,60.7,8.3c1-1.5,1.9-3.1,3.1-4.5c3.2-4,7.5-4.9,11.4-2.3c3.7,2.4,4.9,7.2,2.2,11.4c-5.1,8-10.5,15.8-15.8,23.6c-8.2,12.1-16.3,24.3-24.5,36.3c-4.6,6.7-9.3,7.1-15,1.3C15.8,67.9,9.6,61.7,3.4,55.4c-4.1-4.2-4.4-8.7-1-12.3c3.3-3.4,8.5-3.3,12.4,0.6C19.1,47.8,23.2,52.2,27.9,57z'/></svg>";
+			str +="</span>";
       str += "<img id='popovercross' class='icon' src='Icon_Cross.svg' onclick='clearUpdateCellInternal();'>";
       var lmnt = cellelement.getBoundingClientRect();
       var popoverelement = document.getElementById("editpopover");
