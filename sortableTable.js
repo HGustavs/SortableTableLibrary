@@ -256,8 +256,8 @@ function SortableTable(param)
     var tableSort;
     var colSort;
     var reverseSort;    
-    var freezePane = freezePane;
-    var freezePaneArr = [];
+    //var freezePane = freezePane;
+    //var freezePaneArr = [];
         
     // Local variables that contain html code for main table and local variable that contains magic headings table
     var str = "", mhstr = "", mhvstr = "",  mhfstr = "";
@@ -268,7 +268,7 @@ function SortableTable(param)
         return tbl.tblbody[rowno];
     }
 
-    this.reRender = function() {
+    this.renderTable = function() {
 
     	this.rowIndex = 1;
     	// Local variable that contains html code for main table and local variable that contains magic headings table
@@ -396,8 +396,8 @@ function SortableTable(param)
       		if (rowFilter(row)) {
               str += "<tr id='"+this.tableid+DELIMITER+i+"'"
               if (this.hasRowHighlight) str+=" onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)'";
-              str+=" style='box-sizing:border-box' >";
-              mhvstr += "<tr id='"+this.tableid+DELIMITER+i+DELIMITER+"mhv' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box' >";
+              str+=" style='box-sizing:border-box;'>";
+              mhvstr += "<tr id='"+this.tableid+DELIMITER+i+DELIMITER+"mhv' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box;' class='"+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhvbodyrow' >";
 
         			// Add Counter cell to the row. The class <tableid>_counter can be used to style the counterText
         			if(this.hasCounter) {
@@ -489,7 +489,7 @@ function SortableTable(param)
       }
     	localStorage.setItem(this.tableid+DELIMITER+"filtercolnames", JSON.stringify(columnfilter));
 
-    	this.reRender();
+    	this.renderTable();
     }
 
     this.toggleSortStatus = function(col,kind) {
@@ -503,7 +503,7 @@ function SortableTable(param)
     	sortcolumn = col;
     	sortkind = kind;
 			
-    	this.reRender();
+    	this.renderTable();
     }
 
     this.getKeyByValue = function() {
@@ -558,10 +558,10 @@ function SortableTable(param)
       	for (var i = 0; i < sortableTable.sortableTables.length; i++) {
         		var table = sortableTable.sortableTables[i];
         		if (table.hasMagicHeadings) {
-                if (window.innerWidth != windowWidth){windowWidth=window.innerWidth;table.reRender()}
+                if (window.innerWidth != windowWidth){windowWidth=window.innerWidth;table.renderTable()}
           			if (document.getElementById(table.tableid+DELIMITER+"tbl") != null) {
             				var thetab = document.getElementById(table.tableid+DELIMITER+"tbl").getBoundingClientRect();
-            				var thetabhead = document.getElementById(table.tableid+DELIMITER+"tblhead").getBoundingClientRect();
+                    var thetabhead = document.getElementById(table.tableid+DELIMITER+"tblhead").getBoundingClientRect();
             				// If top is negative and top+height is positive draw mh otherwise hide
             				// Vertical
             				if (thetabhead.top < 0 && thetab.bottom > 0) {
@@ -601,7 +601,7 @@ function SortableTable(param)
 	
     this.updateCell = function() {
         tbl.tblbody[sortableTable.edit_rowno][sortableTable.edit_columnname] = updateCellCallback(sortableTable.edit_rowno,null,sortableTable.edit_columnname,sortableTable.edit_tableid,null,sortableTable.edit_rowid);
-        this.reRender();
+        this.renderTable();
     }
 
     this.getColumnOrder=function(){
@@ -611,7 +611,7 @@ function SortableTable(param)
     this.reorderColumns=function(newOrderList){        
         if(Array.isArray(newOrderList)){
             columnOrder=newOrderList;
-            this.reRender();          
+            this.renderTable();          
         }
     }
 
