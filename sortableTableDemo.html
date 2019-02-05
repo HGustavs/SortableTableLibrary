@@ -42,6 +42,18 @@
 				background-image:radial-gradient(RGBA(0,0,0,0),RGBA(0,0,0,0.2)),linear-gradient(to top,RGBA(97, 72, 117,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(97, 72, 117,1) calc(100% - 3px)), linear-gradient(to right,RGBA(97, 72, 117,1) 2px,RGBA(0,0,0,0.0) 3px, RGBA(0,0,0,0.0) calc(100% - 3px), RGBA(97, 72, 117,1) calc(100% - 2px));
 		}
 		
+		.icon{
+				width:32px;
+				height:32px;
+		}
+		
+		#editpopover {
+				background:#def;
+				margin:4px;
+				padding:4px;
+				box-shadow:2px 2px 2px #000;
+		}
+		
 	</style>
 	<script src="sortableTable.js"></script> 
 	<script>
@@ -499,7 +511,7 @@
   <div id="the_table2"></div>
   <br>
 
-	<div id="editpopover" style="display:none;"></div>
+	<div id="editpopover" style="display:none;position:absolute;"></div>
 
 	<div id="dropdown"></div>
 </body>

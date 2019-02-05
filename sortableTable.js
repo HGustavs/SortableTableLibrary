@@ -47,10 +47,8 @@ function sortableInternalSort(a,b)
     var colname = sortableTable.currentTable.getSortcolumn();
     
 	if ((sortableTable.currentTable.sortkind % 2)==0) {
-		//alet("Compare: "+a+" "+b);
 		ret = compare(a[colname],b[colname]);
 	} else {
-		//alert("Compare: "+b+" "+a);
 		ret = compare(b[colname],a[colname]);
 	}
 	return ret;
@@ -110,13 +108,16 @@ function clickedInternal(event,clickdobj)
     sortableTable.edit_celldata = coldata;
     var estr=sortableTable.currentTable.showEditCell(coldata,rowno,rowelement,cellelement,columnname,columnno,rowdata,coldata,tableid);
     if(estr!==false){
-      str += "<div id='input-container' style='flex-grow:1'>";
-      str += estr;
-      str += "</div>";
-			str += "<span id='popovertick' class='icon' onclick='updateCellInternal();'>";
-			str +="<svg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='79.5px' height='79.2px' viewBox='0 0 79.5 79.2' enable-background='new 0 0 79.5 79.2' xml:space='preserve'><path id='Tick' fill='#006838' d='M27.9,57C39.2,40.2,50,24.3,60.7,8.3c1-1.5,1.9-3.1,3.1-4.5c3.2-4,7.5-4.9,11.4-2.3c3.7,2.4,4.9,7.2,2.2,11.4c-5.1,8-10.5,15.8-15.8,23.6c-8.2,12.1-16.3,24.3-24.5,36.3c-4.6,6.7-9.3,7.1-15,1.3C15.8,67.9,9.6,61.7,3.4,55.4c-4.1-4.2-4.4-8.7-1-12.3c3.3-3.4,8.5-3.3,12.4,0.6C19.1,47.8,23.2,52.2,27.9,57z'/></svg>";
-			str +="</span>";
-      str += "<img id='popovercross' class='icon' src='Icon_Cross.svg' onclick='clearUpdateCellInternal();'>";
+      str+= "<div id='input-container' style='flex-grow:1'>";
+      str+= estr;
+      str+="</div>";
+			str+="<span id='popovertick' class='icon' onclick='updateCellInternal();' >";
+			str+="<svg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 79.5 79.2' enable-background='new 0 0 79.5 79.2' xml:space='preserve'><path id='Tick' fill='#006838' d='M27.9,57C39.2,40.2,50,24.3,60.7,8.3c1-1.5,1.9-3.1,3.1-4.5c3.2-4,7.5-4.9,11.4-2.3c3.7,2.4,4.9,7.2,2.2,11.4c-5.1,8-10.5,15.8-15.8,23.6c-8.2,12.1-16.3,24.3-24.5,36.3c-4.6,6.7-9.3,7.1-15,1.3C15.8,67.9,9.6,61.7,3.4,55.4c-4.1-4.2-4.4-8.7-1-12.3c3.3-3.4,8.5-3.3,12.4,0.6C19.1,47.8,23.2,52.2,27.9,57z'/></svg>";
+			str+="</span>";
+      str+="<span id='popovercross' class='icon' onclick='clearUpdateCellInternal();' >";
+			str+="<svg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 79.5 79.2' enable-background='new 0 0 79.5 79.2' xml:space='preserve'><path id='Cross' fill='#BE1E2D' d='M67.4,57.6c-6-6.2-12.1-12.3-18.2-18.6c6.1-6.2,12.1-12.4,18.2-18.6c1.3-1.3,2.6-2.5,3.8-3.9	c3.3-3.9,3.2-8.4,0-11.7c-3.2-3.2-8-3.3-11.6,0.2c-6.8,6.6-13.3,13.5-19.9,20.2c-0.6,0.6-1.2,1.2-1.7,1.8c-0.6-0.6-1.2-1.2-1.7-1.8	c-6.6-6.8-13.1-13.6-19.9-20.2C12.7,1.6,7.8,1.8,4.7,4.9c-3.3,3.3-3.3,7.7,0,11.7c1.2,1.4,2.5,2.6,3.8,3.9	c6,6.2,12.1,12.3,18.2,18.6c-6.1,6.2-12.1,12.4-18.2,18.6c-1.3,1.3-2.6,2.5-3.8,3.9c-3.3,3.9-3.2,8.4,0,11.7c3.2,3.2,8,3.3,11.6-0.2	c6.8-6.6,13.3-13.5,19.9-20.2c0.6-0.6,1.2-1.2,1.7-1.8c0.6,0.6,1.2,1.2,1.7,1.8c6.6,6.8,13.1,13.6,19.9,20.2	c3.6,3.5,8.5,3.3,11.6,0.2c3.3-3.3,3.3-7.7,0-11.7C70.1,60.2,68.7,59,67.4,57.6z'/></svg>";
+			str+="</span>";
+			
       var lmnt = cellelement.getBoundingClientRect();
       var popoverelement = document.getElementById("editpopover");
   
