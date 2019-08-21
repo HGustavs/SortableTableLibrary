@@ -52,8 +52,21 @@
 				margin:4px;
 				padding:4px;
 				box-shadow:2px 2px 2px #000;
-		}
-		
+    }
+    
+   /* --------------================################================-------------- *
+    *                               Pagination                                     *
+    * --------------================################================-------------- */
+    .pagination-btn,.pagination-btn-selected {
+      padding:0 4px 0 4px;
+      text-decoration: underline;
+      cursor: default;
+    }
+
+    .pagination-btn-selected {
+      text-decoration: none;
+    }
+
 	</style>
 	<script src="sortableTable.js"></script> 
 	<script>
@@ -161,7 +174,10 @@
   				updateCellCallback:updateCellCallback,
           hasRowHighlight:true,
           hasMagicHeadings:true,
-          hasCounterColumn:true
+          hasCounterColumn:true,
+          rowsPerPage:5,
+          postRenderCallback:postRender,
+          preRenderCallback:preRender
       });
       myTable.renderTable();
 
@@ -188,7 +204,30 @@
       myTable2.renderTable();
       
 	}
-					
+		//--------------------------------------------------------------------------
+		// preRender
+		// ---------------
+		//  Callback function that execute before rendering the table
+		//--------------------------------------------------------------------------
+    function preRender(tbl)
+    {
+        alert("Before rendering "+tbl.tableid);
+        console.log(tbl)
+    }
+
+    //--------------------------------------------------------------------------
+		// postRender
+		// ---------------
+		//  Callback function that execute after rendering the table
+		//--------------------------------------------------------------------------
+    function postRender(tbl)
+    {
+        alert("Done rendering "+tbl.tableid);
+        console.log(tbl)
+        document.getElementById('total').innerHTML=tbl.getTotalRows();
+        document.getElementById('filtered').innerHTML=tbl.getFilteredRows();
+    }
+    
 		//--------------------------------------------------------------------------
 		// editCell
 		// ---------------
@@ -496,6 +535,8 @@
 	
 	<div id='MHTEST'></div>
 
+  <div>Total number of rows:<span id='total'></span></div>
+  <div>Filtered number of rows:<span id='filtered'></span></div>
 	<!-- Column filter div -->
 	<div id="columnfilter"></div>
   

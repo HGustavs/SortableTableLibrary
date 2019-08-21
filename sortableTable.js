@@ -54,6 +54,18 @@ function sortableInternalSort(a,b)
 	return ret;
 }
 
+changePage=function(tblid,p)
+{
+    for (var i = 0; i < sortableTable.sortableTables.length; i++) {
+        let t=sortableTable.sortableTables[i];
+        if (t.tableid == tblid) {
+            if(typeof(p)==="undefined")p=1;
+            t.selectedPage=p;
+            t.renderTable();
+        }
+    }
+}
+
 function clearUpdateCellInternal()
 {
     sortableTable.edit_rowno =- 1;
@@ -240,6 +252,12 @@ function SortableTable(param)
     this.updateCell = getparam(param.updateCellCallback,null);
 		this.hasMagicHeadings = getparam(param.hasMagicHeadings,false);
     this.hasCounter = getparam(param.hasCounterColumn,false);
+    this.rowsPerPage = getparam(param.rowsPerPage,0);
+    this.filteredRows=0;
+    this.selectedPage=1;
+    this.preRenderCallback=getparam(param.preRenderCallback,null);
+    this.postRenderCallback=getparam(param.postRenderCallback,null);
+
 
 		// Prepare head and order with columns from rowsum list
 		for(let i=0;i<rowsumList.length;i++){
@@ -271,6 +289,9 @@ function SortableTable(param)
     }
 
     this.renderTable = function() {
+      // Must be first in the render function!
+      if(this.preRenderCallback!==null)this.preRenderCallback(this);
+
 
     	this.rowIndex = 1;
     	// Local variable that contains html code for main table and local variable that contains magic headings table
@@ -392,53 +413,57 @@ function SortableTable(param)
 
     	// Render table body
     	str += "<tbody id='"+this.tableid+DELIMITER+"body'>";
-    	mhvstr += "<tbody id='"+this.tableid+DELIMITER+"mhvbody'>";
+      mhvstr += "<tbody id='"+this.tableid+DELIMITER+"mhvbody'>";
+      this.filteredRows=0;
     	for (var i = 0; i < tbl.tblbody.length; i++) {
       		var row = tbl.tblbody[i];
       		if (rowFilter(row)) {
-              str += "<tr id='"+this.tableid+DELIMITER+i+"'"
-              if (this.hasRowHighlight) str+=" onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)'";
-              str+=" style='box-sizing:border-box;'>";
-              mhvstr += "<tr id='"+this.tableid+DELIMITER+i+DELIMITER+"mhv' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box;' class='"+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhvbodyrow' >";
+              this.filteredRows++;
+              if(this.rowsPerPage===0 || (this.filteredRows<=(this.selectedPage*this.rowsPerPage)&&this.filteredRows>((this.selectedPage-1)*this.rowsPerPage))){
+                str += "<tr id='"+this.tableid+DELIMITER+i+"'"
+                if (this.hasRowHighlight) str+=" onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)'";
+                str+=" style='box-sizing:border-box;'>";
+                mhvstr += "<tr id='"+this.tableid+DELIMITER+i+DELIMITER+"mhv' onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)' style='box-sizing:border-box;' class='"+this.tableid+DELIMITER+"tbl"+DELIMITER+"mhvbodyrow' >";
 
-        			// Add Counter cell to the row. The class <tableid>_counter can be used to style the counterText
-        			if(this.hasCounter) {
-                  str += "<td style='white-space:nowrap;' onclick='clickedInternal(event,this);' class='" + this.tableid + DELIMITER+"counter'><span>"+ this.rowIndex +"</span></td>";
-                  mhvstr += "<td style='white-space:nowrap;' onclick='clickedInternal(event,this);' class='" + this.tableid + DELIMITER+"counter'><span>"+ this.rowIndex++ +"</span></td>";
+                // Add Counter cell to the row. The class <tableid>_counter can be used to style the counterText
+                if(this.hasCounter) {
+                    str += "<td style='white-space:nowrap;' onclick='clickedInternal(event,this);' class='" + this.tableid + DELIMITER+"counter'><span>"+ ((this.selectedPage-1)*this.rowsPerPage+this.rowIndex) +"</span></td>";
+                    mhvstr += "<td style='white-space:nowrap;' onclick='clickedInternal(event,this);' class='" + this.tableid + DELIMITER+"counter'><span>"+ ((this.selectedPage-1)*this.rowsPerPage+this.rowIndex++) +"</span></td>";
+                }
+                result++;
+                for(var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
+                  if (columnfilter[columnOrderIdx] !== null) {
+                      // check if this column is a row-sum column
+                      for (let j=0;j<rowsumList.length;j++){                      
+                          if (columnOrder[columnOrderIdx].indexOf(rowsumList[j][0]['id'])>-1) {
+                              tbl.tblbody[i][columnOrder[columnOrderIdx]]=0;
+                              for(let k=1;k<rowsumList[j].length;k++){                                
+                                  if (typeof(tbl.tblbody[i][rowsumList[j][k].substring(0,rowsumList[j][k].indexOf('.'))])==='object'){
+                                      tbl.tblbody[i][columnOrder[columnOrderIdx]]+=parseFloat(byString(tbl.tblbody[i][rowsumList[j][k].substring(0,rowsumList[j][k].indexOf('.'))],rowsumList[j][k]));
+                                  }else{
+                                      tbl.tblbody[i][columnOrder[columnOrderIdx]]+=parseFloat(tbl.tblbody[i][rowsumList[j][k]]);
+                                  } 
+                                  
+                              }                  						
+                          }
+                      }
+                    
+                      // This condition is true if column is in summing list and in that case perform the sum like a BOSS
+                      if (colsumList.indexOf(columnOrder[columnOrderIdx]) >- 1) {
+                          if (typeof(sumContent[columnOrder[columnOrderIdx]]) == "undefined") sumContent[columnOrder[columnOrderIdx]]=0;
+                          sumContent[columnOrder[columnOrderIdx]]+=sumFunc(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],row);
+                      }
+                        
+                      var cellid = "r"+i+deli+columnOrder[columnOrderIdx];
+                      str += "<td style='white-space:nowrap;' id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+this.tableid+"-"+columnOrder[columnOrderIdx]+"'>"+renderCell(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],cellid)+"</td>";  
+                      if(columnOrderIdx<freezePaneIndex){
+                          mhvstr+="<td style='white-space:nowrap;' id='"+cellid+DELIMITER+"mhv' onclick='clickedInternal(event,this);' class='"+this.tableid+"-"+columnOrder[columnOrderIdx]+"'>"+renderCell(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],cellid)+"</td>";  
+                      }
+                  }
               }
-        			result++;
-              for(var columnOrderIdx=0;columnOrderIdx<columnOrder.length;columnOrderIdx++){
-        				if (columnfilter[columnOrderIdx] !== null) {
-                    // check if this column is a row-sum column
-                    for (let j=0;j<rowsumList.length;j++){                      
-                        if (columnOrder[columnOrderIdx].indexOf(rowsumList[j][0]['id'])>-1) {
-                            tbl.tblbody[i][columnOrder[columnOrderIdx]]=0;
-                            for(let k=1;k<rowsumList[j].length;k++){                                
-                                if (typeof(tbl.tblbody[i][rowsumList[j][k].substring(0,rowsumList[j][k].indexOf('.'))])==='object'){
-                                    tbl.tblbody[i][columnOrder[columnOrderIdx]]+=parseFloat(byString(tbl.tblbody[i][rowsumList[j][k].substring(0,rowsumList[j][k].indexOf('.'))],rowsumList[j][k]));
-                                }else{
-                                    tbl.tblbody[i][columnOrder[columnOrderIdx]]+=parseFloat(tbl.tblbody[i][rowsumList[j][k]]);
-                                } 
-                                
-                            }                  						
-                        }
-                    }
-                  
-          					// This condition is true if column is in summing list and in that case perform the sum like a BOSS
-          					if (colsumList.indexOf(columnOrder[columnOrderIdx]) >- 1) {
-            						if (typeof(sumContent[columnOrder[columnOrderIdx]]) == "undefined") sumContent[columnOrder[columnOrderIdx]]=0;
-            						sumContent[columnOrder[columnOrderIdx]]+=sumFunc(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],row);
-          					}
-                      
-                    var cellid = "r"+i+deli+columnOrder[columnOrderIdx];
-          					str += "<td style='white-space:nowrap;' id='"+cellid+"' onclick='clickedInternal(event,this);' class='"+this.tableid+"-"+columnOrder[columnOrderIdx]+"'>"+renderCell(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],cellid)+"</td>";  
-                    if(columnOrderIdx<freezePaneIndex){
-                        mhvstr+="<td style='white-space:nowrap;' id='"+cellid+DELIMITER+"mhv' onclick='clickedInternal(event,this);' class='"+this.tableid+"-"+columnOrder[columnOrderIdx]+"'>"+renderCell(columnOrder[columnOrderIdx],tbl.tblbody[i][columnOrder[columnOrderIdx]],cellid)+"</td>";  
-                    }
-        				}
-      			}
-      			str += "</tr>";
-      			mhvstr += "</tr>";
+              str += "</tr>";
+              mhvstr += "</tr>";
+            }
           }
     	}
     	str += "</tbody>";
@@ -474,7 +499,10 @@ function SortableTable(param)
     	mhvstr+= "</table>";
 
     	this.magicHeader();
-    	freezePaneHandler();
+      freezePaneHandler();
+
+      // Must be last in the render function!
+      if(this.postRenderCallback!==null)this.postRenderCallback(this);
     }
 
     this.toggleColumn = function(colname,col) {
@@ -550,8 +578,11 @@ function SortableTable(param)
 
     	if (tableSort != null) {
     		  sortTable(tableSort, colSort, reverseSort);
-    	}
-			
+      }
+
+      if(this.rowsPerPage>0){
+        this.renderPagination();
+      }        		
     }
 
     setInterval(freezePaneHandler,30);
@@ -636,4 +667,41 @@ function SortableTable(param)
           }
         return str;
     }
+
+    this.renderPagination=function()
+    {
+        if(this.rowsPerPage>0){
+            let str="";
+            let cls="";
+            let pages=Math.ceil(this.filteredRows/this.rowsPerPage)
+            for(let i=1;i<=pages;i++){
+                if(i===this.selectedPage){
+                    cls="pagination-btn pagination-btn-selected";
+                }else{
+                    cls="pagination-btn";
+                }
+                str+="<span class='"+cls+"' style='white-space: nowrap' onclick='changePage(\""+this.tableid+"\","+i+")'>Page "+i+"</span>";
+            }
+            if(document.getElementById(this.tableid+"-number-of-pages")===null){
+                document.getElementById(this.tableid).outerHTML='<div style="overflow:auto;padding:10px 0 10px 0;"><span id="'+this.tableid+'-number-of-pages"></span></div>'+document.getElementById(this.tableid).outerHTML;
+            }   
+            if(document.getElementById(this.tableid+"-number-of-pages-bottom")===null){
+                document.getElementById(this.tableid).outerHTML=document.getElementById(this.tableid).outerHTML+'<div style="overflow:auto;padding:10px 0 10px 0;"><span id="'+this.tableid+'-number-of-pages-bottom"></span></div>';
+            }   
+            
+            document.getElementById(this.tableid+"-number-of-pages").innerHTML=str;
+            document.getElementById(this.tableid+"-number-of-pages-bottom").innerHTML=str;
+        }
+    }
+
+    this.getTotalRows=function()
+    {
+        return tbl.tblbody.length;
+    }
+
+    this.getFilteredRows=function()
+    {
+        return this.filteredRows;
+    }
+
 }
