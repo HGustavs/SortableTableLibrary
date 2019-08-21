@@ -139,12 +139,14 @@ tbody tr:nth-child(even) {
 /* --------------================################================-------------- *
  *                               Pagination                                     *
  * --------------================################================-------------- */
-.pagination-btn,.pagination-btn-selected {
-  padding:4px 0 4px 0;
+ .pagination-btn,.pagination-btn-selected {
+  padding:0 4px 0 4px;
+  text-decoration: underline;
+  cursor: default;
 }
 
 .pagination-btn-selected {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 /* --------------================################================-------------- *
