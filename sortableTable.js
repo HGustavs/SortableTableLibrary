@@ -418,7 +418,7 @@ function SortableTable(param)
       		if (rowFilter(row)) {
 							filteredRows.push(row);
               
-							if(this.rowsPerPage===0 || (filteredRows<=(this.selectedPage*this.rowsPerPage)&&filteredRows>((this.selectedPage-1)*this.rowsPerPage))){
+							if(this.rowsPerPage===0 || (filteredRows.length<=(this.selectedPage*this.rowsPerPage)&&filteredRows.length>((this.selectedPage-1)*this.rowsPerPage))){
                 str += "<tr id='"+this.tableid+DELIMITER+i+"'"
                 if (this.hasRowHighlight) str+=" onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)'";
                 str+=" style='box-sizing:border-box;'>";
