@@ -177,7 +177,8 @@
           hasCounterColumn:true,
           rowsPerPage:5,
           postRenderCallback:postRender,
-          preRenderCallback:preRender
+          preRenderCallback:preRender,
+					emailColumn:"foo"
       });
       myTable.renderTable();
 
@@ -211,8 +212,8 @@
 		//--------------------------------------------------------------------------
     function preRender(tbl)
     {
-        alert("Before rendering "+tbl.tableid);
-        console.log(tbl)
+        //alert("Before rendering "+tbl.tableid);
+        //console.log(tbl)
     }
 
     //--------------------------------------------------------------------------
@@ -220,12 +221,11 @@
 		// ---------------
 		//  Callback function that execute after rendering the table
 		//--------------------------------------------------------------------------
-    function postRender(tbl)
+    function postRender(getTotalRows,getFilteredRows)
     {
-        alert("Done rendering "+tbl.tableid);
-        console.log(tbl)
-        document.getElementById('total').innerHTML=tbl.getTotalRows();
-        document.getElementById('filtered').innerHTML=tbl.getFilteredRows();
+        alert("Done rendering "+getTotalRows+" "+getFilteredRows);
+        document.getElementById('total').innerHTML=getTotalRows;
+        document.getElementById('filtered').innerHTML=getFilteredRows;
     }
     
 		//--------------------------------------------------------------------------
@@ -531,6 +531,7 @@
 </head>
 <body onload="setup();" onkeypress='keypressHandler(event)'>
   	<h2>Example Table 1</h2>
+		<button onclick="myTable.mail('Hello','Titans of industry, and the like.');">e-mail visible rows</button>
   	<span>Search:</span><div><input type="text" id="lookingGlass" placeholder="write your query" onkeyup="searchterm=document.getElementById('lookingGlass').value;myTable.renderTable();"/></div>
 	
 	<div id='MHTEST'></div>

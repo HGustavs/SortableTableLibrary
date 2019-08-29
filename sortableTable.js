@@ -245,7 +245,8 @@ function SortableTable(param)
     var rowsumList = getparam(param.rowSum,[]);
   	var sumFunc = getparam(param.columnSumCallback,null);
     var freezePaneIndex = getparam(param.freezePaneIndex,-1);
-    this.hasRowHighlight = getparam(param.hasRowHighlight,false);
+		var emailColumn = getparam(param.emailColumn, null);	
+		this.hasRowHighlight = getparam(param.hasRowHighlight,false);
     this.highlightRow = getparam(param.rowHighlightOnCallback,defaultRowHighlightOn);
     this.deHighlightRow = getparam(param.rowHighlightOffCallback,defaultRowHighlightOff);
 		this.showEditCell = getparam(param.displayCellEditCallback,null);
@@ -253,11 +254,11 @@ function SortableTable(param)
 		this.hasMagicHeadings = getparam(param.hasMagicHeadings,false);
     this.hasCounter = getparam(param.hasCounterColumn,false);
     this.rowsPerPage = getparam(param.rowsPerPage,0);
-    this.filteredRows=0;
     this.selectedPage=1;
     this.preRenderCallback=getparam(param.preRenderCallback,null);
     this.postRenderCallback=getparam(param.postRenderCallback,null);
 
+		alert(emailColumn);
 
 		// Prepare head and order with columns from rowsum list
 		for(let i=0;i<rowsumList.length;i++){
@@ -271,6 +272,9 @@ function SortableTable(param)
     var sortcolumn = "UNK";
     var sortkind = -1;
     var windowWidth=window.innerWidth;
+
+		//all visible rows will be stored to this array
+		var filteredRows = []; 	
     
     // Keeps track of the last picked sorting order
     var tableSort;
@@ -414,12 +418,13 @@ function SortableTable(param)
     	// Render table body
     	str += "<tbody id='"+this.tableid+DELIMITER+"body'>";
       mhvstr += "<tbody id='"+this.tableid+DELIMITER+"mhvbody'>";
-      this.filteredRows=0;
+      filteredRows=[];
     	for (var i = 0; i < tbl.tblbody.length; i++) {
       		var row = tbl.tblbody[i];
       		if (rowFilter(row)) {
-              this.filteredRows++;
-              if(this.rowsPerPage===0 || (this.filteredRows<=(this.selectedPage*this.rowsPerPage)&&this.filteredRows>((this.selectedPage-1)*this.rowsPerPage))){
+							filteredRows.push(row);
+              
+							if(this.rowsPerPage===0 || (filteredRows<=(this.selectedPage*this.rowsPerPage)&&filteredRows>((this.selectedPage-1)*this.rowsPerPage))){
                 str += "<tr id='"+this.tableid+DELIMITER+i+"'"
                 if (this.hasRowHighlight) str+=" onmouseover='rowHighlightInternal(event,this)' onmouseout='rowDeHighlightInternal(event,this)'";
                 str+=" style='box-sizing:border-box;'>";
@@ -668,12 +673,38 @@ function SortableTable(param)
         return str;
     }
 
+		// Mail input subject and body
+		this.mail = function(subjectline,bodytext) {
+
+			alert(emailColumn);
+			
+			if(emailColumn!=null){
+					var filteredUsernames = "";
+					//get usernames of the filtered rows
+
+					// generic: ['FnameLname'].username -> [this.emailColumn] -- We check if emailColumn is set if not we do nothing
+				
+					for(var i = 0; i < filteredRows.length; i++){ 
+							if(i>0) filteredUsernames+=";";
+							
+							if(typeof filteredRows[i][emailColumn] !== 'undefined'){
+									filteredUsernames+=filteredRows[i][emailColumn];
+							}
+					}
+					alert(filteredUsernames);
+
+					var data="?subject="+encodeURIComponent(subjectline)+"?body="+encodeURIComponent(bodytext);
+
+					window.location.assign("mailto:?bcc="+encodeURIComponent(filteredUsernames)+data);
+			}
+		}
+
     this.renderPagination=function()
     {
         if(this.rowsPerPage>0){
             let str="";
             let cls="";
-            let pages=Math.ceil(this.filteredRows/this.rowsPerPage)
+            let pages=Math.ceil(filteredRows.length/this.rowsPerPage)
             for(let i=1;i<=pages;i++){
                 if(i===this.selectedPage){
                     cls="pagination-btn pagination-btn-selected";
@@ -694,6 +725,10 @@ function SortableTable(param)
         }
     }
 
+		/*
+		
+		Should be sent through callback....
+		
     this.getTotalRows=function()
     {
         return tbl.tblbody.length;
@@ -703,5 +738,6 @@ function SortableTable(param)
     {
         return this.filteredRows;
     }
+		*/
 
 }
