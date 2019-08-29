@@ -184,8 +184,7 @@
           hasMagicHeadings:true,
           hasCounterColumn:true,
           rowsPerPage:5,
-          postRenderCallback:postRender,
-          preRenderCallback:preRender,
+          postFilterCallback:postFilter,
 					emailColumn:"lemail"
       });
       myTable.renderTable();
@@ -213,25 +212,15 @@
       myTable2.renderTable();
       
 	}
-		//--------------------------------------------------------------------------
-		// preRender
-		// ---------------
-		//  Callback function that execute before rendering the table
-		//--------------------------------------------------------------------------
-    function preRender(tbl)
-    {
-        //alert("Before rendering "+tbl.tableid);
-        //console.log(tbl)
-    }
 
     //--------------------------------------------------------------------------
-		// postRender
+		// postFiltering
 		// ---------------
-		//  Callback function that execute after rendering the table
+		//  Callback function that execute after filtering the table
 		//--------------------------------------------------------------------------
-    function postRender(getTotalRows,getFilteredRows)
+    function postFilter(getTotalRows,getFilteredRows)
     {
-        alert("Done rendering "+getTotalRows+" "+getFilteredRows);
+        alert("Done filtering table you nosy individual.");
         document.getElementById('total').innerHTML=getTotalRows;
         document.getElementById('filtered').innerHTML=getFilteredRows;
     }

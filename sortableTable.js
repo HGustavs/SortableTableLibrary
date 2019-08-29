@@ -255,8 +255,7 @@ function SortableTable(param)
     this.hasCounter = getparam(param.hasCounterColumn,false);
     this.rowsPerPage = getparam(param.rowsPerPage,0);
     this.selectedPage=1;
-    this.preRenderCallback=getparam(param.preRenderCallback,null);
-    this.postRenderCallback=getparam(param.postRenderCallback,null);
+    this.postFilterCallback=getparam(param.postFilterCallback,null);
 
 		// Prepare head and order with columns from rowsum list
 		for(let i=0;i<rowsumList.length;i++){
@@ -291,9 +290,6 @@ function SortableTable(param)
     }
 
     this.renderTable = function() {
-      // Must be first in the render function!
-      if(this.preRenderCallback!==null)this.preRenderCallback(this);
-
 
     	this.rowIndex = 1;
     	// Local variable that contains html code for main table and local variable that contains magic headings table
@@ -469,7 +465,11 @@ function SortableTable(param)
             }
           }
     	}
-    	str += "</tbody>";
+
+      // Must be directly after the filtering!
+      if(this.postFilterCallback!==null)this.postFilterCallback(tbl.tblbody.length,filteredRows.length);
+			
+			str += "</tbody>";
       mhvstr += "</tbody>";
       mhvstr += "<tfoot style='border-top:2px solid #000'>";
       mhvstr += "<tr style='font-style:italic;'>";
@@ -504,8 +504,6 @@ function SortableTable(param)
     	this.magicHeader();
       freezePaneHandler();
 
-      // Must be last in the render function!
-      if(this.postRenderCallback!==null)this.postRenderCallback(this);
     }
 
     this.toggleColumn = function(colname,col) {
@@ -717,20 +715,5 @@ function SortableTable(param)
             document.getElementById(this.tableid+"-number-of-pages-bottom").innerHTML=str;
         }
     }
-
-		/*
-		
-		Should be sent through callback....
-		
-    this.getTotalRows=function()
-    {
-        return tbl.tblbody.length;
-    }
-
-    this.getFilteredRows=function()
-    {
-        return this.filteredRows;
-    }
-		*/
 
 }
