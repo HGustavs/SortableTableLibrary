@@ -258,8 +258,6 @@ function SortableTable(param)
     this.preRenderCallback=getparam(param.preRenderCallback,null);
     this.postRenderCallback=getparam(param.postRenderCallback,null);
 
-		alert(emailColumn);
-
 		// Prepare head and order with columns from rowsum list
 		for(let i=0;i<rowsumList.length;i++){
         tbl.tblhead[rowsumList[i][0]['id']]=rowsumList[i][0]['name'];
@@ -675,8 +673,6 @@ function SortableTable(param)
 
 		// Mail input subject and body
 		this.mail = function(subjectline,bodytext) {
-
-			alert(emailColumn);
 			
 			if(emailColumn!=null){
 					var filteredUsernames = "";
@@ -685,17 +681,14 @@ function SortableTable(param)
 					// generic: ['FnameLname'].username -> [this.emailColumn] -- We check if emailColumn is set if not we do nothing
 				
 					for(var i = 0; i < filteredRows.length; i++){ 
-							if(i>0) filteredUsernames+=";";
-							
 							if(typeof filteredRows[i][emailColumn] !== 'undefined'){
-									filteredUsernames+=filteredRows[i][emailColumn];
+								if(i>0) filteredUsernames+=";";
+								filteredUsernames+=filteredRows[i][emailColumn];
 							}
 					}
-					alert(filteredUsernames);
+					var data=";&subject="+encodeURIComponent(subjectline)+"&body="+encodeURIComponent(bodytext);
 
-					var data="?subject="+encodeURIComponent(subjectline)+"?body="+encodeURIComponent(bodytext);
-
-					window.location.assign("mailto:?bcc="+encodeURIComponent(filteredUsernames)+data);
+					window.location.assign("mailto:?bcc="+filteredUsernames+data);
 			}
 		}
 

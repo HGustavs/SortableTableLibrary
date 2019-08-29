@@ -118,26 +118,34 @@
 				
 		for (i = 0; i < 10; i++) {
 			var wordcnt = Math.round(Math.random() * 5 + 1);
-			var str = "";
-			var str2 = "";
-			var str3 = "";
+			var str ="";
+			var str2="";
+			var str3="";
+			var mstr="";
 			for (j = 0; j < wordcnt; j++) {
 				var charcnt = Math.round(Math.random() * 10);
 				for (var k = 0; k < charcnt; k++) {
-    				str += possible.charAt(Math.floor(Math.random() * possible.length));
-        		str2 += possible.charAt(Math.floor(Math.random() * possible.length));
-        		str3 += possible.charAt(Math.floor(Math.random() * possible.length));
+    				str +=possible.charAt(Math.floor(Math.random() * possible.length));
+        		str2+=possible.charAt(Math.floor(Math.random() * possible.length));
+        		str3+=possible.charAt(Math.floor(Math.random() * possible.length));
+        		mstr+=possible.charAt(Math.floor(Math.random() * possible.length));					
 				}
-        		str += "<br>";
-       			str2 += "<br>";
-        		str3 += "<br>";
+        		str+="<br>";
+       			str2+="<br>";
+        		str3+="<br>";
 			}
+			for (var k = 0; k < charcnt; k++) {
+					mstr+=possible.charAt(Math.floor(Math.random() * possible.length));					
+			}
+			mstr+="@hotmail.com"
+			
       tabledata.tblbody.push(
         { firstlast:str,
           pnr:Math.random()*5000,
           num:Math.round(Math.random()*20),
           foo:str2,
           holk:str3,
+				 	lemail:mstr,
           trumma:{xk:Math.round(Math.random()*2000+1000),yk:Math.round(Math.random()*500),col:"Free Shevacadoo"}
         }
       );
@@ -178,7 +186,7 @@
           rowsPerPage:5,
           postRenderCallback:postRender,
           preRenderCallback:preRender,
-					emailColumn:"foo"
+					emailColumn:"lemail"
       });
       myTable.renderTable();
 
