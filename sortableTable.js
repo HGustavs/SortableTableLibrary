@@ -283,7 +283,19 @@ function SortableTable(param)
     // Local variables that contain html code for main table and local variable that contains magic headings table
     var str = "", mhstr = "", mhvstr = "",  mhfstr = "";
 
-    sortableTable.sortableTables.push(this);
+    // Check if we already have this tableid if so ... splice (replace) else push (add)
+    let isNewTable=true;
+    for(let i=0;i<sortableTable.sortableTables.length;i++){
+        let tmptbl=sortableTable.sortableTables[i];
+        if(tmptbl.tableid === this.tableid){
+            isNewTable=false;
+            sortableTable.sortableTables.splice(i,1,this);
+            break;
+        }
+    }
+    if(isNewTable){
+        sortableTable.sortableTables.push(this);
+    }
 
     this.getRow = function(rowno) {
         return tbl.tblbody[rowno];
